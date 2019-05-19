@@ -4,10 +4,14 @@
   "private": true,
   "homepage": "https://santinozaracho.github.io/optimizer-pl-io",
   "dependencies": {
+    "bootstrap": "^4.3.1",
     "gh-pages": "^2.0.1",
     "react": "^16.8.6",
+    "react-bootstrap": "^1.0.0-beta.8",
+    "react-bootstrap-wizard": "0.0.7",
     "react-dom": "^16.8.6",
-    "react-scripts": "3.0.1"
+    "react-scripts": "3.0.1",
+    "reactstrap": "^8.0.0"
   },
   "scripts": {
     "predeploy": "npm run build",
