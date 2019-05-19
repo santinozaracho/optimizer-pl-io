@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/optimizer-pl-io/static/css/main.2cce8147.chunk.css",
+    "main.js": "/optimizer-pl-io/static/js/main.2f061edc.chunk.js",
+    "main.js.map": "/optimizer-pl-io/static/js/main.2f061edc.chunk.js.map",
+    "runtime~main.js": "/optimizer-pl-io/static/js/runtime~main.718f7bf5.js",
+    "runtime~main.js.map": "/optimizer-pl-io/static/js/runtime~main.718f7bf5.js.map",
+    "static/js/2.b41502e9.chunk.js": "/optimizer-pl-io/static/js/2.b41502e9.chunk.js",
+    "static/js/2.b41502e9.chunk.js.map": "/optimizer-pl-io/static/js/2.b41502e9.chunk.js.map",
+    "index.html": "/optimizer-pl-io/index.html",
+    "precache-manifest.3187b8bc43f27eeb754b68409097fb74.js": "/optimizer-pl-io/precache-manifest.3187b8bc43f27eeb754b68409097fb74.js",
+    "service-worker.js": "/optimizer-pl-io/service-worker.js",
+    "static/css/main.2cce8147.chunk.css.map": "/optimizer-pl-io/static/css/main.2cce8147.chunk.css.map",
+    "static/media/logo.svg": "/optimizer-pl-io/static/media/logo.5d5d9eef.svg"
+  }
+}
