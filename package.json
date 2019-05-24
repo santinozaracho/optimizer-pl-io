@@ -1,5 +1,5 @@
 {
-  "name": "optimizer-pl-io2",
+  "name": "optimizer-pl-io",
   "version": "0.1.0",
   "private": true,
   "homepage": "https://santinozaracho.github.io/optimizer-pl-io",
@@ -11,6 +11,7 @@
     "react-bootstrap-wizard": "0.0.7",
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1",
+    "react-step-wizard": "^5.3.0",
     "reactstrap": "^8.0.0"
   },
   "scripts": {

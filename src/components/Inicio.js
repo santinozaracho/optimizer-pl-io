@@ -4,6 +4,8 @@ import  Configuration  from "./Configuration";
 import  Processing  from "./Processing";
 import  Presentation  from "./Presentation";
 import logo from '../logo.svg';
+import StepWizard from 'react-step-wizard';
+
 
 class Inicio extends React.Component{
     constructor (props){
@@ -15,17 +17,6 @@ class Inicio extends React.Component{
   
     render () {
 
-        var steps = [
-            // this step hasn't got a isValidated() function, so it will be considered to be true
-            { stepName: "Configuration", component: Configuration },
-            // this step will be validated to false
-            { stepName: "Processing", component: Processing },
-            // this step will never be reachable because of the seconds isValidated() steps function that will always return false
-            { stepName: "Presentation", component: Presentation }
-          ];
-    
-        
-
         return(
             
             <Container fluid className="App">
@@ -36,11 +27,11 @@ class Inicio extends React.Component{
                     </Col>
                 </Row>
                 <Row>
-                    <Col xs={12} md={6}  className="mt-4 mx-auto">
+                    <StepWizard lg={12} md={6}  className="mt-4 mx-auto">
                         <Configuration></Configuration>
                         <Processing></Processing>
                         <Presentation></Presentation>
-                    </Col>
+                    </StepWizard>
                 </Row>
             </Container>
 
