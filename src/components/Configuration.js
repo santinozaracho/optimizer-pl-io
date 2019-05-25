@@ -1,5 +1,5 @@
 import React from 'react';
-import {Alert, ToggleButtonGroup, ToggleButton, Button, Jumbotron, Container, Row, Col, Card, InputGroup, FormControl} from 'react-bootstrap';
+import {Tooltip, ToggleButtonGroup, ToggleButton, Button, Jumbotron, Container, Row, Col, Card, InputGroup, FormControl, OverlayTrigger} from 'react-bootstrap';
 
 
 
@@ -82,14 +82,20 @@ class Configuration extends React.Component{
                 <InputGroup.Prepend>
                     <InputGroup.Text name="xi" id="variable">{"X"+variable.xi}</InputGroup.Text>
                 </InputGroup.Prepend>
-                <FormControl
-                    name={index}
-                    placeholder="Descripcion de la Variable"
-                    aria-label="Descripcion"
-                    aria-describedby="variable"
-                    onChange={this.handlerInputVar}
-                    value={variable.descripcion}
-                    />
+                <OverlayTrigger
+                        overlay={
+                            <Tooltip>
+                            Aqui usted debe Ingresar la Descripcion de la Variable.
+                            </Tooltip>}>
+                    <FormControl
+                        name={index}
+                        placeholder="Descripcion de la Variable"
+                        aria-label="Descripcion"
+                        aria-describedby="variable"
+                        onChange={this.handlerInputVar}
+                        value={variable.descripcion}
+                        />
+                </OverlayTrigger>
             </InputGroup>)
         });
         let restriccionesToDesc = restricciones.map( (restriccion,index) => {
@@ -97,14 +103,20 @@ class Configuration extends React.Component{
                 <InputGroup.Prepend>
                     <InputGroup.Text name="ri" id="restriccion">{"R"+restriccion.ri}</InputGroup.Text>
                 </InputGroup.Prepend>
-                <FormControl
-                    name={index}
-                    placeholder="Descripcion de la Restriccion"
-                    aria-label="Descripcion"
-                    aria-describedby="restriccion"
-                    onChange={this.handlerInputRes}
-                    value={restriccion.descripcion}
-                    />
+                <OverlayTrigger
+                        overlay={
+                            <Tooltip>
+                            Aqui usted debe Ingresar la Descripcion de la Restriccion.
+                            </Tooltip>}>
+                    <FormControl
+                        name={index}
+                        placeholder="Descripcion de la Restriccion"
+                        aria-label="Descripcion"
+                        aria-describedby="restriccion"
+                        onChange={this.handlerInputRes}
+                        value={restriccion.descripcion}
+                        />
+                    </OverlayTrigger>
             </InputGroup>)
         });
         
@@ -114,28 +126,42 @@ class Configuration extends React.Component{
             <Jumbotron>
                 <Container>
                     <Row>
-                        <Card className="mx-auto">
-                            <p>Metodo a Utilizar:</p>
-                            <ToggleButtonGroup type="radio" onChange={this.handlerMethod} value={this.state.method} name="method">
-                                <ToggleButton value="graph">
-                                    GRAFICO
-                                </ToggleButton>
-                                <ToggleButton value="simplex">
-                                    SIMPLEX
-                                </ToggleButton>
-                            </ToggleButtonGroup>
-                        </Card>
-                        <Card className="mx-auto">
-                            <p>Tipo de Optimizacion:</p>
-                            <ToggleButtonGroup type="radio" onChange={this.handlerObjective} value={this.state.objective} name="objective" >
-                                <ToggleButton value="max">
-                                    Maximizacion
-                                </ToggleButton>
-                                <ToggleButton value="min">
-                                    Minimizacion
-                                </ToggleButton>
-                            </ToggleButtonGroup>
-                        </Card>
+                        <OverlayTrigger
+                                    overlay={
+                                        <Tooltip>
+                                        Seleccione el Metodo deseado para la solucion del Modelo.
+                                        </Tooltip>}>
+                            <Card className="mx-auto">
+                                
+                                <p>Metodo a Utilizar:</p>
+                                <ToggleButtonGroup type="radio" onChange={this.handlerMethod} value={this.state.method} name="method">
+                                    <ToggleButton value="graph">
+                                        GRAFICO
+                                    </ToggleButton>
+                                    <ToggleButton value="simplex">
+                                        SIMPLEX
+                                    </ToggleButton>
+                                </ToggleButtonGroup>
+                            
+                            </Card>
+                        </OverlayTrigger>
+                        <OverlayTrigger
+                                    overlay={
+                                        <Tooltip>
+                                        Seleccione que tipo de Optimizacion desea realizar en el Modelo.
+                                        </Tooltip>}>
+                            <Card className="mx-auto">
+                                <p>Tipo de Optimizacion:</p>
+                                <ToggleButtonGroup type="radio" onChange={this.handlerObjective} value={this.state.objective} name="objective" >
+                                    <ToggleButton value="max">
+                                        Maximizacion
+                                    </ToggleButton>
+                                    <ToggleButton value="min">
+                                        Minimizacion
+                                    </ToggleButton>
+                                </ToggleButtonGroup>
+                            </Card>
+                        </OverlayTrigger>
                     </Row>
                     <Row>
                         <Card className="w-100 mt-3">       
