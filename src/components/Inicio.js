@@ -11,8 +11,15 @@ class Inicio extends React.Component{
     constructor (props){
         super(props)
         this.state={
-            params:""
+            params:"",
+            variables:[],
+            restricciones:[]
         }
+        this.handleConfiguration=this.handleConfiguration.bind(this)
+    }
+
+    handleConfiguration (variables,restricciones) {
+        this.setState({variables,restricciones})
     }
   
     render () {
@@ -28,9 +35,9 @@ class Inicio extends React.Component{
                 </Row>
                 <Row>
                     <StepWizard lg={12} md={6}  className="mt-4 mx-auto">
-                        <Configuration></Configuration>
-                        <Processing></Processing>
-                        <Presentation></Presentation>
+                        <Configuration handlingConfig={this.handleConfiguration}></Configuration>
+                        <Processing handlingProcess={this.handleConfiguration}></Processing>
+                        <Presentation handlingPres={this.handleConfiguration}></Presentation>
                     </StepWizard>
                 </Row>
             </Container>
