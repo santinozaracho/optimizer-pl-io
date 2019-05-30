@@ -11,21 +11,25 @@ class Inicio extends React.Component{
     constructor (props){
         super(props)
         this.state={
-            params:"",
-            variables:[],
-            restricciones:[]
-        }
-        this.handleConfiguration=this.handleConfiguration.bind(this)
+            variables:[{xi:1, descripcion:'',coeficiente:0},{xi:2,descripcion:'',coeficiente:0}],
+            restricciones:[],
+            method:"graph",
+            objective:"max"
+        };
+        this.handleStateSystem=this.handleStateSystem.bind(this)
     }
 
-    handleConfiguration (variables,restricciones) {
-        this.setState({variables,restricciones})
+    handleStateSystem (variables,restricciones,method,objective) {
+        console.log(restricciones);
+        this.setState({variables,restricciones,method,objective});  
+        console.log('====================================');
+        console.log(this.state);
+        console.log('====================================');
     }
   
+  
     render () {
-
         return(
-            
             <Container fluid className="App">
                 <Row className="">
                     <Col xs={12} md={6}  className="mx-auto">
@@ -35,9 +39,9 @@ class Inicio extends React.Component{
                 </Row>
                 <Row>
                     <StepWizard lg={12} md={6}  className="mt-4 mx-auto">
-                        <Configuration handlingConfig={this.handleConfiguration}></Configuration>
-                        <Processing handlingProcess={this.handleConfiguration}></Processing>
-                        <Presentation handlingPres={this.handleConfiguration}></Presentation>
+                        <Configuration handleStateSystem={this.handleStateSystem} status={this.state}/>
+                        <Processing handleStateSystem={this.handleStateSystem} status={this.state}/>
+                        <Presentation handleStateSystem={this.handleStateSystem} status={this.state}/>
                     </StepWizard>
                 </Row>
             </Container>
