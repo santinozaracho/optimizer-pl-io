@@ -1,5 +1,5 @@
 import React from 'react';
-import {Tooltip, ToggleButtonGroup, ToggleButton, Button, Jumbotron, Container, Row, Col, Card, InputGroup, FormControl, OverlayTrigger} from 'react-bootstrap';
+import {Button,InputGroupText, InputGroup, Input,InputGroupAddon, ButtonGroup} from 'reactstrap';
 
 
 
@@ -27,33 +27,45 @@ class Restriccion extends React.Component{
     render () {
         let {coeficientes} = this.state
         console.log(coeficientes);
+        let thisEq = this.props.restriccion.eq;
         
         let inputsRestriccions = coeficientes.map((coeficiente,indx) => {
             return(<>
-                <FormControl key={indx}
+                <Input key={'C'+indx}
                     name={indx}
-                    placeholder="Coe"
-                    aria-label="Coe"
-                    aria-describedby="restriccion"
+                    placeholder="Coefiente"
                     onChange={this.handleChangeRestriccion}
                     value={coeficiente}
                     />
-                
-                <InputGroup.Text name="ri" id="restriccion">+</InputGroup.Text>
-                    
+                {indx === coeficientes.length-1 ? (
+                    <ButtonGroup key={'Eq0'}name="Inecuation">
+                        <Button color={thisEq === '<=' ? "primary":"secondary" }>{'<='}</Button>
+                        <Button disabled color={thisEq === '=' ? "primary":"secondary" }>{'='}</Button>
+                        <Button color={thisEq === '>=' ? "primary":"secondary" }>{'>='}</Button>
+                  </ButtonGroup>
+                ):(
+                    <InputGroupText key={'+'+indx}>+</InputGroupText>
+                )}
                 </>
                 )
         })
         return(
-            <>
             <InputGroup>
-                    <InputGroup.Prepend>
-                        <InputGroup.Text name="ri" id="restriccion">{"R"+this.props.restriccion.ri}</InputGroup.Text>
-                        <InputGroup.Text name="ri" id="restriccion">{"R"+this.props.restriccion.descripcion}</InputGroup.Text>
-                    </InputGroup.Prepend>
+                    <InputGroupAddon addonType="prepend">
+                        <InputGroupText key='Rindx'>{"R"+this.props.restriccion.ri}</InputGroupText>
+                        <InputGroupText key='Rdesc'>{"R"+this.props.restriccion.descripcion}</InputGroupText>
+                    </InputGroupAddon>
                     {inputsRestriccions}
+                    <Input key={'C'+coeficientes.length}
+                            className='InputCoe'
+                            name={'Derecha'}
+                            placeholder="Coe"
+                            aria-label="Coe"
+                            aria-describedby="restriccion"
+                            onChange={this.handleChangeRestriccion}
+                            value={this.props.restriccion.derecha}
+                            />
             </InputGroup>
-            </>
             )
         }
 }

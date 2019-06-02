@@ -1,5 +1,5 @@
 import React from 'react';
-import {Alert} from 'react-bootstrap';
+import {Alert} from 'reactstrap';
 
 class Presentation extends React.Component{
     constructor (props){
@@ -11,7 +11,7 @@ class Presentation extends React.Component{
     }
     render () {
         return(
-            <Alert variant="warning">HELLO PRESENETATIOANON</Alert>
+            <Alert color="warning">HELLO PRESENETATIOANON</Alert>
 
         )
     }

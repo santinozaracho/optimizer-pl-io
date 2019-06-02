@@ -1,105 +1,71 @@
 import React from 'react';
-import {Tooltip, ToggleButtonGroup, ToggleButton, Button, Jumbotron, Container, Row, Col, Card, InputGroup, FormControl, OverlayTrigger} from 'react-bootstrap';
+import {Button, Jumbotron, Container, Row, Col, Card} from 'reactstrap';
 import Restriccion from './elements/Restriccion';
+import Variable from './elements/Variable';
 
 
 
 class Processing extends React.Component{
     constructor (props){
         super(props);
-        this.state={variables:[],restricciones:[{ri:1,descripcion:'',coeficientes:[0,0],eq:'>',derecha:0}]};
-        this.handleNext=this.handleNext.bind(this);
+        this.state={};
+        this.handleCoeficientefromV=this.handleCoeficientefromV.bind(this);
         this.handlerInputRes=this.handlerInputRes.bind(this);
         this.handlerInputVar=this.handlerInputVar.bind(this);
 
     }
 
-    componentDidMount () {
-        this.setState({
-            method:this.props.status.method,
-            objective:this.props.status.objective,
-            restricciones:this.props.status.restricciones,
-            variables:this.props.status.variables})
-    }
-
 
     handlerInputVar (event) {
         let {value, name} = event.target;
-        let {variables} = this.state;
-        variables[name].coeficiente = value;
-        this.setState({variables});
+        
     }
 
     handlerInputRes (event) {
         let {value, name} = event.target;
-        let {restricciones} = this.state;
-        restricciones[name].descripcion = value;
-        this.setState({restricciones});
+        let {restricciones} = this.props.status;
+        restricciones[name] = value;
+        this.props.handleRestricciones(restricciones);
+    }
+    //En el Siguiente Handler, Se toma del input de una variable en particular el coeficiente.
+    handleCoeficientefromV(indVariable,coeficiente) {
+        let {variables} = this.props.status;
+        variables[indVariable-1].coeficiente = coeficiente;
+        this.props.handleVariables(variables);
     }
 
-    handleNext () {
-        console.log("Next");
-        
-    }  
     render() {
-        let {variables} = this.state;
-        let {restricciones} = this.state;
+        //Obtenemos las propiedades del Super
+        let {variables} = this.props.status;        
+        let {restricciones} = this.props.status;
+        console.log(restricciones);
+
+        //Generamos el renderizado para cada una de los elementos de los arreglos obtenidos anteriormente.
         let variablesToDesc = variables.map( (variable,index) => {       
-            return(<InputGroup key={index}>
-                <InputGroup.Prepend>
-                    <InputGroup.Text name="xi" id="variable">{"X"+variable.xi}</InputGroup.Text>
-                </InputGroup.Prepend>
-                <InputGroup.Prepend>
-                    <InputGroup.Text name="description" id="variable">{variable.descripcion}</InputGroup.Text>
-                </InputGroup.Prepend>
-                <OverlayTrigger
-                        overlay={
-                            <Tooltip>
-                            Aqui usted debe Ingresar el coeficiente de la Variable.
-                            </Tooltip>}>
-                    <FormControl
-                        name={index}
-                        placeholder="Coef"
-                        aria-label="Coeficiente"
-                        aria-describedby="coe"
-                        onChange={this.handlerInputVar}
-                        value={variable.coeficiente}
-                        />
-                </OverlayTrigger>
-            </InputGroup>)
+            return(<Variable key={'V'+index} getCoeficiente={this.handleCoeficientefromV} variable={variable}/>)
         });
 
-        console.log("restricciones");
-        console.log(restricciones);
-        let restriccionesInput = restricciones.map( (restriccion,index) => {
-            return(<Restriccion key={index} restriccion={restriccion} />)
+        let restriccionesInput = restricciones.map((restriccion,index) => {
+            return(<Restriccion key={'R'+index} restriccion={restriccion} />)
         });
         
         return(
             <>
             <h3>Cargamos los datos de nuestro Modelo:</h3>
-            <Jumbotron>
-                <Container>
-                    <Row>
-                        <Card className="w-100 mt-3">       
-                            <h5>Variables:</h5>
-                            {variablesToDesc}
-                        </Card>
-                    </Row>
-                    <Row>
-                        <Card className="w-100 mt-3">
-                            <h5>Restricciones:</h5>
-                            {restriccionesInput}
-                        </Card>
-                    </Row>
-                    <Row className="mt-3">
-                        <Col md={{ span: 6, offset: 6 }}>
-                            <Button onClick={this.props.nextStep} onClickCapture={this.handleNext}>Continuar</Button>
-                        </Col> 
-                    </Row>
-                </Container>
-                
-            </Jumbotron>
+            <Container>
+                <Row>
+                    <Card className="w-100 mt-3">       
+                        <h5>Variables:</h5>
+                        {variablesToDesc}
+                    </Card>
+                </Row>
+                <Row>
+                    <Card className="w-100 mt-3">
+                        <h5>Restricciones:</h5>
+                        {restriccionesInput}                        
+                    </Card>
+                </Row>
+            </Container>
             </>
         )
     }

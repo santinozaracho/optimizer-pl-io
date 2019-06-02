@@ -6,6 +6,11 @@
   height: auto;
 }
 
+.InputCoe {
+  width: 2em;
+  padding: 1px
+}
+
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
   max-height: 30vmin;

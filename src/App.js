@@ -1,10 +1,9 @@
 import React from 'react';
-import  Inicio  from "./components/Inicio";
-import './App.css';
+import  LinealProg  from "./components/LinealProg";
 
 function App() {
   return (
-    <Inicio></Inicio>
+    <LinealProg></LinealProg>
   );
 }
 
