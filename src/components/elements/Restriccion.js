@@ -6,42 +6,50 @@ import {Button,InputGroupText, InputGroup, Input,InputGroupAddon, ButtonGroup} f
 class Restriccion extends React.Component{
     constructor (props){
         super(props);
-        this.state={coeficientes:[0,0]};
-        this.handleChangeRestriccion=this.handleChangeRestriccion.bind(this);
+        this.handleChangeCoeRestriccion=this.handleChangeCoeRestriccion.bind(this);
+        this.handleChangeRigthRestriccion=this.handleChangeRigthRestriccion.bind(this);
+        this.handleChangeEqRestriccion=this.handleChangeEqRestriccion.bind(this);
     }
 
-    componentDidMount(){
-        this.setState({coeficientes:this.props.restriccion.coeficientes,
-            derecha:this.props.restriccion.derecha,
-            eq:this.props.restriccion.eq,
-            descripcion:this.props.restriccion.descripcion})
 
+    handleChangeCoeRestriccion(event){
+        let {name,value} = event.target
+        this.props.restriccion.coeficientes[name]=value
     }
 
-    handleChangeRestriccion(){
-        console.log("change");
+    handleChangeRigthRestriccion (event){
+        let {value} = event.target;
+        console.log(this.props.restriccion.derecha);
+        
+        this.props.restriccion.derecha = value
+        console.log(value);
         
     }
 
+    handleChangeEqRestriccion (event){
+        let {value} = event.target;
+        this.props.restriccion.eq = value;
+        console.log(this.props.restriccion);
+    }
 
     render () {
-        let {coeficientes} = this.state
+        let {coeficientes} = this.props.restriccion
         console.log(coeficientes);
         let thisEq = this.props.restriccion.eq;
-        
+        console.log(thisEq);
         let inputsRestriccions = coeficientes.map((coeficiente,indx) => {
             return(<>
                 <Input key={'C'+indx}
                     name={indx}
                     placeholder="Coefiente"
-                    onChange={this.handleChangeRestriccion}
+                    onChange={this.handleChangeCoeRestriccion}
                     value={coeficiente}
                     />
                 {indx === coeficientes.length-1 ? (
-                    <ButtonGroup key={'Eq0'}name="Inecuation">
-                        <Button color={thisEq === '<=' ? "primary":"secondary" }>{'<='}</Button>
-                        <Button disabled color={thisEq === '=' ? "primary":"secondary" }>{'='}</Button>
-                        <Button color={thisEq === '>=' ? "primary":"secondary" }>{'>='}</Button>
+                    <ButtonGroup key={'Eq'+this.props.restriccion.ri} name="Inecuation">
+                        <Button onClick={this.handleChangeEqRestriccion} color={thisEq === '<=' ? "primary":"secondary" } value='<='>{'<='}</Button>
+                        <Button disabled onClick={this.handleChangeEqRestriccion} color={thisEq === '=' ? "primary":"secondary"} value='='>{'='}</Button>
+                        <Button onClick={this.handleChangeEqRestriccion} color={thisEq === '>=' ? "primary":"secondary"} value='>='>{'>='}</Button>
                   </ButtonGroup>
                 ):(
                     <InputGroupText key={'+'+indx}>+</InputGroupText>
@@ -52,17 +60,17 @@ class Restriccion extends React.Component{
         return(
             <InputGroup>
                     <InputGroupAddon addonType="prepend">
-                        <InputGroupText key='Rindx'>{"R"+this.props.restriccion.ri}</InputGroupText>
-                        <InputGroupText key='Rdesc'>{"R"+this.props.restriccion.descripcion}</InputGroupText>
+                        <InputGroupText key={'RR'+this.props.restriccion.ri}>{"R"+this.props.restriccion.ri}</InputGroupText>
+                        <InputGroupText key={'RD'+this.props.restriccion.ri}>{this.props.restriccion.descripcion}</InputGroupText>
                     </InputGroupAddon>
                     {inputsRestriccions}
                     <Input key={'C'+coeficientes.length}
                             className='InputCoe'
-                            name={'Derecha'}
+                            name={'derecha'}
                             placeholder="Coe"
                             aria-label="Coe"
                             aria-describedby="restriccion"
-                            onChange={this.handleChangeRestriccion}
+                            onChange={this.handleChangeRigthRestriccion}
                             value={this.props.restriccion.derecha}
                             />
             </InputGroup>

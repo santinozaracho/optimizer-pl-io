@@ -1,16 +1,14 @@
 import React from 'react';
-import {ButtonGroup, Button, Jumbotron, Container, Row, Col, Card, InputGroup,InputGroupAddon,InputGroupText, Input} from 'reactstrap';
+import {ButtonGroup, Button, Container, Row, Card, InputGroup,InputGroupAddon,InputGroupText, Input} from 'reactstrap';
 
 
 
 class Configuration extends React.Component{
     constructor (props){
         super(props);
-        this.state={};
         this.handlerInputRes=this.handlerInputRes.bind(this);
         this.handlerInputVar=this.handlerInputVar.bind(this);
         this.handleNewsRes();
-
     }
 
     handlerInputVar (event) {
@@ -35,8 +33,8 @@ class Configuration extends React.Component{
         if (counterWitheRes === 0 ) {
             let {variables} = this.props.status
             let coeficientes = [];
-            variables.forEach(variables => coeficientes.push(0))
-            restricciones.push({ri:restricciones.length+1,descripcion:'',coeficientes:coeficientes,eq:'>=',derecha:0})
+            variables.forEach(variables => coeficientes.push(null))
+            restricciones.push({ri:restricciones.length,descripcion:'',coeficientes:coeficientes,eq:'>=',derecha:null})
             this.props.handleRestricciones(restricciones);
         }
     }
@@ -47,10 +45,10 @@ class Configuration extends React.Component{
         if (method === 'simplex') {
             let counterWitheVar = variables.filter( element => element.descripcion.length === 0).length;
             if (counterWitheVar === 0 ) {  
-                variables.push({xi:variables.length+1,descripcion:'',coeficiente:0})
+                variables.push({xi:variables.length,descripcion:'',coeficiente:null})
                 this.props.handleVariables(variables);
                 restricciones.forEach(rest => {
-                    rest.coeficientes.push(0);
+                    rest.coeficientes.push(null);
                 })
                 this.props.handleRestricciones(restricciones)      
             }

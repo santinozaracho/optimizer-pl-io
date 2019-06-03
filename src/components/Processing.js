@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Jumbotron, Container, Row, Col, Card} from 'reactstrap';
+import {Container, Row, Card} from 'reactstrap';
 import Restriccion from './elements/Restriccion';
 import Variable from './elements/Variable';
 
@@ -17,8 +17,7 @@ class Processing extends React.Component{
 
 
     handlerInputVar (event) {
-        let {value, name} = event.target;
-        
+        let {value, name} = event.target;   
     }
 
     handlerInputRes (event) {
@@ -29,8 +28,11 @@ class Processing extends React.Component{
     }
     //En el Siguiente Handler, Se toma del input de una variable en particular el coeficiente.
     handleCoeficientefromV(indVariable,coeficiente) {
+        
         let {variables} = this.props.status;
-        variables[indVariable-1].coeficiente = coeficiente;
+        variables[indVariable].coeficiente = coeficiente;
+        console.log(variables);
+        
         this.props.handleVariables(variables);
     }
 
@@ -46,7 +48,7 @@ class Processing extends React.Component{
         });
 
         let restriccionesInput = restricciones.map((restriccion,index) => {
-            return(<Restriccion key={'R'+index} restriccion={restriccion} />)
+            return(<Restriccion key={'R'+index} restriccion={restriccion}/>)
         });
         
         return(
