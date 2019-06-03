@@ -1,11 +1,10 @@
 import React from 'react';
-import { Container,Col,Row,Progress,Jumbotron,Button } from "reactstrap";
+import { Container,Col,Row,Progress } from "reactstrap";
 import ReactWizard from 'react-bootstrap-wizard';
 import  Configuration  from "./Configuration";
 import  Processing  from "./Processing";
 import  Presentation  from "./Presentation";
 import logo from '../logo.svg';
-import StepWizard from 'react-step-wizard';
 
 
 
@@ -13,7 +12,7 @@ class LinealProg extends React.Component{
     constructor (props){
         super(props)
         this.state={
-            variables:[{xi:1, descripcion:'',coeficiente:0},{xi:2,descripcion:'',coeficiente:0}],
+            variables:[{xi:0, descripcion:'',coeficiente:null},{xi:1,descripcion:'',coeficiente:null}],
             restricciones:[],
             method:"graph",
             objective:"max"
@@ -45,26 +44,36 @@ class LinealProg extends React.Component{
         var steps = [
             // this step hasn't got a isValidated() function, so it will be considered to be true
             { stepName: "Configuracion del Modelo", 
-            component:<Configuration status={this.state} 
-            handleMethod={this.handleMethod}
-            handleVariables={this.handleVariables}
-            handleRestricciones={this.handleRestricciones}
-            handleObjective={this.handleObjective} />},
+            component:Configuration,
+            stepProps:{
+                status:this.state,
+                handleMethod:this.handleMethod,
+                handleVariables:this.handleVariables,
+                handleRestricciones:this.handleRestricciones,
+                handleObjective:this.handleObjective
+            }
+        },
             // this step will be validated to false
             { stepName: "Detalles del Modelo",
-            component:<Processing status={this.state} 
-            handleMethod={this.handleMethod}
-            handleVariables={this.handleVariables}
-            handleRestricciones={this.handleRestricciones}
-            handleObjective={this.handleObjective} />
+            component:Processing, 
+            stepProps:{
+                status:this.state,
+                handleMethod:this.handleMethod,
+                handleVariables:this.handleVariables,
+                handleRestricciones:this.handleRestricciones,
+                handleObjective:this.handleObjective
+            }
         },
             // this step will never be reachable because of the seconds isValidated() steps function that will always return false
             { stepName: "Presentacion de los Resultados",
-            component:<Presentation status={this.state} 
-            handleMethod={this.handleMethod}
-            handleVariables={this.handleVariables}
-            handleRestricciones={this.handleRestricciones}
-            handleObjective={this.handleObjective} />
+            component:Presentation,
+            stepProps:{
+                status:this.state,
+                handleMethod:this.handleMethod,
+                handleVariables:this.handleVariables,
+                handleRestricciones:this.handleRestricciones,
+                handleObjective:this.handleObjective
+            }
         }
           ];        
         return(
