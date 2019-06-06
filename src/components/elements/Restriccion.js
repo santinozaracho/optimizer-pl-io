@@ -3,79 +3,59 @@ import {Button,InputGroupText, InputGroup, Input,InputGroupAddon, ButtonGroup} f
 
 
 
-class Restriccion extends React.Component{
-    constructor (props){
-        super(props);
-        this.handleChangeCoeRestriccion=this.handleChangeCoeRestriccion.bind(this);
-        this.handleChangeRigthRestriccion=this.handleChangeRigthRestriccion.bind(this);
-        this.handleChangeEqRestriccion=this.handleChangeEqRestriccion.bind(this);
-    }
+const Restriccion = props => {
 
-
-    handleChangeCoeRestriccion(event){
-        let {name,value} = event.target
-        this.props.restriccion.coeficientes[name]=value
-    }
-
-    handleChangeRigthRestriccion (event){
-        let {value} = event.target;
-        console.log(this.props.restriccion.derecha);
-        
-        this.props.restriccion.derecha = value
-        console.log(value);
-        
-    }
-
-    handleChangeEqRestriccion (event){
-        let {value} = event.target;
-        this.props.restriccion.eq = value;
-        console.log(this.props.restriccion);
-    }
-
-    render () {
-        let {coeficientes} = this.props.restriccion
-        console.log(coeficientes);
-        let thisEq = this.props.restriccion.eq;
-        console.log(thisEq);
-        let inputsRestriccions = coeficientes.map((coeficiente,indx) => {
-            return(<>
-                <Input key={'C'+indx}
-                    name={indx}
-                    placeholder="Coefiente"
-                    onChange={this.handleChangeCoeRestriccion}
-                    value={coeficiente}
-                    />
-                {indx === coeficientes.length-1 ? (
-                    <ButtonGroup key={'Eq'+this.props.restriccion.ri} name="Inecuation">
-                        <Button onClick={this.handleChangeEqRestriccion} color={thisEq === '<=' ? "primary":"secondary" } value='<='>{'<='}</Button>
-                        <Button disabled onClick={this.handleChangeEqRestriccion} color={thisEq === '=' ? "primary":"secondary"} value='='>{'='}</Button>
-                        <Button onClick={this.handleChangeEqRestriccion} color={thisEq === '>=' ? "primary":"secondary"} value='>='>{'>='}</Button>
-                  </ButtonGroup>
-                ):(
-                    <InputGroupText key={'+'+indx}>+</InputGroupText>
-                )}
-                </>
-                )
-        })
-        return(
-            <InputGroup>
-                    <InputGroupAddon addonType="prepend">
-                        <InputGroupText key={'RR'+this.props.restriccion.ri}>{"R"+this.props.restriccion.ri}</InputGroupText>
-                        <InputGroupText key={'RD'+this.props.restriccion.ri}>{this.props.restriccion.descripcion}</InputGroupText>
-                    </InputGroupAddon>
-                    {inputsRestriccions}
-                    <Input key={'C'+coeficientes.length}
-                            className='InputCoe'
-                            name={'derecha'}
-                            placeholder="Coe"
-                            aria-label="Coe"
-                            aria-describedby="restriccion"
-                            onChange={this.handleChangeRigthRestriccion}
-                            value={this.props.restriccion.derecha}
-                            />
-            </InputGroup>
+    let {coeficientes} = props.restriccion
+    let thisEq = props.restriccion.eq;
+    let inputsRestriccions = coeficientes.map((coeficiente,indx) => {
+        return(<>
+            <Input key={'C'+props.restriccion.ri+'r'+indx}
+                name={indx}
+                placeholder="Coefiente"
+                onChange={e => {props.handleCoefRes(e,props.restriccion.ri)}}
+                value={coeficiente}
+                />
+            {indx === coeficientes.length-1 ? (
+                <ButtonGroup key={'Eq'+props.restriccion.ri}>
+                    <Button name='eq' 
+                        onClick={e => {props.handleCoefRes(e,props.restriccion.ri);thisEq='<='}} 
+                        active={thisEq === '<=' ? "primary":"secondary" } 
+                        value='<='>{'<='}</Button>
+                    <Button name='eq' 
+                        disabled 
+                        onClick={e => {props.handleCoefRes(e,props.restriccion.ri);thisEq='='}} 
+                        active={thisEq === '=' ? "primary":"secondary"} 
+                        value='='>{'='}</Button>
+                    <Button name='eq' 
+                        onClick={e => {props.handleCoefRes(e,props.restriccion.ri);thisEq='>='}} 
+                        active={thisEq === '>=' ? true:false} 
+                        value='>='>{'>='}</Button>
+                </ButtonGroup>
+            ):(
+                <InputGroupText key={'+'+props.restriccion.ri+'r'+indx}>+</InputGroupText>
+            )}
+            </>
             )
-        }
+    })
+    return(
+        <InputGroup>
+                <InputGroupAddon addonType="prepend">
+                    <InputGroupText key={'RR'+props.restriccion.ri}>{"R"+props.restriccion.ri}</InputGroupText>
+                    <InputGroupText key={'RD'+props.restriccion.ri}>{props.restriccion.descripcion}</InputGroupText>
+                </InputGroupAddon>
+                {inputsRestriccions}
+                <Input key={'C'+props.restriccion.ri+'r'+coeficientes.length}
+                        className='InputCoe'
+                        name={'derecha'}
+                        placeholder="Coe"
+                        aria-label="Coe"
+                        aria-describedby="restriccion"
+                        onChange={e => {props.handleCoefRes(e,props.restriccion.ri)}}
+                        value={props.restriccion.derecha}
+                        />
+        </InputGroup>
+        )
+    
 }
 
 export default Restriccion;
