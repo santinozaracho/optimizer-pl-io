@@ -12,7 +12,7 @@ class LinealProg extends React.Component{
     constructor (props){
         super(props)
         this.state={
-            variables:[{xi:0, descripcion:'',coeficiente:null},{xi:1,descripcion:'',coeficiente:null}],
+            variables:[{xi:0, descripcion:'',coeficiente:''},{xi:1,descripcion:'',coeficiente:''}],
             restricciones:[],
             method:"graph",
             objective:"max"
@@ -24,7 +24,6 @@ class LinealProg extends React.Component{
     }
 
     handleRestricciones (restricciones) {
-        console.log(restricciones);
         this.setState({restricciones}); 
     }
 
@@ -81,13 +80,12 @@ class LinealProg extends React.Component{
                 <Row className="">
                     <Col xs={12} md={6}  className="mx-auto">
                         <img src={logo} className="App-logo" alt="logo" height="200" />
-                        <Progress  animated color="success" value="25" />
+                        <Progress  animated color="blue" value="33" />
                     </Col>
                 </Row>
                 <Row>
-                    <Col xs={12} md={6}  className="mt-3 mx-auto">
+                    <Col xs={12} md={6}  className="my-4 mx-auto">
                         <ReactWizard
-                            progressbar
                             steps={steps}
                             title="Programacion Lineal"
                             headerTextCenter
