@@ -1,14 +1,49 @@
 import React from 'react';
-import {Alert,Button} from 'reactstrap';
-import solver from 'javascript-lp-solver'
-import Restriccion from './elements/Restriccion';
+import {Alert,Card,CardTitle,CardBody,CardText} from 'reactstrap';
+import solver from 'javascript-lp-solver';
 
-let convertArraysToModelForSolver = (modelo) => {
+let convertAppToModelForSolver = (modelo) => {
     let {restricciones,variables,objective} = modelo;
-    let model = {};
-    model.constraints = restricciones;
-    
-    return JSON.stringify(model)
+    let model = {
+        optimize:'coeficiente',
+        opType:'',
+        constraints: {},
+        variables: {}
+    };
+    //Tratamos el objetivo
+    model.opType = objective;
+        
+    //Tratamos las Variables
+    variables.forEach( vari => {  
+        if (vari.descripcion !== '') {
+            //Generamos una nueva Variable
+            let newVari = {};
+            newVari.coeficiente = vari.coeficiente;
+            restricciones.forEach(restri => {
+                if(restri.descripcion !==''){
+                    newVari['r'+restri.ri] = restri.coeficientes[vari.xi];
+                }
+            });
+            console.log(newVari);
+            model.variables[vari.xi] = newVari;
+        }     
+    });
+    //Tratamos las Restricciones
+    restricciones.forEach(restri => {
+        if(restri.descripcion !== ''){
+            if(restri.eq === '>='){ 
+                let res = {};
+                res.min = restri.derecha     
+                model.constraints['r'+restri.ri] = res;
+            }else{
+                let res = {};
+                res.max = restri.derecha
+                model.constraints['r'+restri.ri] = res;
+            }
+        }    
+    });
+    console.log(model);
+    return model
 }
         
 
@@ -16,25 +51,48 @@ let convertArraysToModelForSolver = (modelo) => {
 class Presentation extends React.Component{
     constructor (props){
         super(props)
-        this.state={model:''}
+        this.state={result:false,model:''}
     }
 
     calculate = () => {
-        let model = convertArraysToModelForSolver(this.props.status)
-        console.log(model);
-        
-        
+        let model = convertAppToModelForSolver(this.props.status)
+//        return model
+        return solver.Solve(model);      
     }
 
 
     render () {
-        
+        let result = 'No hay resultados todavia'
+        if (this.props.status.result){
+            result = this.calculate()
+            console.log(result);
+            
+        }
+        let {variables} =this.props.status;
+        let impresionDeResultados = variables
+        .map( vari => {
+            console.log(result);
+            console.log(result.xi);
+            
+            
+            return(
+            <Card>
+                <CardTitle>
+                    {'Variable: X'+vari.xi}
+                </CardTitle>
+                <CardBody>
+                    <CardText>{'Definicion: '+vari.descripcion}</CardText>
+                    <CardText>{'Se Producira: '+result[vari.xi]+' cantidad del Producto'}</CardText>
+                </CardBody>
 
+            </Card>)
+            }
+
+        ) 
         return(
             <> 
-            <Alert color="warning">TESTING RESULTS</Alert>
-            <Button color='success' onClick={this.calculate}>Calcular</Button>
-            <p>{this.state.resultados}</p>
+                <h3>{'Se va a Ganar:$ '+result.result}</h3>
+                {impresionDeResultados}
             </>
 
         )

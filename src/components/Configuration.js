@@ -16,8 +16,8 @@ class Configuration extends React.Component{
             return true
         }else {
             this.setState({faltaDescrip:true});
-            return false
-        } 
+            return true
+        }
     }
     //Funcion que se encarga de manejar las modificaciones en las variables.
     handlerInputVar = event => {
@@ -58,7 +58,7 @@ class Configuration extends React.Component{
         let counterWitheRes = restricciones.filter( element => element.descripcion.length === 0).length;
         //Si el contador de restricciones vacias es igual a 0 entonces agregamos una restriccion mas.
         if (counterWitheRes === 0 ) {
-            restricciones.push({ri:restricciones.length,descripcion:'',coeficientes:[],eq:'>=',derecha:''})
+            restricciones.push({ri:restricciones.length,descripcion:'',coeficientes:[],eq:'>=',derecha:0})
             this.props.handleRestricciones(restricciones);
         }
     }
@@ -70,7 +70,7 @@ class Configuration extends React.Component{
             let counterWitheVar = variables.filter( element => element.descripcion.length === 0).length;
             //Si la cantidad de Variables Libres es igual a 0 se agrega una mas.
             if (counterWitheVar === 0 ) {  
-                variables.push({xi:variables.length,descripcion:'',coeficiente:''})
+                variables.push({xi:variables.length,descripcion:'',coeficiente:0})
                 this.props.handleVariables(variables);    
             }
         }else{

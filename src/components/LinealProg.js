@@ -12,11 +12,11 @@ class LinealProg extends React.Component{
     constructor (props){
         super(props)
         this.state={
-            variables:[{xi:0, descripcion:''},{xi:1,descripcion:'',coeficiente:''}],
-            restricciones:[{ri:0,descripcion:'',coeficientes:[],eq:'>=',derecha:''}],
+            variables:[{xi:0, descripcion:'',coeficiente:0},{xi:1,descripcion:'',coeficiente:0}],
+            restricciones:[{ri:0,descripcion:'',coeficientes:[],eq:'>=',derecha:0}],
             method:"graph",
             objective:"max",
-            result:'NORESULTUNTIL'
+            result:false
         };
     }
 
@@ -38,7 +38,10 @@ class LinealProg extends React.Component{
 
     handleResult = result => {
         this.setState({result})
-    } 
+    }
+    handleStepResult = result => {
+        this.setState({result})
+    }
   
     render () {
         var steps = [
@@ -59,6 +62,7 @@ class LinealProg extends React.Component{
             stepProps:{
                 status:this.state,
                 handleVariables:this.handleVariables,
+                handleStepResult:this.handleStepResult,
                 handleRestricciones:this.handleRestricciones,
             }
         },
@@ -66,7 +70,7 @@ class LinealProg extends React.Component{
             { stepName: "Presentacion de los Resultados",
             component:Presentation,
             stepProps:{
-                status:this.state,
+                status:this.state,        
                 handleResult:this.handleResult,
             }
         }

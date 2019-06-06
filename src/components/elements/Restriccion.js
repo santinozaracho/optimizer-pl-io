@@ -21,6 +21,7 @@ const Restriccion = props => {
     let inputsRestriccions = coeficientes.map((coeficiente,indx) => {
         return(<>
             <Input key={'C'+props.restriccion.ri+'r'+indx}
+                type="number"
                 name={indx}
                 placeholder="Coefiente"
                 onChange={e => {props.handleCoefRes(e,props.restriccion.ri)}}
@@ -56,14 +57,14 @@ const Restriccion = props => {
                 </InputGroupAddon>
                 {inputsRestriccions}
                 <Input key={'C'+props.restriccion.ri+'r'+coeficientes.length}
+                        type="number"
                         className='InputCoe'
                         name={'derecha'}
                         placeholder="Coe"
                         aria-label="Coe"
                         aria-describedby="restriccion"
                         onChange={e => {props.handleCoefRes(e,props.restriccion.ri)}}
-                        value={props.restriccion.derecha}
-                        />
+                        value={props.restriccion.derecha}/>
         </InputGroup>
         )
     

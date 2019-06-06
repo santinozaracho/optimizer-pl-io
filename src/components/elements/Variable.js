@@ -10,7 +10,7 @@ const Variable = props=> {
                 <InputGroupText name="description" id="variable">{props.variable.descripcion}</InputGroupText>
             </InputGroupAddon>
             
-            <Input      
+            <Input      type='number'
                         name={props.variable.xi}
                         className='InputCoe'
                         placeholder="Coef"
