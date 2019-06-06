@@ -6,6 +6,17 @@ import {Button,InputGroupText, InputGroup, Input,InputGroupAddon, ButtonGroup} f
 const Restriccion = props => {
 
     let {coeficientes} = props.restriccion
+    if (coeficientes.length !== props.cantVariables) {        
+        let diferencia = props.cantVariables - coeficientes.length;
+        if ( diferencia > 0) {
+            for (let index = 0; index < diferencia; index++) {
+                coeficientes.push(0)       
+            }
+        }else {
+            coeficientes.splice(props.cantVariables)
+        }
+    }
+
     let thisEq = props.restriccion.eq;
     let inputsRestriccions = coeficientes.map((coeficiente,indx) => {
         return(<>
