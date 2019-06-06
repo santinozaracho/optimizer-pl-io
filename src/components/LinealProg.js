@@ -12,32 +12,33 @@ class LinealProg extends React.Component{
     constructor (props){
         super(props)
         this.state={
-            variables:[{xi:0, descripcion:'',coeficiente:''},{xi:1,descripcion:'',coeficiente:''}],
-            restricciones:[],
+            variables:[{xi:0, descripcion:''},{xi:1,descripcion:'',coeficiente:''}],
+            restricciones:[{ri:0,descripcion:'',coeficientes:[],eq:'>=',derecha:''}],
             method:"graph",
-            objective:"max"
+            objective:"max",
+            result:'NORESULTUNTIL'
         };
-        this.handleRestricciones=this.handleRestricciones.bind(this)
-        this.handleVariables=this.handleVariables.bind(this)
-        this.handleObjective=this.handleObjective.bind(this)
-        this.handleMethod=this.handleMethod.bind(this)
     }
 
-    handleRestricciones (restricciones) {
+    handleRestricciones = restricciones => {
         this.setState({restricciones}); 
     }
 
-    handleVariables (variables) {
+    handleVariables = variables => {
         this.setState({variables}); 
     }
     
-    handleMethod (method) {
+    handleMethod = method => {
         this.setState({method}); 
     }
 
-    handleObjective (objective) {
+    handleObjective = objective => {
         this.setState({objective})
     }
+
+    handleResult = result => {
+        this.setState({result})
+    } 
   
     render () {
         var steps = [
@@ -57,10 +58,8 @@ class LinealProg extends React.Component{
             component:Processing, 
             stepProps:{
                 status:this.state,
-                handleMethod:this.handleMethod,
                 handleVariables:this.handleVariables,
                 handleRestricciones:this.handleRestricciones,
-                handleObjective:this.handleObjective
             }
         },
             // this step will never be reachable because of the seconds isValidated() steps function that will always return false
@@ -68,10 +67,7 @@ class LinealProg extends React.Component{
             component:Presentation,
             stepProps:{
                 status:this.state,
-                handleMethod:this.handleMethod,
-                handleVariables:this.handleVariables,
-                handleRestricciones:this.handleRestricciones,
-                handleObjective:this.handleObjective
+                handleResult:this.handleResult,
             }
         }
           ];        
