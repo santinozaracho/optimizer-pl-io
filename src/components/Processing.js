@@ -1,5 +1,5 @@
 import React from 'react';
-import {Container, Row, Card} from 'reactstrap';
+import {Container, Row, Card,CardBody,CardHeader,CardTitle} from 'reactstrap';
 import Restriccion from './elements/Restriccion';
 import Variable from './elements/Variable';
 
@@ -65,34 +65,38 @@ class Processing extends React.Component{
         let varsOperativas = variables.filter(va => va.descripcion !== '').length;
 
         //Generamos el renderizado para cada una de los elementos de los arreglos obtenidos anteriormente.
-        let variablesInput = variables.map(
-            (variable,index) => {
-                if (variable.descripcion !== ''){
-                    return(<Variable key={'V'+index} handleCoefVar={this.handleCoefVar} variable={variable}/>)
-                }
-        });
+        let variablesInput = variables
+        .filter(item => item.descripcion !== '')
+        .map( (variable,index) =>
+                <Variable key={'V'+index} className="mt-1" handleCoefVar={this.handleCoefVar} variable={variable}/>);
 
-        let restriccionesInput = restricciones.map(
-            (restriccion,index) => {
-                if (restriccion.descripcion !== '') {
-                    return(<Restriccion key={'R'+index} handleCoefRes={this.handleCoefRes} cantVariables={varsOperativas} restriccion={restriccion}/>)
-                }
-        });
+        let restriccionesInput = restricciones
+        .filter(item => item.descripcion !== '')
+        .map( (restriccion,index) =>
+                <Restriccion 
+                key={'R'+index} 
+                handleCoefRes={this.handleCoefRes} 
+                cantVariables={varsOperativas} 
+                restriccion={restriccion}/>);
         
         return(
             <>
             <h3>Cargamos los datos de nuestro Modelo:</h3>
             <Container>
                 <Row>
-                    <Card className="w-100 mt-3">       
-                        <h5>Variables:</h5>
-                        {variablesInput}
+                    <Card className="w-100 mt-3">
+                        <CardHeader><CardTitle className="text-left"><h4>Variables:</h4></CardTitle></CardHeader>       
+                        <CardBody>
+                            {variablesInput}
+                        </CardBody>
                     </Card>
                 </Row>
                 <Row>
                     <Card className="w-100 mt-3">
-                        <h5>Restricciones:</h5>
-                        {restriccionesInput}                        
+                        <CardHeader><CardTitle className="text-left"><h4>Restricciones:</h4></CardTitle></CardHeader>       
+                        <CardBody>
+                            {restriccionesInput}
+                        </CardBody>
                     </Card>
                 </Row>
             </Container>

@@ -1,21 +1,20 @@
 import React from 'react';
-import {Alert,Card,CardTitle,CardBody,CardText} from 'reactstrap';
+import {Card,CardTitle,CardBody,CardText} from 'reactstrap';
 import solver from 'javascript-lp-solver';
 
-let convertAppToModelForSolver = (modelo) => {
-    let {restricciones,variables,objective} = modelo;
-    let model = {
-        optimize:'coeficiente',
-        opType:'',
-        constraints: {},
-        variables: {}
-    };
+let convertAppToModelForSolverPrimal = datosApp => {
+    //Obtenemos los Datos de la aplicacion
+    let {restricciones,variables,objective} = datosApp;
+    //Precargamos el Modelo
+    let model = {optimize:'coeficiente',opType:'',constraints:{},variables:{}};
+    
     //Tratamos el objetivo
     model.opType = objective;
         
     //Tratamos las Variables
-    variables.forEach( vari => {  
-        if (vari.descripcion !== '') {
+    variables
+    .filter(item => item.descripcion !== '')
+    .forEach( vari => {  
             //Generamos una nueva Variable
             let newVari = {};
             newVari.coeficiente = vari.coeficiente;
@@ -26,11 +25,11 @@ let convertAppToModelForSolver = (modelo) => {
             });
             console.log(newVari);
             model.variables[vari.xi] = newVari;
-        }     
-    });
+        });
     //Tratamos las Restricciones
-    restricciones.forEach(restri => {
-        if(restri.descripcion !== ''){
+    restricciones
+    .filter(item => item.descripcion !== '')
+    .forEach(restri => {
             if(restri.eq === '>='){ 
                 let res = {};
                 res.min = restri.derecha     
@@ -39,10 +38,8 @@ let convertAppToModelForSolver = (modelo) => {
                 let res = {};
                 res.max = restri.derecha
                 model.constraints['r'+restri.ri] = res;
-            }
-        }    
-    });
-    console.log(model);
+            }});
+
     return model
 }
         
@@ -51,44 +48,36 @@ let convertAppToModelForSolver = (modelo) => {
 class Presentation extends React.Component{
     constructor (props){
         super(props)
-        this.state={result:false,model:''}
+        this.state={result:false}
     }
 
-    calculate = () => {
-        let model = convertAppToModelForSolver(this.props.status)
-//        return model
+    //Funcion de Calculo del modelo.
+    calcularPrimal = () => {
+        //Convertimos la App en Modelo para Solver.js
+        let model = convertAppToModelForSolverPrimal(this.props.status)
+        //solver.js soluciona y nos devuelve
         return solver.Solve(model);      
     }
-
 
     render () {
         let result = 'No hay resultados todavia'
         if (this.props.status.result){
-            result = this.calculate()
+            result = this.calculatePrimal()
             console.log(result);
-            
         }
         let {variables} =this.props.status;
         let impresionDeResultados = variables
-        .map( vari => {
-            console.log(result);
-            console.log(result.xi);
-            
-            
-            return(
-            <Card>
-                <CardTitle>
-                    {'Variable: X'+vari.xi}
-                </CardTitle>
-                <CardBody>
-                    <CardText>{'Definicion: '+vari.descripcion}</CardText>
-                    <CardText>{'Se Producira: '+result[vari.xi]+' cantidad del Producto'}</CardText>
-                </CardBody>
-
-            </Card>)
-            }
-
-        ) 
+        .filter(vari => vari.descripcion !== '')
+        .map( vari => 
+                    <Card key={'Card'+vari.xi}>
+                        <CardTitle>
+                            {'Variable: X'+vari.xi}
+                        </CardTitle>
+                        <CardBody>
+                            <CardText>{'Se recomienda: '+result[vari.xi]+' de'+vari.descripcion}</CardText>
+                        </CardBody>
+        
+                    </Card>) 
         return(
             <> 
                 <h3>{'Se va a Ganar:$ '+result.result}</h3>

@@ -1,5 +1,5 @@
 import React from 'react';
-import {ButtonGroup, Button, Container, Row, Card, InputGroup,InputGroupAddon,InputGroupText, Input} from 'reactstrap';
+import {ButtonGroup, Button, Container, Row, Card,CardBody,CardHeader,CardTitle, InputGroup,InputGroupAddon,InputGroupText, Input} from 'reactstrap';
 
 
 
@@ -88,80 +88,89 @@ class Configuration extends React.Component{
         //Obtenemos de las props, las varaibles y restricciones.
         let {variables} = this.props.status;
         let {restricciones} = this.props.status;
-        // Generamos los input para las Variables
-        let variablesARenderizar = variables.map(
-            (variable,index) => {
-                return(<InputGroup key={index}>
-                            <InputGroupAddon addonType="prepend">
-                                <InputGroupText name="xi" id="variable">{"X"+index}</InputGroupText>
-                            </InputGroupAddon>
-                            <Input
-                                name={index}
-                                placeholder="Descripcion de la Variable"
-                                aria-label="Descripcion"
-                                aria-describedby="variable"
-                                onChange={this.handlerInputVar}
-                                value={variable.descripcion}/>
-                        </InputGroup>)});
+        // Generamos los inputs para las Variables
+        let variablesARenderizar = variables
+        .map( (variable,index) => 
+                <InputGroup className="mt-1" key={'VTD'+index}>
+                    <InputGroupAddon addonType="prepend">
+                        <InputGroupText name="xi" id="variable">{"X"+index}</InputGroupText>
+                    </InputGroupAddon>
+                    <Input
+                        name={index}
+                        placeholder="Descripcion de la Variable"
+                        aria-label="Descripcion"
+                        aria-describedby="variable"
+                        onChange={this.handlerInputVar}
+                        value={variable.descripcion}/>
+                </InputGroup>);
         //Generamos los imputs para las restricciones
-        let restriccionesARenderizar = restricciones.map(
-            (restriccion,index) => {
-                return(<InputGroup key={index}>
-                            <InputGroupAddon addonType="prepend">
-                                <InputGroupText name="ri" id="restriccion">{"R"+index}</InputGroupText>
-                            </InputGroupAddon>
-                                <Input
-                                    name={index}
-                                    placeholder="Descripcion de la Restriccion"
-                                    aria-label="Descripcion"
-                                    aria-describedby="restriccion"
-                                    onChange={this.handlerInputRes}
-                                    value={restriccion.descripcion}/>        
-                        </InputGroup>)});
-            
+        let restriccionesARenderizar = restricciones
+        .map( (restriccion,index) => 
+                <InputGroup className="mt-1" key={'RTD'+index}>
+                    <InputGroupAddon addonType="prepend">
+                        <InputGroupText name="ri" id="restriccion">{"R"+index}</InputGroupText>
+                    </InputGroupAddon>
+                        <Input
+                            name={index}
+                            placeholder="Descripcion de la Restriccion"
+                            aria-label="Descripcion"
+                            aria-describedby="restriccion"
+                            onChange={this.handlerInputRes}
+                            value={restriccion.descripcion}/>        
+                </InputGroup>);
+        let buttonsMethods = (<ButtonGroup>
+                                <Button onClick={() => {this.props.handleMethod('graph');this.handleNewsVar('graph')}} 
+                                        active={this.props.status.method === 'graph'}
+                                        color='primary'>
+                                    GRAFICO
+                                </Button>
+                                <Button onClick={() => {this.props.handleMethod('simplex');this.handleNewsVar('simplex')}} 
+                                        active={this.props.status.method === 'simplex'}
+                                        color='primary'>
+                                    SIMPLEX
+                                </Button>
+                            </ButtonGroup>)
+        let buttonsOptType = (<ButtonGroup>
+                                <Button onClick={() => this.props.handleObjective('max')} 
+                                        active={this.props.status.objective === 'max'}
+                                        color='primary'>
+                                    Maximizacion
+                                </Button>
+                                <Button onClick={() => this.props.handleObjective('min')} 
+                                        active={this.props.status.objective === 'min'}
+                                        color='primary'>
+                                    Minimizacion
+                                </Button>
+                            </ButtonGroup>)
         return(
             <>
                 <h3>Comenzamos Configurando nuestro Modelo:</h3>
                 <Container>
                     <Row>         
                             <Card className="mx-auto">
-                                <p>Metodo a Utilizar:</p>
-                                <ButtonGroup>
-                                    <Button onClick={() => {this.props.handleMethod('graph');this.handleNewsVar('graph')}} 
-                                            active={this.props.status.method === 'graph'}>
-                                        GRAFICO
-                                    </Button>
-                                    <Button onClick={() => {this.props.handleMethod('simplex');this.handleNewsVar('simplex')}} 
-                                            active={this.props.status.method === 'simplex'}>
-                                        SIMPLEX
-                                    </Button>
-                                </ButtonGroup>
-                            
-                            </Card>              
+                                <CardHeader>Metodo a Utilizar:</CardHeader>
+                                <CardBody>{buttonsMethods}</CardBody>            
+                            </Card>  
+
                             <Card className="mx-auto">
-                                <p>Tipo de Optimizacion:</p>
-                                <ButtonGroup>
-                                    <Button onClick={() => this.props.handleObjective('max')} 
-                                            active={this.props.status.objective === 'max'}>
-                                        Maximizacion
-                                    </Button>
-                                    <Button onClick={() => this.props.handleObjective('min')} 
-                                            active={this.props.status.objective === 'min'}>
-                                        Minimizacion
-                                    </Button>
-                                </ButtonGroup>
+                                <CardHeader>Tipo de Optimizacion:</CardHeader>
+                                <CardBody>{buttonsOptType}</CardBody>  
                             </Card>
                     </Row>
                     <Row>
-                        <Card className="w-100 mt-3">       
-                            <h5>Variables:</h5>
-                            {variablesARenderizar}
+                        <Card className="w-100 mt-3">
+                            <CardHeader><CardTitle className="text-left" ><h4>Variables:</h4></CardTitle></CardHeader>       
+                            <CardBody>
+                                {variablesARenderizar}
+                            </CardBody>
                         </Card>
                     </Row>
                     <Row>
                         <Card className="w-100 mt-3">
-                            <h5>Restricciones:</h5>
-                            {restriccionesARenderizar}
+                            <CardHeader><CardTitle className="text-left" ><h4>Restricciones:</h4></CardTitle></CardHeader>       
+                            <CardBody>
+                                {restriccionesARenderizar}
+                            </CardBody>
                         </Card>
                     </Row>
                 </Container>
