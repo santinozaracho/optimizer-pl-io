@@ -1,5 +1,5 @@
 import React from 'react';
-import {Card,CardTitle,CardBody,CardText} from 'reactstrap';
+import {Card,CardTitle,CardBody,CardText,CardHeader} from 'reactstrap';
 import solver from 'javascript-lp-solver';
 
 let convertAppToModelForSolverPrimal = datosApp => {
@@ -60,7 +60,7 @@ class Presentation extends React.Component{
     }
 
     render () {
-        let result = 'No hay resultados todavia'
+        let result = 'No hay resultados todavsia'
         if (this.props.status.result){
             result = this.calculatePrimal()
             console.log(result);
@@ -74,14 +74,22 @@ class Presentation extends React.Component{
                             {'Variable: X'+vari.xi}
                         </CardTitle>
                         <CardBody>
-                            <CardText>{'Se recomienda: '+result[vari.xi]+' de'+vari.descripcion}</CardText>
+                            <CardText>{
+                                result[vari.xi] ? 
+                                'Se recomienda utilizar: '+result[vari.xi]:
+                                'No se Recomienda la utilizacion'}
+                                {' de '+vari.descripcion}</CardText>
                         </CardBody>
         
                     </Card>) 
         return(
             <> 
-                <h3>{'Se va a Ganar:$ '+result.result}</h3>
-                {impresionDeResultados}
+                <Card>
+                    <CardHeader><CardTitle><h3>{'El resultado optimo es: '+result.result}</h3></CardTitle></CardHeader>
+                    <CardBody>
+                        {impresionDeResultados}
+                    </CardBody>
+                </Card>  
             </>
 
         )
