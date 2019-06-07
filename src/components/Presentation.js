@@ -52,7 +52,7 @@ class Presentation extends React.Component{
     }
 
     //Funcion de Calculo del modelo.
-    calcularPrimal = () => {
+    calculatePrimal = () => {
         //Convertimos la App en Modelo para Solver.js
         let model = convertAppToModelForSolverPrimal(this.props.status)
         //solver.js soluciona y nos devuelve
