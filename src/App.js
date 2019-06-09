@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button,Jumbotron,Container,Row,Col } from "reactstrap";
+import { Button,Jumbotron,Container,Row,Col,ButtonGroup} from "reactstrap";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import  LinealProg  from "./components/LinealProg";
 
@@ -23,12 +23,21 @@ const Index = () =>
                         <Col xs={12} md={6}  className="mx-auto my-5">
                           <Jumbotron>
                             <Row><h2 className='mx-auto'>Bienvenido!!!! Seleccione una opcion.</h2></Row>
-                            <Row>
+                            <Row className='mt-2'>
                               <Col><Link to={'/linealProg'}><Button color='success'>Programacion Lineal </Button></Link></Col>
                               <Col><Link to={'/noLinealProg'}><Button disabled color='success'>Programacion No Lineal </Button></Link></Col>
                             </Row>
-                            <Row>
-                              <h5>Desarrolladores:</h5>
+                            <Row className='mt-3'>
+                              <h5>Colaboradores:</h5>
+                            </Row>
+                            <Row >
+                              <ButtonGroup  className='mx-auto'>
+                                <Button  outline tag='a' href='https://github.com/EdgarCardozo'>CE</Button>
+                                <Button  outline tag='a' href='https://github.com/juliandiazok'>DJ</Button>
+                                <Button  outline tag='a' href='https://github.com/santisolis97'>SS</Button>
+                                <Button  outline tag='a' href='https://github.com/ianv97'>VI</Button>
+                                <Button  outline tag='a' href='https://github.com/santinozaracho'>ZS</Button>
+                              </ButtonGroup>
                             </Row>
                           </Jumbotron>       
                         </Col>                    
