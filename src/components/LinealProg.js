@@ -12,35 +12,46 @@ class LinealProg extends React.Component{
     constructor (props){
         super(props)
         this.state={
-            variables:[{xi:0, descripcion:'',coeficiente:0},{xi:1,descripcion:'',coeficiente:0}],
-            restricciones:[{ri:0,descripcion:'',coeficientes:[],eq:'>=',derecha:0}],
+            variables:[{xi:0, descripcion:'',coeficiente:''},{xi:1,descripcion:'',coeficiente:''}],
+            restricciones:[{ri:0,descripcion:'',coeficientes:[],eq:'>=',derecha:''}],
             method:"graph",
             objective:"max",
-            result:false
+            result:false,
+            barProg:33
         };
     }
-
+    //Esta funcion maneja el cambio en las restricciones
     handleRestricciones = restricciones => {
         this.setState({restricciones}); 
     }
-
+    //Esta funcion maneja el cambio en las variables
     handleVariables = variables => {
         this.setState({variables}); 
     }
-    
+    //Esta funcion maneja el cambio del metodo
     handleMethod = method => {
         this.setState({method}); 
     }
-
+    //Esta funcion maneja el cambio del objetivo de optimizacion
     handleObjective = objective => {
         this.setState({objective})
     }
-
+    //Esta funcion guarda el resultado (inutilizada por el momento)
     handleResult = result => {
         this.setState({result})
     }
-    handleStepResult = result => {
-        this.setState({result})
+    //Esta funcion habilita el calculo en el ultimo paso
+    lastStep = step => {
+        if (step === 2) {
+            this.setState({result:true,barProg:100})
+        }else{
+            this.setState({result:false,barProg:66})
+        }
+        
+    }
+
+    finishButtonClick = result => {
+        console.log('En algun momento va a imprimir resultados');
     }
   
     render () {
@@ -53,6 +64,7 @@ class LinealProg extends React.Component{
                 handleMethod:this.handleMethod,
                 handleVariables:this.handleVariables,
                 handleRestricciones:this.handleRestricciones,
+                lastStep:this.lastStep,
                 handleObjective:this.handleObjective
             }
         },
@@ -62,7 +74,7 @@ class LinealProg extends React.Component{
             stepProps:{
                 status:this.state,
                 handleVariables:this.handleVariables,
-                handleStepResult:this.handleStepResult,
+                lastStep:this.lastStep,
                 handleRestricciones:this.handleRestricciones,
             }
         },
@@ -72,6 +84,7 @@ class LinealProg extends React.Component{
             stepProps:{
                 status:this.state,        
                 handleResult:this.handleResult,
+                lastStep:this.lastStep
             }
         }
           ];        
@@ -80,19 +93,21 @@ class LinealProg extends React.Component{
                 <Row className="">
                     <Col xs={12} md={6}  className="mx-auto">
                         <img src={logo} className="App-logo" alt="logo" height="200" />
-                        <Progress  animated color="blue" value="33" />
+                        <Progress  animated color="blue" value={this.state.barProg} />
                     </Col>
                 </Row>
                 <Row>
-                    <Col xs={12} md={6}  className="my-4 mx-auto">
+                    <Col xs={12} md={6} className="my-4 mx-auto">
                         <ReactWizard
                             steps={steps}
                             title="Programacion Lineal"
+                            progressbar
                             headerTextCenter
                             validate
                             color="blue"
                             previousButtonText="Volver"
                             nextButtonText="Siguiente"
+                            finishButtonText='Imprimir Resultados'
                             finishButtonClick={this.finishButtonClick}
                             />
                      

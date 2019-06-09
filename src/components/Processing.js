@@ -1,27 +1,29 @@
 import React from 'react';
-import {Container, Row, Card,CardBody,CardHeader,CardTitle} from 'reactstrap';
+import {Container, Row, Card,CardBody,CardHeader,CardTitle,Alert} from 'reactstrap';
 import Restriccion from './elements/Restriccion';
-import Variable from './elements/Variable';
+import FuncionObj from './elements/FuncionObj';
 
 
 
 class Processing extends React.Component{
     constructor (props){
         super(props);
-        this.state={};
+        this.state={faltaCoe:''};
 
     }
 
     isValidated() {
         //Verificando si los coeficientes de las variables no son nulos
-        let verifQty = this.props.status.variables.every( va => va.coeficiente !== 0)
+        let verifQty = this.props.status.variables
+        .filter(va => va.descripcion !== '')
+        .every( va => va.coeficiente !== '')
         if (verifQty) {
-            this.props.handleStepResult(true);
+            this.props.lastStep(2);
+            this.setState({faltaCoe:''})
             return true
         }else{
-            this.props.handleStepResult(true);
-
-            return true
+            this.setState({faltaCoe:'Rellename pue todos los Coeficientes no seas Guampa'})
+            return false
         }
 
     }
@@ -65,15 +67,11 @@ class Processing extends React.Component{
         let varsOperativas = variables.filter(va => va.descripcion !== '').length;
 
         //Generamos el renderizado para cada una de los elementos de los arreglos obtenidos anteriormente.
-        let variablesInput = variables
-        .filter(item => item.descripcion !== '')
-        .map( (variable,index) =>
-                <Variable key={'V'+index} className="mt-1" handleCoefVar={this.handleCoefVar} variable={variable}/>);
 
         let restriccionesInput = restricciones
         .filter(item => item.descripcion !== '')
         .map( (restriccion,index) =>
-                <Restriccion 
+                <Restriccion className="mt-1" 
                 key={'R'+index} 
                 handleCoefRes={this.handleCoefRes} 
                 cantVariables={varsOperativas} 
@@ -85,9 +83,17 @@ class Processing extends React.Component{
             <Container>
                 <Row>
                     <Card className="w-100 mt-3">
-                        <CardHeader><CardTitle className="text-left"><h4>Variables:</h4></CardTitle></CardHeader>       
-                        <CardBody>
-                            {variablesInput}
+                            <CardHeader><CardTitle className="text-left"><h4>Referencia:</h4></CardTitle></CardHeader>       
+                            <CardBody>
+                                Aqui iran las Referencias
+                            </CardBody>
+                    </Card>
+                </Row>
+                <Row>
+                    <Card className="w-100 mt-3">
+                        <CardHeader><CardTitle className="text-left"><h4>Funcion Objetivo:</h4></CardTitle></CardHeader>       
+                        <CardBody className="mx-auto">
+                            <FuncionObj variables={variables} handleCoefVar={this.handleCoefVar} objective={this.props.status.objective}/>
                         </CardBody>
                     </Card>
                 </Row>
@@ -99,6 +105,10 @@ class Processing extends React.Component{
                         </CardBody>
                     </Card>
                 </Row>
+                {this.state.faltaCoe !== '' && 
+                        <Row className="mt-3">
+                            <Alert className="mx-auto" color="danger">{this.state.faltaCoe}</Alert>
+                        </Row>}
             </Container>
             </>
         )

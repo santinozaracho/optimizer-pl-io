@@ -76,8 +76,8 @@ class Presentation extends React.Component{
                         <CardBody>
                             <CardText>{
                                 result[vari.xi] ? 
-                                'Se recomienda utilizar: '+result[vari.xi]:
-                                'No se Recomienda la utilizacion'}
+                                'Se recomienda producir '+result[vari.xi]+' unidades':
+                                'No se recomienda la produccion'}
                                 {' de '+vari.descripcion}</CardText>
                         </CardBody>
         

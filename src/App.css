@@ -6,9 +6,9 @@
   height: auto;
 }
 
-.InputCoe {
-  width: 2em;
-  padding: 1px
+.InputCoeficiente {
+  max-width: 4em;
+  min-width: 3em;
 }
 
 .App-logo {

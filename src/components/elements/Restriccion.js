@@ -9,7 +9,7 @@ const Restriccion = props => {
         let diferencia = props.cantVariables - coeficientes.length;
         if ( diferencia > 0 ) {
             for (let index = 0; index < diferencia; index++) {
-                coeficientes.push(0)       
+                coeficientes.push('')       
             }
         }else {
             coeficientes.splice(props.cantVariables)
@@ -17,7 +17,7 @@ const Restriccion = props => {
     }
 
     let thisEq = props.restriccion.eq;
-    let botoneraMaxMin = (<ButtonGroup key={'Eq'+props.restriccion.ri}>
+    let botoneraMaxMin = (<ButtonGroup className='mx-1' key={'Eq'+props.restriccion.ri}>
                                     <Button key={'B<s'+props.restriccion.ri} name='eq' 
                                         onClick={e => {props.handleCoefRes(e,props.restriccion.ri);thisEq='<='}} 
                                         color={thisEq === '<=' ? "primary":"secondary" } 
@@ -35,14 +35,17 @@ const Restriccion = props => {
     let inputsRestriccions = coeficientes
     .map((coeficiente,indx) => 
         <>
-            <Input key={'C'+props.restriccion.ri+'r'+indx}
+            <Input key={'Ci'+props.restriccion.ri+'r'+indx}
                 type="number"
                 name={indx}
                 placeholder="Coefiente"
+                className="InputCoeficiente"
                 onChange={e => {props.handleCoefRes(e,props.restriccion.ri)}}
                 value={coeficiente}
                 />
-            <InputGroupText key={'n'+props.restriccion.ri+'r'+indx}>{'X'+indx}</InputGroupText>
+            <InputGroupAddon key={'IADD'+props.restriccion.ri+'r'+indx} addonType='append'>
+                <InputGroupText key={'r'+props.restriccion.ri+'r'+indx}>{'X'+indx}</InputGroupText>
+            </InputGroupAddon>
             {indx < coeficientes.length-1 && <InputGroupText key={'+'+props.restriccion.ri+'r'+indx}>+</InputGroupText>}
         </>
             
@@ -50,8 +53,8 @@ const Restriccion = props => {
 
     return(
         <Card key={'RRR'+props.restriccion.ri}>
-            <CardHeader className="py-0"><CardTitle>{'R'+props.restriccion.ri+':'+props.restriccion.descripcion}</CardTitle></CardHeader>
-            <CardBody className="py-0">
+            <CardHeader className="p-0 m-0"><CardTitle>{'R'+props.restriccion.ri+':'+props.restriccion.descripcion}</CardTitle></CardHeader>
+            <CardBody className="p-0 my-1 mx-auto">
                 <InputGroup key={'RT'+props.restriccion.ri}>
                     {inputsRestriccions}
                     {botoneraMaxMin}
@@ -59,6 +62,7 @@ const Restriccion = props => {
                             type="number"
                             name={'derecha'}
                             placeholder="Coe"
+                            className="InputCoeficiente"
                             aria-label="Coe"
                             aria-describedby="restriccion"
                             onChange={e => {props.handleCoefRes(e,props.restriccion.ri)}}

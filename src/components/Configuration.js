@@ -1,22 +1,31 @@
 import React from 'react';
-import {ButtonGroup, Button, Container, Row, Card,CardBody,CardHeader,CardTitle, InputGroup,InputGroupAddon,InputGroupText, Input} from 'reactstrap';
+import {ButtonGroup, Button, Container, Row, Card,CardBody,CardHeader,CardTitle,Alert,InputGroup,InputGroupAddon,InputGroupText, Input} from 'reactstrap';
 
 
 
 class Configuration extends React.Component{
     constructor (props){
         super(props);
-        this.state={faltaDescrip:false};
+        this.state={faltaDescrip:''};
     }
     //Funcion que permite validar si se ingresaron todos los cambios correspondientes en la etapa
     isValidated(){
-        let {variables} = this.props.status;
+        let {variables,restricciones} = this.props.status;
         let variablesDescriptionsMin = variables.filter( va => va.descripcion !== '');
-        if (variablesDescriptionsMin.length > 1) { 
+        let restriccionesDescriptionsMin = restricciones.filter(re => re.descripcion !=='')
+        if (variablesDescriptionsMin.length > 1 &  restriccionesDescriptionsMin.length > 0 ) { 
+            this.props.lastStep(1)
             return true
         }else {
-            this.setState({faltaDescrip:true});
-            return true
+
+            if (variablesDescriptionsMin < 2 ){
+                this.setState({faltaDescrip:'Dale no seas Guampa poneme como minimo 2 variables'});
+                
+            }else{
+                this.setState({faltaDescrip:'Poneme Alguna Restri pue '});
+            }
+           
+            return false
         }
     }
     //Funcion que se encarga de manejar las modificaciones en las variables.
@@ -58,7 +67,7 @@ class Configuration extends React.Component{
         let counterWitheRes = restricciones.filter( element => element.descripcion.length === 0).length;
         //Si el contador de restricciones vacias es igual a 0 entonces agregamos una restriccion mas.
         if (counterWitheRes === 0 ) {
-            restricciones.push({ri:restricciones.length,descripcion:'',coeficientes:[],eq:'>=',derecha:0})
+            restricciones.push({ri:restricciones.length,descripcion:'',coeficientes:[],eq:'>=',derecha:''})
             this.props.handleRestricciones(restricciones);
         }
     }
@@ -70,7 +79,7 @@ class Configuration extends React.Component{
             let counterWitheVar = variables.filter( element => element.descripcion.length === 0).length;
             //Si la cantidad de Variables Libres es igual a 0 se agrega una mas.
             if (counterWitheVar === 0 ) {  
-                variables.push({xi:variables.length,descripcion:'',coeficiente:0})
+                variables.push({xi:variables.length,descripcion:'',coeficiente:''})
                 this.props.handleVariables(variables);    
             }
         }else{
@@ -173,6 +182,10 @@ class Configuration extends React.Component{
                             </CardBody>
                         </Card>
                     </Row>
+                    {this.state.faltaDescrip !== '' && 
+                        <Row className="mt-3">
+                            <Alert className="mx-auto" color="danger">{this.state.faltaDescrip}</Alert>
+                        </Row>}
                 </Container>
             </>
         )
