@@ -1,5 +1,5 @@
 import React from 'react';
-import {ButtonGroup, Button, Container, Row, Card,CardBody,CardHeader,CardTitle,Alert,InputGroup,InputGroupAddon,InputGroupText, Input} from 'reactstrap';
+import {ButtonGroup, Button, Container, Row, Card,CardBody,CardHeader,CardTitle,Alert,InputGroup,InputGroupAddon,InputGroupText, Input,UncontrolledTooltip,UncontrolledPopover,PopoverBody,PopoverHeader} from 'reactstrap';
 
 
 
@@ -100,22 +100,25 @@ class Configuration extends React.Component{
         // Generamos los inputs para las Variables
         let variablesARenderizar = variables
         .map( (variable,index) => 
-                <InputGroup className="mt-1" key={'VTD'+index}>
+                <InputGroup className="mt-1"  id={'XTT'+index} key={'VTD'+index}>
                     <InputGroupAddon addonType="prepend">
                         <InputGroupText name="xi" id="variable">{"X"+index}</InputGroupText>
                     </InputGroupAddon>
-                    <Input
+                    <Input     
                         name={index}
                         placeholder="Descripcion de la Variable"
                         aria-label="Descripcion"
                         aria-describedby="variable"
                         onChange={this.handlerInputVar}
                         value={variable.descripcion}/>
+                    <UncontrolledTooltip trigger='focus hover click' placement="auto" target={'XTT'+index}>
+                        Aqui debes ingresar el significado de la Variable.
+                    </UncontrolledTooltip>
                 </InputGroup>);
         //Generamos los imputs para las restricciones
         let restriccionesARenderizar = restricciones
         .map( (restriccion,index) => 
-                <InputGroup className="mt-1" key={'RTD'+index}>
+                <InputGroup className="mt-1" id={"TTR"+index} key={'RTD'+index}>
                     <InputGroupAddon addonType="prepend">
                         <InputGroupText name="ri" id="restriccion">{"R"+index}</InputGroupText>
                     </InputGroupAddon>
@@ -125,9 +128,12 @@ class Configuration extends React.Component{
                             aria-label="Descripcion"
                             aria-describedby="restriccion"
                             onChange={this.handlerInputRes}
-                            value={restriccion.descripcion}/>        
+                            value={restriccion.descripcion}/>
+                    <UncontrolledTooltip trigger='focus hover click' placement="auto" target={'TTR'+index}>
+                        Aqui, debes ingresar el significado de la restriccion.
+                    </UncontrolledTooltip>      
                 </InputGroup>);
-        let buttonsMethods = (<ButtonGroup>
+        let buttonsMethods = (<ButtonGroup id='ButtUtil'> 
                                 <Button onClick={() => {this.props.handleMethod('graph');this.handleNewsVar('graph')}} 
                                         active={this.props.status.method === 'graph'}
                                         color='primary'>
@@ -155,19 +161,27 @@ class Configuration extends React.Component{
             <>
                 <h3>Comenzamos configurando nuestro Modelo:</h3>
                 <Container>
-                    <Row>         
-                            <Card outline color='secondary' className="mt-2 mx-auto">
-                                <CardHeader>Metodo a Utilizar:</CardHeader>
-                                <CardBody>{buttonsMethods}</CardBody>            
-                            </Card>  
-
-                            <Card outline color='secondary' className="mt-2 mx-auto">
-                                <CardHeader>Tipo de Optimizacion:</CardHeader>
-                                <CardBody>{buttonsOptType}</CardBody>  
-                            </Card>
+                    <Row>     
+                        <UncontrolledPopover placement="top" target='CardUtil'>
+                                <PopoverBody>Aqui debes seleccionar el metodo de Calculo y Visualizacion de los Resultados</PopoverBody>
+                        </UncontrolledPopover>       
+                        <Card outline color='secondary' id='CardUtil' className="mt-2 mx-auto">
+                            
+                            <CardHeader>Metodo a Utilizar:</CardHeader>
+                            <CardBody>{buttonsMethods}</CardBody>            
+                        </Card>  
+                        <UncontrolledPopover placement="top" target='CardOpt'>
+                                <PopoverBody>Y aqui, el tipo de Optimizacion que deseas realizar, si deseas Maximizar tu funcion o Minimizarla</PopoverBody>
+                        </UncontrolledPopover> 
+                        <Card outline color='secondary' id='CardOpt' className="mt-2 mx-auto">
+                            
+                            <CardHeader>Tipo de Optimizacion:</CardHeader>
+                            <CardBody>{buttonsOptType}</CardBody>  
+                        </Card>
                     </Row>
                     <Row>
-                        <Card outline color='secondary' className="w-100 mt-3 mx-auto">
+                        
+                        <Card outline color='secondary' id='CardVariables' className="w-100 mt-3 mx-auto">
                             <CardHeader><CardTitle className="text-left" ><h4>Variables:</h4></CardTitle></CardHeader>       
                             <CardBody>
                                 {variablesARenderizar}
@@ -175,7 +189,8 @@ class Configuration extends React.Component{
                         </Card>
                     </Row>
                     <Row>
-                        <Card outline color='secondary' className="w-100 mt-3 mx-auto">
+                        
+                        <Card outline color='secondary' id='CardRestri' className="w-100 mt-3 mx-auto">
                             <CardHeader><CardTitle className="text-left" ><h4>Restricciones:</h4></CardTitle></CardHeader>       
                             <CardBody>
                                 {restriccionesARenderizar}
