@@ -15,6 +15,7 @@ class Configuration extends React.Component{
         let restriccionesDescriptionsMin = restricciones.filter(re => re.descripcion !=='')
         if (variablesDescriptionsMin.length > 1 &  restriccionesDescriptionsMin.length > 0 ) { 
             this.props.lastStep(1)
+            this.setState({faltaDescrip:''});
             return true
         }else {
 
