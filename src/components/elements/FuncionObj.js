@@ -9,8 +9,8 @@ const FuncionObj = props => {
     .map( (vari,index) => 
 
         <>
-            <UncontrolledTooltip key={'TTV'+index} target={'IF'+index}>
-            {'Debes ingresar el coeficiente de '+vari.descripcion}
+            <UncontrolledTooltip key={'TTV'+index} placement='auto' target={'IF'+index}>
+            {'Aqui debes ingresar el coeficiente de '+vari.descripcion}
             </UncontrolledTooltip>
             <Input key={'IF'+index}
                     id={'IF'+index}

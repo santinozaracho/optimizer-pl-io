@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button,InputGroupText,Card,CardBody,CardHeader,CardTitle ,InputGroup, Input,InputGroupAddon, ButtonGroup} from 'reactstrap';
+import {Button,InputGroupText,Card,CardBody,CardHeader,CardTitle ,InputGroup, Input,InputGroupAddon, ButtonGroup,UncontrolledTooltip} from 'reactstrap';
 
 const Restriccion = props => {
     let {coeficientes} = props.restriccion;
@@ -52,7 +52,10 @@ const Restriccion = props => {
     )
 
     return(
-        <Card key={'RRR'+props.restriccion.ri}>
+        <Card key={'CR'+props.restriccion.ri} id={'CR'+props.restriccion.ri}>
+            <UncontrolledTooltip key={'TTCR'+props.restriccion.ri} placement='auto' target={'CR'+props.restriccion.ri}>
+            {'Aqui debes ingresar los coeficiente de '+props.restriccion.descripcion}
+            </UncontrolledTooltip>
             <CardHeader className="p-0 m-0"><CardTitle>{'R'+props.restriccion.ri+':'+props.restriccion.descripcion}</CardTitle></CardHeader>
             <CardBody className="p-0 my-1 mx-auto">
                 <InputGroup key={'RT'+props.restriccion.ri}>
