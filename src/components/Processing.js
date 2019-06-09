@@ -89,7 +89,7 @@ class Processing extends React.Component{
             <h3>Cargamos los datos de nuestro Modelo:</h3>
             <Container>
                 <Row>
-                    <Card className="w-100 mt-3">
+                    <Card outline color='secondary' className="w-100 mt-3">
                             <CardHeader>
                                 <Row>
                                     <Col className="text-left"><CardTitle><h4>Referencias:</h4></CardTitle></Col>
@@ -111,12 +111,11 @@ class Processing extends React.Component{
                                     </ListGroup>
                                                                     
                                 </CardBody>
-                            </Collapse> 
-                            
+                            </Collapse>                       
                     </Card>
                 </Row>
                 <Row>
-                    <Card className="w-100 mt-3">
+                    <Card outline color='secondary' className="w-100 mt-3">
                         <CardHeader><CardTitle className="text-left"><h4>Funcion Objetivo:</h4></CardTitle></CardHeader>       
                         <CardBody className="mx-auto">
                             <FuncionObj variables={variables} handleCoefVar={this.handleCoefVar} objective={this.props.status.objective}/>
@@ -124,7 +123,7 @@ class Processing extends React.Component{
                     </Card>
                 </Row>
                 <Row>
-                    <Card className="w-100 mt-3">
+                    <Card outline color='secondary' className="w-100 mt-3">
                         <CardHeader><CardTitle className="text-left"><h4>Restricciones:</h4></CardTitle></CardHeader>       
                         <CardBody>
                             {restriccionesInput}

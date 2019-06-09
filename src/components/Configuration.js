@@ -153,21 +153,21 @@ class Configuration extends React.Component{
                             </ButtonGroup>)
         return(
             <>
-                <h3>Comenzamos Configurando nuestro Modelo:</h3>
+                <h3>Comenzamos configurando nuestro Modelo:</h3>
                 <Container>
                     <Row>         
-                            <Card className="mx-auto">
+                            <Card outline color='secondary' className="mt-2 mx-auto">
                                 <CardHeader>Metodo a Utilizar:</CardHeader>
                                 <CardBody>{buttonsMethods}</CardBody>            
                             </Card>  
 
-                            <Card className="mx-auto">
+                            <Card outline color='secondary' className="mt-2 mx-auto">
                                 <CardHeader>Tipo de Optimizacion:</CardHeader>
                                 <CardBody>{buttonsOptType}</CardBody>  
                             </Card>
                     </Row>
                     <Row>
-                        <Card className="w-100 mt-3">
+                        <Card outline color='secondary' className="w-100 mt-3 mx-auto">
                             <CardHeader><CardTitle className="text-left" ><h4>Variables:</h4></CardTitle></CardHeader>       
                             <CardBody>
                                 {variablesARenderizar}
@@ -175,7 +175,7 @@ class Configuration extends React.Component{
                         </Card>
                     </Row>
                     <Row>
-                        <Card className="w-100 mt-3">
+                        <Card outline color='secondary' className="w-100 mt-3 mx-auto">
                             <CardHeader><CardTitle className="text-left" ><h4>Restricciones:</h4></CardTitle></CardHeader>       
                             <CardBody>
                                 {restriccionesARenderizar}

@@ -69,10 +69,8 @@ class Presentation extends React.Component{
         let impresionDeResultados = variables
         .filter(vari => vari.descripcion !== '')
         .map( vari => 
-                    <Card key={'Card'+vari.xi}>
-                        <CardTitle>
-                            {'Variable: X'+vari.xi}
-                        </CardTitle>
+                    <Card key={'Card'+vari.xi} outline color='secondary' className="w-100 mt-3 mx-auto">
+                        <CardHeader><CardTitle>{'Variable: X'+vari.xi}</CardTitle></CardHeader>    
                         <CardBody>
                             <CardText>{
                                 result[vari.xi] ? 
@@ -84,7 +82,7 @@ class Presentation extends React.Component{
                     </Card>) 
         return(
             <> 
-                <Card>
+                <Card outline color='info' className="w-100 mt-3 mx-auto">
                     <CardHeader><CardTitle><h3>{'El resultado optimo es: '+result.result}</h3></CardTitle></CardHeader>
                     <CardBody>
                         {impresionDeResultados}
