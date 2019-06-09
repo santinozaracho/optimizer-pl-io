@@ -1,5 +1,5 @@
 import React from 'react';
-import {Container, Row, Card,CardBody,CardHeader,CardTitle,Alert} from 'reactstrap';
+import {Container, Row, Card,CardBody,CardHeader,CardTitle,Alert,Button,Col,Collapse,ListGroup,ListGroupItem,Badge} from 'reactstrap';
 import Restriccion from './elements/Restriccion';
 import FuncionObj from './elements/FuncionObj';
 
@@ -8,7 +8,7 @@ import FuncionObj from './elements/FuncionObj';
 class Processing extends React.Component{
     constructor (props){
         super(props);
-        this.state={faltaCoe:''};
+        this.state={faltaCoe:'',references:false};
 
     }
 
@@ -59,6 +59,13 @@ class Processing extends React.Component{
         this.props.handleRestricciones(restricciones);
     }
 
+    listDescriptionsVarItems = array => array.filter(item => item.descripcion !== '')
+        .map(item => <ListGroupItem key={'DLGIV'+item.xi} className="justify-content-between"><Badge>{'X'+item.xi}</Badge>{' '+item.descripcion}</ListGroupItem>)
+    
+    listDescriptionsResItems = array => array.filter(item => item.descripcion !== '')
+        .map(item => <ListGroupItem key={'DLGIR'+item.ri} className="justify-content-between"><Badge>{'R'+item.ri}</Badge>{' '+item.descripcion}</ListGroupItem>)
+    
+
 
     render() {
         //Obtenemos las propiedades del Super
@@ -83,10 +90,29 @@ class Processing extends React.Component{
             <Container>
                 <Row>
                     <Card className="w-100 mt-3">
-                            <CardHeader><CardTitle className="text-left"><h4>Referencia:</h4></CardTitle></CardHeader>       
-                            <CardBody>
-                                Aqui iran las Referencias
-                            </CardBody>
+                            <CardHeader>
+                                <Row>
+                                    <Col className="text-left"><CardTitle><h4>Referencias:</h4></CardTitle></Col>
+                                    <Col><Button outline size='sm'
+                                        onClick={() => this.setState({references:!this.state.references})} 
+                                        color={!this.state.references ? 'success':'danger'}>{!this.state.references ? 'Ver Referencias':'Ocultar Referencias'}</Button>
+                                    </Col>
+                                </Row>
+                            </CardHeader>
+                            <Collapse isOpen={this.state.references}>
+                                <CardBody>
+                                    <h5 className='text-left'>Variables:</h5>
+                                    <ListGroup>
+                                        {this.listDescriptionsVarItems(variables)}
+                                    </ListGroup>
+                                    <h5 className='text-left'>Restricciones:</h5>
+                                    <ListGroup>
+                                        {this.listDescriptionsResItems(restricciones)}
+                                    </ListGroup>
+                                                                    
+                                </CardBody>
+                            </Collapse> 
+                            
                     </Card>
                 </Row>
                 <Row>
