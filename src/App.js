@@ -37,7 +37,7 @@ const Index = () =>
 
 const App = () => {
   return (
-    <Router>
+    <Router basename={process.env.PUBLIC_URL}>
         <Route exact path="/" component={Index} />
         <Route path="/linealProg" component={LinealProgramacion} />
         <Route path="/noLinealProg/" component={NoLinealProgramacion} />
