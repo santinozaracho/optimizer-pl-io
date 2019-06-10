@@ -162,6 +162,7 @@ class Configuration extends React.Component{
             <>
                 <h3>Comenzamos configurando nuestro Modelo:</h3>
                 <Container>
+                    <Row><Button color='warning' outline className='float-rigth' onClick={this.props.loadExampleModel}>Cargar Modelo de Ejemplo</Button></Row>
                     <Row>     
                         <UncontrolledPopover placement="top" target='CardUtil'>
                                 <PopoverBody>Aqui debes seleccionar el metodo de Calculo y Visualizacion de los Resultados</PopoverBody>
