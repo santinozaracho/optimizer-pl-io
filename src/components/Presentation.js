@@ -74,7 +74,7 @@ class Presentation extends React.Component{
         console.log(model);
         
         //solver.js soluciona y nos devuelve 
-        let result = solver.Solve(model,true,true);
+        let result = solver.Solve(model,false,true);
         console.log(result);
         
         this.setState({result})
