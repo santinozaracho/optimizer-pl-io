@@ -37,6 +37,7 @@ class LinealProg extends React.Component{
     handleObjective = objective => {
         this.setState({objective})
     }
+    toggleInteger = () => this.setState({integer:!this.state.integer});
     //Esta funcion guarda el resultado (inutilizada por el momento)
     handleResult = result => {
         this.setState({result})
@@ -58,7 +59,7 @@ class LinealProg extends React.Component{
     loadExampleModel = () =>{
         let variables = [{xi:0, descripcion:'Pantalones (U/dia)',coeficiente:3},{xi:1, descripcion:'Camisas (U/Dia)',coeficiente:1}]
         let restricciones = [{ri:0,descripcion:'Mano de Obra (hs/Dia)',coeficientes:[2,1],eq:'<=',derecha:8},{ri:1,descripcion:'Tela (m2)',coeficientes:[3,1],eq:'<=',derecha:30}]
-        this.setState({variables,restricciones,objective:"max",integer:true})
+        this.setState({variables,restricciones,objective:"max"})
     }
   
     render () {
@@ -73,6 +74,7 @@ class LinealProg extends React.Component{
                 handleVariables:this.handleVariables,
                 handleRestricciones:this.handleRestricciones,
                 lastStep:this.lastStep,
+                toggleInteger:this.toggleInteger,
                 handleObjective:this.handleObjective
             }
         },
