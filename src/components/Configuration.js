@@ -1,5 +1,5 @@
 import React from 'react';
-import {ButtonGroup, Button, Container, Row, Card,CardBody,CardHeader,CardTitle,Alert,InputGroup,InputGroupAddon,InputGroupText, Input,UncontrolledTooltip,UncontrolledPopover,PopoverBody,PopoverHeader} from 'reactstrap';
+import {ButtonGroup, Button, Container, Row,Col, Card,CardBody,CardHeader,CardTitle,Alert,InputGroup,InputGroupAddon,InputGroupText, Input,UncontrolledTooltip,UncontrolledPopover,PopoverBody,PopoverHeader} from 'reactstrap';
 
 
 
@@ -7,6 +7,16 @@ class Configuration extends React.Component{
     constructor (props){
         super(props);
         this.state={faltaDescrip:''};
+    }
+
+    componentDidMount(){
+        this.handleNewsRes()
+    }
+    
+    componentDidUpdate(prevProps) {
+        if (prevProps!==this.props) {
+            this.handleNewsRes()
+        }
     }
     //Funcion que permite validar si se ingresaron todos los cambios correspondientes en la etapa
     isValidated(){
@@ -105,7 +115,7 @@ class Configuration extends React.Component{
                     <InputGroupAddon addonType="prepend">
                         <InputGroupText name="xi" id="variable">{"X"+index}</InputGroupText>
                     </InputGroupAddon>
-                    <Input     
+                    <Input  
                         name={index}
                         placeholder="Descripcion de la Variable"
                         aria-label="Descripcion"
@@ -130,56 +140,86 @@ class Configuration extends React.Component{
                             aria-describedby="restriccion"
                             onChange={this.handlerInputRes}
                             value={restriccion.descripcion}/>
-                    <UncontrolledTooltip trigger='focus hover click' placement="auto" target={'TTR'+index}>
+                    <UncontrolledTooltip trigger='hover' placement="auto" target={'TTR'+index}>
                         Aqui, debes ingresar el significado de la restriccion.
                     </UncontrolledTooltip>      
                 </InputGroup>);
         let buttonsMethods = (<ButtonGroup id='ButtUtil'> 
-                                <Button onClick={() => {this.props.handleMethod('graph');this.handleNewsVar('graph')}} 
+                                <Button outline onClick={() => {this.props.handleMethod('graph');this.handleNewsVar('graph')}} 
                                         active={this.props.status.method === 'graph'}
                                         color='primary'>
                                     GRAFICO
                                 </Button>
-                                <Button onClick={() => {this.props.handleMethod('simplex');this.handleNewsVar('simplex')}} 
+                                <Button outline onClick={() => {this.props.handleMethod('simplex');this.handleNewsVar('simplex')}} 
                                         active={this.props.status.method === 'simplex'}
                                         color='primary'>
                                     SIMPLEX
                                 </Button>
                             </ButtonGroup>)
         let buttonsOptType = (<ButtonGroup>
-                                <Button onClick={() => this.props.handleObjective('max')} 
+                                <Button outline 
+                                        onClick={() => this.props.handleObjective('max')} 
                                         active={this.props.status.objective === 'max'}
                                         color='primary'>
                                     Maximizacion
                                 </Button>
-                                <Button onClick={() => this.props.handleObjective('min')} 
+                                <Button outline 
+                                        onClick={() => this.props.handleObjective('min')} 
                                         active={this.props.status.objective === 'min'}
                                         color='primary'>
                                     Minimizacion
                                 </Button>
                             </ButtonGroup>)
-        return(
+       
+       return(
             <>
                 <h3>Comenzamos configurando nuestro Modelo:</h3>
                 <Container>
-                    <Row><Button color='warning' outline className='float-rigth' onClick={this.props.loadExampleModel}>Cargar Modelo de Ejemplo</Button></Row>
-                    <Row>     
-                        <UncontrolledPopover placement="top" target='CardUtil'>
-                                <PopoverBody>Aqui debes seleccionar el metodo de Calculo y Visualizacion de los Resultados</PopoverBody>
-                        </UncontrolledPopover>       
-                        <Card outline color='secondary' id='CardUtil' className="mt-2 mx-auto">
-                            
-                            <CardHeader>Metodo a Utilizar:</CardHeader>
-                            <CardBody>{buttonsMethods}</CardBody>            
-                        </Card>  
-                        <UncontrolledPopover placement="top" target='CardOpt'>
-                                <PopoverBody>Y aqui, el tipo de Optimizacion que deseas realizar, si deseas Maximizar tu funcion o Minimizarla</PopoverBody>
-                        </UncontrolledPopover> 
-                        <Card outline color='secondary' id='CardOpt' className="mt-2 mx-auto">
-                            
-                            <CardHeader>Tipo de Optimizacion:</CardHeader>
-                            <CardBody>{buttonsOptType}</CardBody>  
-                        </Card>
+                    <Row>
+                        <Col>
+                            <Card outline color='secondary' id='CardUtil' className="mt-2 mx-auto">
+                                <CardHeader>Programacion Entera:</CardHeader>
+                                <CardBody><Button outline color={this.props.status.integer ? 'success':'danger'}
+                                            onClick={() => this.props.toggleInteger()}>
+                                    {this.props.status.integer ? 'Activado':'Desactivado'}</Button>
+                                </CardBody>            
+                            </Card>
+                        </Col>
+                        <Col>
+                            <Card outline color='secondary' id='CardModel' className="mt-2 mx-auto">
+                                <CardHeader>Modelo de Ejemplo:</CardHeader>
+                                <CardBody><Button color='warning' 
+                                            outline 
+                                            onClick={this.props.loadExampleModel}>Cargar Modelo de Ejemplo</Button>
+                                </CardBody>            
+                            </Card>
+                        </Col>  
+                         
+                        
+                    </Row>
+                    <Row>
+                        <Col>
+                            <UncontrolledPopover placement="top" target='CardUtil'>
+                                    <PopoverBody>Aqui debes seleccionar el metodo de Calculo y Visualizacion de los Resultados</PopoverBody>
+                            </UncontrolledPopover>       
+                            <Card outline color='secondary' id='CardUtil' className="mt-3 mx-auto">
+                                
+                                <CardHeader>Metodo a Utilizar:</CardHeader>
+                                <CardBody>{buttonsMethods}</CardBody>            
+                            </Card>  
+                        </Col>     
+                       
+                        <Col>
+                            <UncontrolledPopover placement="top" target='CardOpt'>
+                                    <PopoverBody>Y aqui, el tipo de Optimizacion que deseas realizar, si deseas Maximizar tu funcion o Minimizarla</PopoverBody>
+                            </UncontrolledPopover> 
+                            <Card outline color='secondary' id='CardOpt' className="mt-3 mx-auto">
+                                
+                                <CardHeader>Tipo de Optimizacion:</CardHeader>
+                                <CardBody>{buttonsOptType}</CardBody>  
+                            </Card>
+                        </Col>
+                        
                     </Row>
                     <Row>
                         
