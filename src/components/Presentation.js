@@ -80,8 +80,18 @@ class Presentation extends React.Component{
         this.setState({result})
     }
 
-
-    tablaDeRecursos = (cantUsoVar,variable,restricciones) => {
+    //funcion que en base al uso de una variable, devuelve una tabla con los recursos utilizados
+    tablaDeRecursosFoot = (cantUsoVar,variableId) => {
+        let {restricciones} = this.props.status;
+        let tableBody = restricciones.filter(item => item.descripcion!== '')
+        //Realizamos calculos
+        .map( restri => 
+            <tr key={'TdeR'+variableId}><td>{'R'+restri.ri}</td><td>{cantUsoVar*restri.coeficientes[variableId]}</td>
+            <td>{restri.derecha-(cantUsoVar*restri.coeficientes[variableId])}</td></tr>)
+        return(<Table size='sm' responsive>
+            <thead><th>Recurso</th><th>Usado</th><th>Diferencia</th></thead>
+            <tbody>{tableBody}</tbody>
+        </Table>)
 
     }
 
@@ -101,12 +111,13 @@ class Presentation extends React.Component{
                                     'No se recomienda la produccion'}
                                     {' de '+vari.descripcion}</CardText>
                                 </Row>
-                                <Row></Row>
+                                <Row></Row> 
                     
                             </CardBody>
                             <CardFooter>
                                 <CardText>Tabla de Recursos:</CardText>
-                               
+                                {result.solutionSet[vari.xi] ? 
+                                this.tablaDeRecursosFoot(result.solutionSet[vari.xi],vari.xi):'Sin Consumo de Recursos'}
                             </CardFooter>
             
                         </Card>) 
