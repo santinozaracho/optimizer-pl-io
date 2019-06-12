@@ -1,5 +1,5 @@
 import React from 'react';
-import {ButtonGroup, Button, Container, Row,Col, Card,CardBody,CardHeader,CardTitle,Alert,InputGroup,InputGroupAddon,InputGroupText, Input,UncontrolledTooltip,UncontrolledPopover,PopoverBody,PopoverHeader} from 'reactstrap';
+import {ButtonGroup, Button, Container, Row,Col, Card,CardBody,CardHeader,CardTitle,Alert,InputGroup,InputGroupAddon,InputGroupText,Input,UncontrolledPopover,PopoverBody,PopoverHeader} from 'reactstrap';
 
 
 
@@ -122,9 +122,9 @@ class Configuration extends React.Component{
                         aria-describedby="variable"
                         onChange={this.handlerInputVar}
                         value={variable.descripcion}/>
-                    <UncontrolledTooltip trigger='focus hover click' placement="auto" target={'XTT'+index}>
-                        Aqui debes ingresar el significado de la Variable.
-                    </UncontrolledTooltip>
+                    <UncontrolledPopover trigger='focus hover' placement="auto" target={'XTT'+index}>
+                        <PopoverBody>Aqui debes ingresar el significado de la Variable.</PopoverBody>
+                    </UncontrolledPopover>
                 </InputGroup>);
         //Generamos los imputs para las restricciones
         let restriccionesARenderizar = restricciones
@@ -140,9 +140,9 @@ class Configuration extends React.Component{
                             aria-describedby="restriccion"
                             onChange={this.handlerInputRes}
                             value={restriccion.descripcion}/>
-                    <UncontrolledTooltip trigger='hover' placement="auto" target={'TTR'+index}>
-                        Aqui, debes ingresar el significado de la restriccion.
-                    </UncontrolledTooltip>      
+                    <UncontrolledPopover trigger='focus hover' placement="auto" target={'TTR'+index}>
+                       <PopoverBody>Aqui, debes ingresar el significado de la restriccion.</PopoverBody>
+                    </UncontrolledPopover>      
                 </InputGroup>);
         let buttonsMethods = (<ButtonGroup id='ButtUtil'> 
                                 <Button outline onClick={() => {this.props.handleMethod('graph');this.handleNewsVar('graph')}} 
@@ -161,13 +161,13 @@ class Configuration extends React.Component{
                                         onClick={() => this.props.handleObjective('max')} 
                                         active={this.props.status.objective === 'max'}
                                         color='primary'>
-                                    Maximizacion
+                                    Maximizar
                                 </Button>
                                 <Button outline 
                                         onClick={() => this.props.handleObjective('min')} 
                                         active={this.props.status.objective === 'min'}
                                         color='primary'>
-                                    Minimizacion
+                                    Minimizar
                                 </Button>
                             </ButtonGroup>)
        
@@ -190,7 +190,7 @@ class Configuration extends React.Component{
                                 <CardHeader>Modelo de Ejemplo:</CardHeader>
                                 <CardBody><Button color='warning' 
                                             outline 
-                                            onClick={this.props.loadExampleModel}>Cargar Modelo de Ejemplo</Button>
+                                            onClick={this.props.loadExampleModel}>Cargar</Button>
                                 </CardBody>            
                             </Card>
                         </Col>  
