@@ -1,5 +1,5 @@
 import React from 'react';
-import {Card,CardTitle,CardBody,CardText,CardHeader,Table,CardFooter,Row} from 'reactstrap';
+import {Card,CardTitle,CardBody,CardText,CardHeader,Table,CardFooter,Row,Col,Button,Collapse} from 'reactstrap';
 import solver from 'javascript-lp-solver';
 
 let convertAppToModelForSolverPrimal = datosApp => {
@@ -47,7 +47,7 @@ let convertAppToModelForSolverPrimal = datosApp => {
 class Presentation extends React.Component{
     constructor (props){
         super(props)
-        this.state={result:false,resultDual:false}
+        this.state={result:false,resultDual:false,details:false}
     }
 
     componentDidMount() {
@@ -98,29 +98,58 @@ class Presentation extends React.Component{
     render () {
         let {result} = this.state
         let {variables} = this.props.status;
-        let impresionDeResultados = <p>.</p>;
-        if (result.feasible) { impresionDeResultados = variables
-            .filter(vari => vari.descripcion !== '')
-            .map( vari => 
-                        <Card key={'Card'+vari.xi} outline color='secondary' className="w-100 mt-3 mx-auto">
-                            <CardHeader><CardTitle>{'Variable: X'+vari.xi}</CardTitle></CardHeader>    
-                            <CardBody>
-                                <Row><CardText>{
-                                    result.solutionSet[vari.xi] ? 
-                                    'Se recomienda producir '+result.solutionSet[vari.xi]+' unidades':
-                                    'No se recomienda la produccion'}
-                                    {' de '+vari.descripcion}</CardText>
-                                </Row>
-                                <Row></Row> 
-                    
-                            </CardBody>
-                            <CardFooter>
-                                <CardText>Tabla de Recursos:</CardText>
-                                {result.solutionSet[vari.xi] ? 
-                                this.tablaDeRecursosFoot(result.solutionSet[vari.xi],vari.xi):'Sin Consumo de Recursos'}
-                            </CardFooter>
-            
-                        </Card>) 
+        let resultVariablesCards = <p></p>;
+        let resultDetalleCard = <p></p>;
+        let resultAnalisisCard = <p></p>;
+        if (result.feasible) { 
+            resultVariablesCards = variables
+                .filter(vari => vari.descripcion !== '')
+                .map( vari => 
+                            <Card key={'Card'+vari.xi} outline color='secondary' className="w-100 mt-3 mx-auto">
+                                <CardHeader><CardTitle>{'Variable: X'+vari.xi}</CardTitle></CardHeader>    
+                                <CardBody>
+                                    <Row><CardText>{
+                                        result.solutionSet[vari.xi] ? 
+                                        'Se recomienda producir '+result.solutionSet[vari.xi]+' unidades':
+                                        'No se recomienda la produccion'}
+                                        {' de '+vari.descripcion}</CardText>
+                                    </Row>
+                                    <Row></Row> 
+                        
+                                </CardBody>
+                                <CardFooter>
+                                    <CardText>Tabla de Recursos:</CardText>
+                                    {result.solutionSet[vari.xi] ? 
+                                    this.tablaDeRecursosFoot(result.solutionSet[vari.xi],vari.xi):'Sin Consumo de Recursos'}
+                                </CardFooter>
+                
+                            </Card>)
+            resultAnalisisCard = 
+                            <Card outline color='secondary' className="w-100 mt-3 mx-auto">
+                                <CardHeader><CardTitle><h4>Tabla de Analisis</h4></CardTitle></CardHeader>
+                                <CardBody>
+                                    <Table>
+                                        <thead><th>Algo</th></thead>
+                                        <tbody><tr><td>eso de ese algo</td></tr></tbody>
+                                    </Table>
+                                </CardBody>
+                            </Card>
+            resultDetalleCard = <Card outline color='secondary' className="w-100 mt-3 mx-auto">
+                                    <CardHeader>
+                                        <Row>
+                                            <Col className="text-left"><CardTitle><h4>Detalle de Variables Y Recursos:</h4></CardTitle></Col>
+                                            <Col><Button outline size='sm'
+                                                onClick={() => this.setState({details:!this.state.details})} 
+                                                color={!this.state.details ? 'success':'danger'}>{!this.state.details ? 'Ver Detalles':'Ocultar Referencias'}</Button>
+                                            </Col>
+                                        </Row>
+                                   </CardHeader>
+                                    <Collapse isOpen={this.state.details}>
+                                        <CardBody>
+                                            {resultVariablesCards}
+                                        </CardBody>
+                                    </Collapse>
+                                </Card>
 
         }
     
@@ -130,7 +159,8 @@ class Presentation extends React.Component{
                 <Card outline color='info' className="w-100 mt-3 mx-auto">
                     <CardHeader><CardTitle><h3>{result.feasible ? 'El resultado optimo es: '+result.evaluation:'Solucion No Factible'}</h3></CardTitle></CardHeader>
                     <CardBody>
-                        {impresionDeResultados}
+                        {resultAnalisisCard}
+                        {resultDetalleCard}
                     </CardBody>
                 </Card>  
             </>
