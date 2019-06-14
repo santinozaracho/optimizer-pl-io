@@ -59,8 +59,7 @@ class LinealProg extends React.Component{
     loadExampleModel = () =>{
         let variables = [{xi:0, descripcion:'Pantalones (U/dia)',coeficiente:3},{xi:1, descripcion:'Camisas (U/Dia)',coeficiente:1}]
         let restricciones = [{ri:0,descripcion:'Mano de Obra (hs/Dia)',coeficientes:[2,1],eq:'<=',derecha:8},{ri:1,descripcion:'Tela (m2)',coeficientes:[3,1],eq:'<=',derecha:30}]
-        this.toggleInteger();
-        this.setState({variables,restricciones,objective:"max"})
+        this.setState({variables,restricciones,integer:true,method:'simplex',objective:"max"})
     }
   
     render () {
