@@ -16,6 +16,7 @@ class Configuration extends React.Component{
     componentDidUpdate(prevProps) {
         if (prevProps!==this.props) {
             this.handleNewsRes()
+            this.handleNewsVar(this.props.status.method)
         }
     }
     //Funcion que permite validar si se ingresaron todos los cambios correspondientes en la etapa
