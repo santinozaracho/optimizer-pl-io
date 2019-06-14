@@ -1,6 +1,7 @@
 import React from 'react';
 import {Card,CardTitle,CardBody,CardText,CardHeader,Table,CardFooter,Row,Col,Button,Collapse} from 'reactstrap';
 import solver from 'javascript-lp-solver';
+import ReferencesList from './elements/ReferencesList'
 
 let convertAppToModelForSolverPrimal = datosApp => {
     //Obtenemos los Datos de la aplicacion
@@ -47,14 +48,12 @@ let convertAppToModelForSolverPrimal = datosApp => {
 class Presentation extends React.Component{
     constructor (props){
         super(props)
-        this.state={result:false,resultDual:false,details:false}
+        this.state={result:false,details:false}
     }
 
     componentDidMount() {
         if (this.props.status.result){
             this.calculateResults()
-            console.log(this.state.result);
-            console.log(this.state.resultDual);
         }
 
     }
@@ -147,49 +146,46 @@ class Presentation extends React.Component{
         return tableResult
     }
 
+    cardsVariablesRender = (variables,result) => variables
+                                                    .filter(vari => vari.descripcion !== '')
+                                                    .map( vari => 
+                                                                <Card key={'C-V-'+vari.xi} outline color='secondary' className="w-100 mt-3 mx-auto">
+                                                                    <CardHeader><CardTitle>{'Variable: X'+vari.xi}</CardTitle></CardHeader>    
+                                                                    <CardBody>
+                                                                        <Row><CardText>{
+                                                                            result.solutionSet[vari.xi] ? 
+                                                                            'Se recomienda producir '+result.solutionSet[vari.xi]+' unidades':
+                                                                            'No se recomienda la produccion'}
+                                                                            {' de '+vari.descripcion}</CardText>
+                                                                        </Row>
+                                                                        <Row></Row> 
+                                                            
+                                                                    </CardBody>
+                                                                    <CardFooter>
+                                                                        <CardText>Tabla de Recursos:</CardText>
+                                                                        {result.solutionSet[vari.xi] ? 
+                                                                        this.tablaDeRecursosFoot(result.solutionSet[vari.xi],vari.xi):'Sin Consumo de Recursos'}
+                                                                    </CardFooter>
+
+                                                                </Card>)
+
 
     render () {
-
+        //Obtenemos el resultado almacenado
         let {result} = this.state
-        let {variables} = this.props.status;
-        let resultVariablesCards;
+        //Obtenemos las Variables desde las props
+        let {variables, restricciones} = this.props.status;
         let resultDetalleCard;
         let resultAnalisisCard;
         
         
         
         if (result.feasible) {
-           
-            let itemsTabAnalisis = this.mapperAnalisisTable(result);
-            // let itemsTabAnalisis = [];
-            // let slacksList = result._tableau.variablesPerIndex.filter( el => el.isSlack);
-            // console.log(slacksList);
-            
-
+            //Obtenemos  la informacion para la tabla de Analisis
+            let itemsTabAnalisis = this.mapperAnalisisTable(result);     
+            //Renderizamos el Tablero de analisis
             let elementosTabAnalisis = itemsTabAnalisis.map( (item, index) => <tr key={'T-A-'+index}><td>{item.name}</td><td>{item.item}</td><td>{item.value}</td></tr>);
-
-            resultVariablesCards = variables
-                .filter(vari => vari.descripcion !== '')
-                .map( vari => 
-                            <Card key={'Card'+vari.xi} outline color='secondary' className="w-100 mt-3 mx-auto">
-                                <CardHeader><CardTitle>{'Variable: X'+vari.xi}</CardTitle></CardHeader>    
-                                <CardBody>
-                                    <Row><CardText>{
-                                        result.solutionSet[vari.xi] ? 
-                                        'Se recomienda producir '+result.solutionSet[vari.xi]+' unidades':
-                                        'No se recomienda la produccion'}
-                                        {' de '+vari.descripcion}</CardText>
-                                    </Row>
-                                    <Row></Row> 
-                        
-                                </CardBody>
-                                <CardFooter>
-                                    <CardText>Tabla de Recursos:</CardText>
-                                    {result.solutionSet[vari.xi] ? 
-                                    this.tablaDeRecursosFoot(result.solutionSet[vari.xi],vari.xi):'Sin Consumo de Recursos'}
-                                </CardFooter>
-                
-                            </Card>)
+            // 
             resultAnalisisCard = 
                             <Card outline color='secondary' className="w-100 mt-3 mx-auto">
                                 <CardHeader><CardTitle><h4>Tablero de Analisis</h4></CardTitle></CardHeader>
@@ -202,24 +198,26 @@ class Presentation extends React.Component{
                                     </Table>
                                 </CardBody>
                             </Card>
+
             resultDetalleCard = <Card outline color='secondary' className="w-100 mt-3 mx-auto">
                                     <CardHeader>
                                         <Row>
                                             <Col className="text-left"><CardTitle><h5>Detalle de Variables Y Recursos:</h5></CardTitle></Col>
                                             <Col><Button outline size='sm'
                                                 onClick={() => this.setState({details:!this.state.details})} 
-                                                color={!this.state.details ? 'success':'danger'}>{!this.state.details ? 'Ver Detalles':'Ocultar Referencias'}</Button>
+                                                color={!this.state.details ? 'success':'danger'}>{!this.state.details ? 'Ver Detalles':'Ocultar Detalles'}</Button>
                                             </Col>
                                         </Row>
                                    </CardHeader>
                                     <Collapse isOpen={this.state.details}>
                                         <CardBody>
-                                            {resultVariablesCards}
+                                            {this.cardsVariablesRender(variables,result)}
                                         </CardBody>
                                     </Collapse>
                                 </Card>
-
+            
         }
+
     
        
        return(
@@ -228,10 +226,11 @@ class Presentation extends React.Component{
                     <CardHeader><CardTitle><h3>{result.feasible ? 'El resultado optimo de la funcion objetivo es: '+result.evaluation:'Solucion No Factible'}</h3></CardTitle></CardHeader>
                     { result.feasible &&
                     <CardBody>
-                        {resultAnalisisCard}
-                        {resultDetalleCard}
+                        <Row>{resultAnalisisCard}</Row>
+                        <Row><ReferencesList variables={variables} restricciones={restricciones}/></Row>
+                        <Row>{resultDetalleCard}</Row>
                     </CardBody>
-}
+                    }
                 </Card>  
             </>
 
