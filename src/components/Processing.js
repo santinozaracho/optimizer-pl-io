@@ -1,14 +1,15 @@
 import React from 'react';
-import {Container, Row, Card,CardBody,CardHeader,CardTitle,Alert,Button,Col,Collapse,ListGroup,ListGroupItem,Badge} from 'reactstrap';
+import {Container, Row, Card,CardBody,CardHeader,CardTitle,Alert} from 'reactstrap';
 import Restriccion from './elements/Restriccion';
 import FuncionObj from './elements/FuncionObj';
+import ReferencesList from './elements/ReferencesList'
 
 
 
 class Processing extends React.Component{
     constructor (props){
         super(props);
-        this.state={faltaCoe:'',references:false};
+        this.state={faltaCoe:''};
 
     }
 
@@ -59,14 +60,6 @@ class Processing extends React.Component{
         this.props.handleRestricciones(restricciones);
     }
 
-    listDescriptionsVarItems = array => array.filter(item => item.descripcion !== '')
-        .map(item => <ListGroupItem key={'DLGIV'+item.xi} className="justify-content-between"><Badge>{'X'+item.xi}</Badge>{' '+item.descripcion}</ListGroupItem>)
-    
-    listDescriptionsResItems = array => array.filter(item => item.descripcion !== '')
-        .map(item => <ListGroupItem key={'DLGIR'+item.ri} className="justify-content-between"><Badge>{'R'+item.ri}</Badge>{' '+item.descripcion}</ListGroupItem>)
-    
-
-
     render() {
         //Obtenemos las propiedades del Super
         let {variables} = this.props.status;        
@@ -89,30 +82,7 @@ class Processing extends React.Component{
             <h3>Cargamos los datos de nuestro Modelo:</h3>
             <Container>
                 <Row>
-                    <Card outline color='secondary' className="w-100 mt-3">
-                            <CardHeader>
-                                <Row>
-                                    <Col className="text-left"><CardTitle><h4>Referencias:</h4></CardTitle></Col>
-                                    <Col><Button outline size='sm'
-                                        onClick={() => this.setState({references:!this.state.references})} 
-                                        color={!this.state.references ? 'success':'danger'}>{!this.state.references ? 'Ver Referencias':'Ocultar Referencias'}</Button>
-                                    </Col>
-                                </Row>
-                            </CardHeader>
-                            <Collapse isOpen={this.state.references}>
-                                <CardBody>
-                                    <h5 className='text-left'>Variables:</h5>
-                                    <ListGroup>
-                                        {this.listDescriptionsVarItems(variables)}
-                                    </ListGroup>
-                                    <h5 className='text-left'>Restricciones:</h5>
-                                    <ListGroup>
-                                        {this.listDescriptionsResItems(restricciones)}
-                                    </ListGroup>
-                                                                    
-                                </CardBody>
-                            </Collapse>                       
-                    </Card>
+                    <ReferencesList variables={variables} restricciones={restricciones}/>
                 </Row>
                 <Row>
                     <Card outline color='secondary' className="w-100 mt-3">
