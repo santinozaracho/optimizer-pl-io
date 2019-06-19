@@ -88,7 +88,7 @@ class Presentation extends React.Component{
             let {variables, restricciones, method} = this.props.status;
             if (method === 'simplex') {
                 printResults = <SimplexPresentation variables={variables} restricciones={restricciones} result={result}/>
-            }else{printResults = <GraphicPresentation/>}      
+            }else{printResults = <GraphicPresentation variables={variables} restricciones={restricciones} graph={this.props.status.result} result={result}/>}      
         }
 
        return(

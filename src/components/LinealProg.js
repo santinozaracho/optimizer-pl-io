@@ -23,19 +23,19 @@ class LinealProg extends React.Component{
     }
     //Esta funcion maneja el cambio en las restricciones
     handleRestricciones = restricciones => {
-        this.setState({restricciones}); 
+        this.setState({restricciones,result:false}); 
     }
     //Esta funcion maneja el cambio en las variables
     handleVariables = variables => {
-        this.setState({variables}); 
+        this.setState({variables,result:false}); 
     }
     //Esta funcion maneja el cambio del metodo
     handleMethod = method => {
-        this.setState({method}); 
+        this.setState({method,result:false}); 
     }
     //Esta funcion maneja el cambio del objetivo de optimizacion
     handleObjective = objective => {
-        this.setState({objective})
+        this.setState({objective,result:false})
     }
     toggleInteger = () => this.setState({integer:!this.state.integer});
     //Esta funcion guarda el resultado (inutilizada por el momento)
