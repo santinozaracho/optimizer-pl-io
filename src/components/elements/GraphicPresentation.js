@@ -17,58 +17,102 @@ class GraphicPresentation extends React.Component{
 
     componentDidMount() {
         if ( this.props.graph ){
-            let {restricciones} = this.props
-            restricciones = restricciones.filter(elem => elem.descripcion!=='')
+            let {variables,restricciones,result} = this.props
+            restricciones = restricciones.filter(elem => elem.descripcion!=='');
+            variables = variables.filter(elem => elem.descripcion!=='');
             let referencias = this.getColorList(restricciones);
-            let lines = this.getLines(restricciones);
-            this.setState({referencias,lines});
+            let {lines,expresiones} = this.getLinesAndExpressions(restricciones);
+            console.log('Expresiones');
+            console.log(expresiones);
+            let points = this.getPoints(variables,restricciones,result.solutionSet,expresiones)
+            this.setState({referencias,lines,points});
+            
         }
     }
     componentDidUpdate(prevProps){
         if ( prevProps !== this.props ){
             if ( this.props.graph ){
-                let {restricciones} = this.props
-                restricciones = restricciones.filter(elem => elem.descripcion!=='')
+                let {variables,restricciones,result} = this.props
+                restricciones = restricciones.filter(elem => elem.descripcion!=='');
+                variables = variables.filter(elem => elem.descripcion!=='');
                 let referencias = this.getColorList(restricciones);
-                let lines = this.getLines(restricciones);
-                this.setState({referencias,lines});
+                let {lines,expresiones} = this.getLinesAndExpressions(restricciones);
+                console.log('Expresiones');
+                console.log(expresiones);
+                let points = this.getPoints(variables,restricciones,result.solutionSet,expresiones)
+                this.setState({referencias,lines,points});
             }
         }
     }
 
 
-    getLines = restricciones => 
-        restricciones.map( restri => {
+    getLinesAndExpressions = restricciones => {
+        let expresiones = [];
+        let lines = restricciones.map( restri => {
             if (restri.coeficientes[0] !== 0  && restri.coeficientes[1] !== 0) {
                 console.log(restri.coeficientes);
                 let x = new Expression('x').multiply(restri.coeficientes[0]);
                 let y = new Expression('y').multiply(restri.coeficientes[1]);
                 let expressRestri = new Expression().add(x).add(y);  
                 let restriEquation = new Equation(expressRestri,restri.derecha)
-                let xEqu = new Equation(restriEquation.solveFor('x'),0);
-                let yEqu = new Equation(restriEquation.solveFor('y'),0);
-                return([{x:0,y:xEqu.solveFor('y')},{x:yEqu.solveFor('x'),y:0}])
+                expresiones.push(restriEquation)
+                let yEqu = (new Equation(restriEquation.solveFor('x'),0)).solveFor('y');
+                let xEqu = (new Equation(restriEquation.solveFor('y'),0)).solveFor('x');
+                return([{x:0,y:yEqu},{x:xEqu,y:0}])
             }else {
                 if (restri.coeficientes[0] !== 0) {
                     let x = new Expression('x').multiply(restri.coeficientes[0]);
                     let restriEquation = new Equation(x,restri.derecha)
+                    expresiones.push(restriEquation)
                     let xEqu = restriEquation.solveFor('x');
                     return([{x:0,y:xEqu},{x:10,y:xEqu}])
                 }else {
                     let y = new Expression('y').multiply(restri.coeficientes[1]);
                     let restriEquation = new Equation(y,restri.derecha)
+                    expresiones.push(restriEquation)
                     let yEqu = restriEquation.solveFor('y')
                     return([{x:yEqu,y:0},{x:yEqu,y:10}])
                 } 
-            } })
+            }
+        })
+        return { lines,expresiones }
+    }
 
     
     getColorList = restricciones => restricciones.map( restri => Object({title: 'R'+restri.ri, color: randomColor()}))
 
-    getPoints = (variables, restricciones,) => {
-        let xPoint,yPoint,pointStr;
+    getPoints = (variables,restricciones,solutionSet,expresiones) => {        
+        let solSet = Object.entries(solutionSet)
+        let maybePoints = [];
+        
 
-        return {x:xPoint,y:yPoint,Punto:pointStr}
+        expresiones.forEach( (exp,index) => {
+            let expResultX = (new Equation(exp.solveFor('y'),0)).solveFor('x')
+            let expResultY = (new Equation(exp.solveFor('x'),0)).solveFor('y')
+            maybePoints.push({x:0,y:Number(expResultY),Punto:'P'+index});
+            maybePoints.push({x:Number(expResultX),y:0,Punto:'P'+index});
+            });
+        expresiones.forEach(exp1 => {
+            expresiones.forEach( exp2 => {
+                if( exp1 !== exp2) {
+                    let expResultX = (new Equation(exp1.solveFor('y'),exp2.solveFor('y'))).solveFor('x');
+                    let expResultY = (new Equation(exp1.solveFor('x'),exp2.solveFor('x'))).solveFor('y');
+                    if ( Number(expResultX) > -1  && Number(expResultY) > -1 ) {
+                        maybePoints.push({x:Number(expResultX),y:Number(expResultY),Point:'P'})
+                    }            
+                }
+            } )
+
+        });
+
+        if ( solSet[0] && solSet[1] ) {
+            maybePoints.push({x:Number(solSet[0][1]),y:Number(solSet[1][1]),Punto:'P1 - OPTIMO'})
+        }else if ( solSet[0] ) {            
+            maybePoints.push({x:Number(solSet[0][1]),y:0,Punto:'P1 - OPTIMO'})
+        }else {
+            maybePoints.push({x:0,y:Number(solSet[1][1]),Punto:'P1 - OPTIMO'})
+        }
+        return maybePoints
     }
        
     _forgetValue = () => {
@@ -87,7 +131,7 @@ class GraphicPresentation extends React.Component{
     
 
     render () {
-        let {referencias,lines,value} = this.state; 
+        let {referencias,lines,value,points} = this.state; 
 
         return( 
         <CardBody>
@@ -108,7 +152,7 @@ class GraphicPresentation extends React.Component{
                                 <MarkSeries
                                     onValueMouseOver={this._rememberValue}
                                     onValueMouseOut={this._forgetValue}
-                                    data={[{x:3,y:5,Punto:'A'},{x:2,y:3,Punto:'B'}]}
+                                    data={points}
                                     />
                                 {value && <Hint value={value} />} 
                         </XYPlot>
