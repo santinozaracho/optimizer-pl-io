@@ -12,7 +12,6 @@ const NoLinealProgramacion = () =>  <Container fluid className="App">
                                           <Col xs={12} md={6}  className="mx-auto my-5">
                                             <Jumbotron className=''>
                                               <Row><h2>La PL No-Lineal recien estara disponible en el 2020.</h2></Row>
-                                              <Row><GraphicPresentation></GraphicPresentation></Row>
                                               <Row><Link to={'/'}><Button className='fluid-left'>Volver</Button></Link></Row>
                                             </Jumbotron>       
                                           </Col>                    
