@@ -12,7 +12,7 @@ var randomColor = require('randomcolor');
 class GraphicPresentation extends React.Component{
     constructor (props){
         super(props)
-        this.state={optimMark:[],points:[],lines:[],referencias:[],value:null}
+        this.state={coefToValueZ:{x:0,y:0},optimMark:[],points:[],lines:[],referencias:[],value:null}
     }
 
     componentDidMount() {
@@ -20,11 +20,13 @@ class GraphicPresentation extends React.Component{
             let {variables,restricciones,result} = this.props
             restricciones = restricciones.filter(elem => elem.descripcion!=='');
             variables = variables.filter(elem => elem.descripcion!=='');
+            let coefToValueZ = {x:variables[0].coeficiente,y:variables[1].coeficiente}
             let referencias = this.getColorList(restricciones);
             let {lines,expresiones} = this.getLinesAndExpressions(restricciones);
-            let optimMark = this.getOptimPoint(result.solutionSet);
-            let points = this.getPoints(variables,restricciones,expresiones)
-            this.setState({referencias,lines,points,optimMark});
+            
+            let points = this.getPoints(variables,restricciones,expresiones,result.solutionSet)
+            let optimMark = [points.shift()];
+            this.setState({coefToValueZ,referencias,lines,points,optimMark});
             
         }
     }
@@ -36,8 +38,8 @@ class GraphicPresentation extends React.Component{
                 variables = variables.filter(elem => elem.descripcion!=='');
                 let referencias = this.getColorList(restricciones);
                 let {lines,expresiones} = this.getLinesAndExpressions(restricciones);
-                let optimMark = this.getOptimPoint(result.solutionSet);
-                let points = this.getPoints(variables,restricciones,expresiones)
+                let points = this.getPoints(variables,restricciones,expresiones,result.solutionSet)
+                let optimMark = [points.shift()];
                 this.setState({referencias,lines,points,optimMark});
             }
         }
@@ -84,35 +86,38 @@ class GraphicPresentation extends React.Component{
 
     getOptimPoint = (solSet) => {
          //Analizamos el Punto Optimo.
-         if ( solSet['0'] && solSet['1'] ) {return[{x:Number(solSet['0']),y:Number(solSet['1']),P:'0 - OPTIMO'}]
-        }else if ( solSet['0'] ) {return[{x:Number(solSet['0']),y:0,P:'0 - OPTIMO'}]
-        }else { return[{x:0,y:Number(solSet['1']),P:'0 - OPTIMO'}]}
+         if ( solSet['0'] && solSet['1'] ) {return{x:Number(solSet['0']).toFixed(2),y:Number(solSet['1']).toFixed(2),P:'0 - OPTIMO'}
+        }else if ( solSet['0'] ) {return{x:Number(solSet['0']).toFixed(2),y:0,P:'0 - OPTIMO'}
+        }else { return{x:0,y:Number(solSet['1']).toFixed(2),P:'0 - OPTIMO'}}
     }
 
-    getPoints = (variables,restricciones,expresiones) => {    
+    getPoints = (variables,restricciones,expresiones,solSet) => {    
         //Limpiamos nuestro array de Puntos
         let points = [];
-        
+        //El primer punto que obtenemos es el Optimo.
+        points.push(this.getOptimPoint(solSet))
+
         //Analizamos las Rectas que cortan en los Ejes.
         expresiones.forEach( exp => {
             
             if (exp.tipo === 2) {
                 //Obtenemos Cortes sobre el Eje-X
-                let expResultX = Number((new Equation(exp.restriEquation.solveFor('y'),0)).solveFor('x'));
+                let expResultX = Number((new Equation(exp.restriEquation.solveFor('y'),0)).solveFor('x')).toFixed(2);
                 //Obtenemos el Corte sobre el Eje-Y
-                let expResultY = Number((new Equation(exp.restriEquation.solveFor('x'),0)).solveFor('y'));
+                let expResultY = Number((new Equation(exp.restriEquation.solveFor('x'),0)).solveFor('y')).toFixed(2);
 
                 if ( expResultY > -1 ) {
                     //Generamos el Punto en Y
-                    let pointInAxY = {x:0,y:expResultY,P:points.length+1}
+                    let pointInAxY = {x:0,y:expResultY,P:points.length}
+                    
                     //Verificamos el punto en Y con las Restricciones.
-                    if (this.verifyPointInRestrictions(pointInAxY,restricciones)){points.push(pointInAxY)}
+                    if (this.verifyPoint(pointInAxY,restricciones,points)){points.push(pointInAxY)}
                 }
                 if ( expResultX > -1 ) {
                      //Generamos el Punto en X
-                    let pointInAxX = {x:expResultX,y:0,P:points.length+1}
+                    let pointInAxX = {x:expResultX,y:0,P:points.length}
                     //Verificamos el punto en X con las Restricciones.
-                    if (this.verifyPointInRestrictions(pointInAxX,restricciones)){points.push(pointInAxX)} 
+                    if (this.verifyPoint(pointInAxX,restricciones,points)){points.push(pointInAxX)} 
                 }  
             }
             // //Punto experminental 
@@ -129,15 +134,15 @@ class GraphicPresentation extends React.Component{
                     let expResultY = 0;
                     //Obtenemos  las expresiones y las igualamos para obtener el punto de corte.
                     if ( exp1.tipo === 2 && exp2.tipo === 2 ) {
-                        expResultX = Number((new Equation(exp1.restriEquation.solveFor('y'),exp2.restriEquation.solveFor('y'))).solveFor('x'));
-                        expResultY = Number((new Equation(exp1.restriEquation.solveFor('x'),exp2.restriEquation.solveFor('x'))).solveFor('y'));
+                        expResultX = Number((new Equation(exp1.restriEquation.solveFor('y'),exp2.restriEquation.solveFor('y'))).solveFor('x')).toFixed(3);
+                        expResultY = Number((new Equation(exp1.restriEquation.solveFor('x'),exp2.restriEquation.solveFor('x'))).solveFor('y')).toFixed(3);
                     }
                     //Verificamos que no se corten en algun otro cuadrante que no sea el de analisis.
                     if ( expResultX > -1  && expResultY > -1 ) {
                         //Generamos el Punto.
-                        let point = {x:expResultX,y:expResultY,P:points.length+1}
+                        let point = {x:expResultX,y:expResultY,P:points.length}
                         //Verificamos el Punto.
-                        if (this.verifyPointInRestrictions(point,restricciones)){points.push(point)}     
+                        if (this.verifyPoint(point,restricciones,points)){points.push(point)}     
                     }            
                 }
             } )
@@ -145,34 +150,48 @@ class GraphicPresentation extends React.Component{
         });
         return points
     }
-
-    getTableResult = () =>
-        <Table>
-            <thead><tr><th>Hola</th><th>Como</th></tr></thead>
-            <tbody><tr><td>Que</td><td>Onda</td></tr></tbody>
-        </Table>
-
-    verifyPointInPoints = () =>{}
-
-    verifyPointInRestrictions = (point,restricciones) => {
-        let verify = true;
-        restricciones.forEach( restri => {
-            let calIzq = restri.coeficientes[0]*point.x + restri.coeficientes[1]*point.y;
-         
-            if( restri.eq === '>=' ) {
-                console.log('P:'+point+' R:'+calIzq + '>='+ restri.derecha);
-                if (Math.round(calIzq) < restri.derecha) {verify=false}
-            }else {
-                console.log('P:('+point.x+','+point.y+') R:'+calIzq + '<='+ restri.derecha);
-                if (Math.round(calIzq) > restri.derecha) {verify=false}
-            } } )
-        return verify
-    }
-       
-    _forgetValue = () => this.setState({value: null})
-
     
-    _rememberValue = value => this.setState({ value })
+    //Funcion que se encarga de devolverme la tabla.
+    getTableResult = (points,coeficientes) =>
+        <Table>
+            <thead><tr><th>Punto</th><th>Resultado</th><th>X0</th><th>X1</th></tr></thead>
+            <tbody>{points.map(point => <tr key={'T-P-'+point.P}><td>P:{point.P}</td><td>{coeficientes.x*point.x + coeficientes.y*point.y}</td><td>{point.x}</td><td>{point.y}</td></tr>)}</tbody>
+        </Table>
+    
+    //Funcion que se encarga de realizar las verificaciones correspondientes para agregar un punto o no.
+    verifyPoint = (point, restricciones, points) => {
+        if ( !this.verifyPointInPoints(point,points) ) {
+            console.log('P:('+point.x +','+point.y+') NotIn' );
+            if ( this.verifyPointInRestrictions(point,restricciones) ) { return true } else return false
+        }else return false
+    }
+
+    //Funcion que se encarga de Verificar si un punto ya se encuentra en la lista de puntos (o ya fue verificado antes).
+    verifyPointInPoints = (point,points) => points.some( pointL =>{
+        console.log(points);
+        console.log(point);
+        console.log(pointL);
+        console.log((pointL.x === point.x && pointL.y === point.y));
+        
+        return(pointL.x === point.x && pointL.y === point.y)})
+    
+    //Funcion que se encarga de verificar que un punto cumpla con todas las Restricciones.
+    verifyPointInRestrictions = (point,restricciones) => restricciones.every( 
+            restri => {
+                let calIzq = (restri.coeficientes[0]*point.x + restri.coeficientes[1]*point.y).toFixed(3);
+                if( restri.eq === '>=' ) {
+                    console.log('P:('+point.x+','+point.y+')  R:'+calIzq + '>='+ restri.derecha);
+                    return ( calIzq >= restri.derecha ) 
+                }else {
+                    console.log('P:('+point.x+','+point.y+') R:'+calIzq + '<='+ restri.derecha);
+                    return ( calIzq <= restri.derecha )
+                } } )
+    
+    //Funcion que encarga de ocultar la descripcion del punto.  
+    hidePoint = () => this.setState({value: null})
+
+    //Funcion que se encarga de mostrar la descripcion del punto.
+    showPoint = value => this.setState({ value })
 
 
     mapperLinesSeries = (lines,referencias) => 
@@ -180,7 +199,7 @@ class GraphicPresentation extends React.Component{
     
 
     render () {
-        let {referencias,lines,value,points,optimMark} = this.state;
+        let {referencias,lines,value,points,optimMark,coefToValueZ} = this.state;
         return( 
         <CardBody>
             <Card>
@@ -199,15 +218,15 @@ class GraphicPresentation extends React.Component{
                                 {this.mapperLinesSeries(lines,referencias)}
                             
                                 <MarkSeries
-                                    onValueMouseOver={this._rememberValue}
-                                    onValueMouseOut={this._forgetValue}
+                                    onValueMouseOver={this.showPoint}
+                                    onValueMouseOut={this.hidePoint}
                                     color={'blue'}
                                     opacity={0.7}
                                     data={points}
                                     />
                                 <MarkSeries
-                                    onValueMouseOver={this._rememberValue}
-                                    onValueMouseOut={this._forgetValue}
+                                    onValueMouseOver={this.showPoint}
+                                    onValueMouseOut={this.hidePoint}
                                     color={'green'}
                                     data={optimMark}
                                     />
@@ -217,7 +236,7 @@ class GraphicPresentation extends React.Component{
                     <Row className='mx-auto'><DiscreteColorLegend orientation="horizontal" items={referencias}/></Row>
                 </CardBody>
                 <CardFooter>
-                    {this.getTableResult()}
+                    {this.getTableResult(optimMark.concat(points),coefToValueZ)}
                 </CardFooter>
             </Card>
         </CardBody> )
