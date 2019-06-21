@@ -48,6 +48,10 @@ class GraphicPresentation extends React.Component{
 
     getLinesAndExpressions = restricciones => {
         let expresiones = [];
+        let arrayDeRestriccionesConLosDosCoef =  restricciones.filter(el=> ( el.coeficientes[0] > 0 && el.coeficientes[1] > 0) )
+        let highestValueY = Math.max.apply(Math,arrayDeRestriccionesConLosDosCoef.map( restri => (restri.derecha / restri.coeficientes[1])));
+        let highestValueX = Math.max.apply(Math,arrayDeRestriccionesConLosDosCoef.map( restri => (restri.derecha / restri.coeficientes[0])));
+        
         let lines = restricciones.map( restri => {
             if (restri.coeficientes[0] !== 0  && restri.coeficientes[1] !== 0) {
                 console.log(restri.coeficientes);
@@ -67,14 +71,14 @@ class GraphicPresentation extends React.Component{
                     let restriEquation = new Equation(x,restri.derecha)
                     expresiones.push({restriEquation,tipo:0})
                     let xEqu = restriEquation.solveFor('x');
-                    if (xEqu > -1 ){return([{x:xEqu,y:0},{x:xEqu,y:10}])}
+                    if (xEqu > -1 ){return([{x:xEqu,y:0},{x:xEqu,y:highestValueY}])}
                 }else {
                     console.log(restri.coeficientes);
                     let y = new Expression('y').multiply(restri.coeficientes[1]);
                     let restriEquation = new Equation(y,restri.derecha)
                     expresiones.push({restriEquation,tipo:1})
                     let yEqu = restriEquation.solveFor('y')
-                    if ( yEqu > -1) {return([{x:0,y:yEqu},{x:10,y:yEqu}])}               
+                    if ( yEqu > -1) {return([{x:0,y:yEqu},{x:highestValueX,y:yEqu}])}               
                 } 
             }
         })
