@@ -32,10 +32,10 @@ class Configuration extends React.Component{
         }else {
 
             if (variablesDescriptionsMin < 2 ){
-                this.setState({faltaDescrip:'Dale no seas Guampa poneme como minimo 2 variables'});
+                this.setState({faltaDescrip:'Se necesita como minimo dos Variables.'});
                 
             }else{
-                this.setState({faltaDescrip:'Poneme Alguna Restri pue '});
+                this.setState({faltaDescrip:'Se necesita como minimo una Restriccion'});
             }
            
             return false
@@ -124,8 +124,8 @@ class Configuration extends React.Component{
                         aria-describedby="variable"
                         onChange={this.handlerInputVar}
                         value={variable.descripcion}/>
-                    <UncontrolledPopover trigger='focus hover' placement="auto" target={'XTT'+index}>
-                        <PopoverBody>Aqui debes ingresar el significado de la Variable.</PopoverBody>
+                    <UncontrolledPopover flip={false}trigger='focus hover' placement="auto" target={'XTT'+index}>
+                        <PopoverBody>Aqui, debes ingresar que representa la Variable en el Modelo.</PopoverBody>
                     </UncontrolledPopover>
                 </InputGroup>);
         //Generamos los imputs para las restricciones
@@ -142,8 +142,8 @@ class Configuration extends React.Component{
                             aria-describedby="restriccion"
                             onChange={this.handlerInputRes}
                             value={restriccion.descripcion}/>
-                    <UncontrolledPopover trigger='focus hover' placement="auto" target={'TTR'+index}>
-                       <PopoverBody>Aqui, debes ingresar el significado de la restriccion.</PopoverBody>
+                    <UncontrolledPopover flip={false}trigger='focus hover' placement="auto" target={'TTR'+index}>
+                       <PopoverBody>Aqui, debes ingresar que representa la Restriccion en el Modelo.</PopoverBody>
                     </UncontrolledPopover>      
                 </InputGroup>);
         let buttonsMethods = (<ButtonGroup id='ButtUtil'> 
@@ -179,15 +179,21 @@ class Configuration extends React.Component{
                 <Container>
                     <Row>
                         <Col>
-                            <Card outline color='secondary' id='CardUtil' className="mt-2 mx-auto">
+                            <UncontrolledPopover flip={false} trigger='hover' placement="top" target='CardInteger'>
+                                    <PopoverBody>Esta funcion Activa o Desactiva la Programacion Lineal Entera.</PopoverBody>
+                            </UncontrolledPopover>  
+                            <Card outline color='secondary' id='CardInteger' className="mt-2 mx-auto">
                                 <CardHeader>Programacion Entera:</CardHeader>
                                 <CardBody><Button outline color={this.props.status.integer ? 'success':'danger'}
                                             onClick={() => this.props.toggleInteger()}>
-                                    {this.props.status.integer ? 'Activado':'Desactivado'}</Button>
+                                    {this.props.status.integer ? 'Activo':'Inactivo'}</Button>
                                 </CardBody>            
                             </Card>
                         </Col>
                         <Col>
+                            <UncontrolledPopover flip={false} trigger='hover' placement="top" target='CardModel'>
+                                    <PopoverBody>Esta funcion cargara un modelo pre definido con el objeto de probar el funcionamiento de la aplicacion.</PopoverBody>
+                            </UncontrolledPopover>  
                             <Card outline color='secondary' id='CardModel' className="mt-2 mx-auto">
                                 <CardHeader>Modelo de Ejemplo:</CardHeader>
                                 <CardBody><Button color='warning' 
@@ -201,8 +207,8 @@ class Configuration extends React.Component{
                     </Row>
                     <Row>
                         <Col>
-                            <UncontrolledPopover placement="top" target='CardUtil'>
-                                    <PopoverBody>Aqui debes seleccionar el metodo de Calculo y Visualizacion de los Resultados</PopoverBody>
+                            <UncontrolledPopover flip={false} trigger='hover' placement="top" target='CardUtil'>
+                                    <PopoverBody>Aqui, debes seleccionar el metodo de Calculo y Visualizacion de los Resultados.</PopoverBody>
                             </UncontrolledPopover>       
                             <Card outline color='secondary' id='CardUtil' className="mt-3 mx-auto">
                                 
@@ -212,8 +218,8 @@ class Configuration extends React.Component{
                         </Col>     
                        
                         <Col>
-                            <UncontrolledPopover placement="top" target='CardOpt'>
-                                    <PopoverBody>Y aqui, el tipo de Optimizacion que deseas realizar, si deseas Maximizar tu funcion o Minimizarla</PopoverBody>
+                            <UncontrolledPopover flip={false} trigger='hover' placement="top" target='CardOpt'>
+                                    <PopoverBody>Y aqui, el tipo de Optimizacion que deseas realizar, si deseas Maximizar tu funcion o Minimizarla.</PopoverBody>
                             </UncontrolledPopover> 
                             <Card outline color='secondary' id='CardOpt' className="mt-3 mx-auto">
                                 
@@ -224,7 +230,10 @@ class Configuration extends React.Component{
                         
                     </Row>
                     <Row>
-                        
+                        <UncontrolledPopover flip={false} trigger='hover' placement="top" target='CardVariables'>
+                            <PopoverHeader>Variables</PopoverHeader>
+                            <PopoverBody>Aqui, debes ingresar las Variables que representaran al modelo, las mismas son de carga dinamica.</PopoverBody>
+                        </UncontrolledPopover>  
                         <Card outline color='secondary' id='CardVariables' className="w-100 mt-3 mx-auto">
                             <CardHeader><CardTitle className="text-left" ><h4>Variables:</h4></CardTitle></CardHeader>       
                             <CardBody>
@@ -233,7 +242,10 @@ class Configuration extends React.Component{
                         </Card>
                     </Row>
                     <Row>
-                        
+                        <UncontrolledPopover flip={false} trigger='hover' placement="top" target='CardRestri'>
+                            <PopoverHeader>Restricciones</PopoverHeader>
+                            <PopoverBody>Aqui, debes ingresar las Restricciones que representaran al modelo, como las Variables estas tambien son de carga dinamica.</PopoverBody>
+                        </UncontrolledPopover>  
                         <Card outline color='secondary' id='CardRestri' className="w-100 mt-3 mx-auto">
                             <CardHeader><CardTitle className="text-left" ><h4>Restricciones:</h4></CardTitle></CardHeader>       
                             <CardBody>
