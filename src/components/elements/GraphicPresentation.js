@@ -1,5 +1,5 @@
 import React from 'react';
-import {CardBody, Card, CardHeader,CardFooter,UncontrolledTooltip,Row} from 'reactstrap';
+import {CardBody, Card, CardHeader,CardFooter,Table,Row} from 'reactstrap';
 import {XYPlot, XAxis, YAxis, HorizontalGridLines,LineSeries, AreaSeries, VerticalGridLines,MarkSeries,DiscreteColorLegend,Hint} from 'react-vis';
 import {Expression, Equation} from 'algebra.js';
 var randomColor = require('randomcolor');
@@ -12,7 +12,7 @@ var randomColor = require('randomcolor');
 class GraphicPresentation extends React.Component{
     constructor (props){
         super(props)
-        this.state={points:[],lines:[],referencias:[],value:null}
+        this.state={optimMark:[],points:[],lines:[],referencias:[],value:null}
     }
 
     componentDidMount() {
@@ -22,10 +22,9 @@ class GraphicPresentation extends React.Component{
             variables = variables.filter(elem => elem.descripcion!=='');
             let referencias = this.getColorList(restricciones);
             let {lines,expresiones} = this.getLinesAndExpressions(restricciones);
-            console.log('Expresiones');
-            console.log(expresiones);
-            let points = this.getPoints(variables,restricciones,result.solutionSet,expresiones)
-            this.setState({referencias,lines,points});
+            let optimMark = this.getOptimPoint(result.solutionSet);
+            let points = this.getPoints(variables,restricciones,expresiones)
+            this.setState({referencias,lines,points,optimMark});
             
         }
     }
@@ -37,10 +36,9 @@ class GraphicPresentation extends React.Component{
                 variables = variables.filter(elem => elem.descripcion!=='');
                 let referencias = this.getColorList(restricciones);
                 let {lines,expresiones} = this.getLinesAndExpressions(restricciones);
-                console.log('Expresiones');
-                console.log(expresiones);
-                let points = this.getPoints(variables,restricciones,result.solutionSet,expresiones)
-                this.setState({referencias,lines,points});
+                let optimMark = this.getOptimPoint(result.solutionSet);
+                let points = this.getPoints(variables,restricciones,expresiones)
+                this.setState({referencias,lines,points,optimMark});
             }
         }
     }
@@ -82,13 +80,16 @@ class GraphicPresentation extends React.Component{
     }
 
     
-    getColorList = restricciones => restricciones.map( restri => Object({title: 'R'+restri.ri+' T:'+restri.eq.slice(0,-1), color: randomColor()}))
+    getColorList = restricciones => restricciones.map( restri => Object({title: 'R'+restri.ri+' Tipo:'+restri.eq, color: randomColor()}))
 
-    getPoints = (variables,restricciones,solutionSet,expresiones) => {  
-        //Preparamos el Punto Optimo      
-        let solSet = solutionSet
-        console.log(solSet);
-        
+    getOptimPoint = (solSet) => {
+         //Analizamos el Punto Optimo.
+         if ( solSet['0'] && solSet['1'] ) {return[{x:Number(solSet['0']),y:Number(solSet['1']),P:'0 - OPTIMO'}]
+        }else if ( solSet['0'] ) {return[{x:Number(solSet['0']),y:0,P:'0 - OPTIMO'}]
+        }else { return[{x:0,y:Number(solSet['1']),P:'0 - OPTIMO'}]}
+    }
+
+    getPoints = (variables,restricciones,expresiones) => {    
         //Limpiamos nuestro array de Puntos
         let points = [];
         
@@ -142,17 +143,14 @@ class GraphicPresentation extends React.Component{
             } )
 
         });
-
-        //Analizamos el Punto Optimo.
-        if ( solSet['0'] && solSet['1'] ) {
-            points.push({x:Number(solSet['0']),y:Number(solSet['1']),P:'0 - OPTIMO'})
-        }else if ( solSet[0] ) {
-            points.push({x:Number(solSet['0']),y:0,P:'0 - OPTIMO'})
-        }else {
-            points.push({x:0,y:Number(solSet['1']),P:'0 - OPTIMO'})
-        }
         return points
     }
+
+    getTableResult = () =>
+        <Table>
+            <thead><tr><th>Hola</th><th>Como</th></tr></thead>
+            <tbody><tr><td>Que</td><td>Onda</td></tr></tbody>
+        </Table>
 
     verifyPointInPoints = () =>{}
 
@@ -163,10 +161,10 @@ class GraphicPresentation extends React.Component{
          
             if( restri.eq === '>=' ) {
                 console.log('P:'+point+' R:'+calIzq + '>='+ restri.derecha);
-                if (calIzq < restri.derecha) {verify=false}
+                if (Math.round(calIzq) < restri.derecha) {verify=false}
             }else {
                 console.log('P:('+point.x+','+point.y+') R:'+calIzq + '<='+ restri.derecha);
-                if (calIzq > restri.derecha) {verify=false}
+                if (Math.round(calIzq) > restri.derecha) {verify=false}
             } } )
         return verify
     }
@@ -182,8 +180,7 @@ class GraphicPresentation extends React.Component{
     
 
     render () {
-        let {referencias,lines,value,points} = this.state; 
-
+        let {referencias,lines,value,points,optimMark} = this.state;
         return( 
         <CardBody>
             <Card>
@@ -204,7 +201,15 @@ class GraphicPresentation extends React.Component{
                                 <MarkSeries
                                     onValueMouseOver={this._rememberValue}
                                     onValueMouseOut={this._forgetValue}
+                                    color={'blue'}
+                                    opacity={0.7}
                                     data={points}
+                                    />
+                                <MarkSeries
+                                    onValueMouseOver={this._rememberValue}
+                                    onValueMouseOut={this._forgetValue}
+                                    color={'green'}
+                                    data={optimMark}
                                     />
                                 {value && <Hint value={value} />} 
                         </XYPlot>
@@ -212,7 +217,7 @@ class GraphicPresentation extends React.Component{
                     <Row className='mx-auto'><DiscreteColorLegend orientation="horizontal" items={referencias}/></Row>
                 </CardBody>
                 <CardFooter>
-                    Aca va la Tabla
+                    {this.getTableResult()}
                 </CardFooter>
             </Card>
         </CardBody> )
