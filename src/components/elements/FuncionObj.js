@@ -7,8 +7,7 @@ const FuncionObj = props => {
     let variablesToFunction = variables
     .filter(vari => vari.descripcion !== '')
     .map( (vari,index) => 
-
-        <div key={'divIF'+index}>
+        <React.Fragment key={'divIF'+index}>
             <UncontrolledTooltip key={'TTV'+index} placement='auto' target={'IF'+index}>
             {'Aqui debes ingresar el coeficiente de '+vari.descripcion}
             </UncontrolledTooltip>
@@ -27,7 +26,7 @@ const FuncionObj = props => {
                 <InputGroupText key={'IFD'+index}>{"X"+vari.xi}</InputGroupText>
             </InputGroupAddon>
             {index < variables.filter(vari => vari.descripcion !== '').length-1 && <InputGroupText key={'+IF'+index}>+</InputGroupText>}
-        </div>) 
+        </React.Fragment>) 
 
     return(
             <InputGroup key={'INPUTFUNCIONAL'}>

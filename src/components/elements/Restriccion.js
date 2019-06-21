@@ -34,7 +34,7 @@ const Restriccion = props => {
                                 </ButtonGroup>);
     let inputsRestriccions = coeficientes
     .map((coeficiente,indx) => 
-        <div key={'divCi'+indx}>
+        <React.Fragment key={'divCi'+indx}>
             <Input key={'Ci'+props.restriccion.ri+'r'+indx}
                 type="number"
                 name={indx}
@@ -47,7 +47,7 @@ const Restriccion = props => {
                 <InputGroupText key={'r'+props.restriccion.ri+'r'+indx}>{'X'+indx}</InputGroupText>
             </InputGroupAddon>
             {indx < coeficientes.length-1 && <InputGroupText key={'+'+props.restriccion.ri+'r'+indx}>+</InputGroupText>}
-        </div>
+        </React.Fragment>
             
     )
 
