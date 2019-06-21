@@ -53,7 +53,7 @@ const Restriccion = props => {
 
     return(
         <Card key={'CR'+props.restriccion.ri} id={'CR'+props.restriccion.ri}>
-            <UncontrolledTooltip key={'TTCR'+props.restriccion.ri} placement='auto' target={'CR'+props.restriccion.ri}>
+            <UncontrolledTooltip flip={false} key={'TTCR'+props.restriccion.ri} placement='auto' target={'CR'+props.restriccion.ri}>
             {'Aqui debes ingresar los coeficiente de '+props.restriccion.descripcion}
             </UncontrolledTooltip>
             <CardHeader className="p-0 m-0"><CardTitle>{'R'+props.restriccion.ri+':'+props.restriccion.descripcion}</CardTitle></CardHeader>

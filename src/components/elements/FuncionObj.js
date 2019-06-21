@@ -8,7 +8,7 @@ const FuncionObj = props => {
     .filter(vari => vari.descripcion !== '')
     .map( (vari,index) => 
         <React.Fragment key={'divIF'+index}>
-            <UncontrolledTooltip key={'TTV'+index} placement='auto' target={'IF'+index}>
+            <UncontrolledTooltip flip={false} key={'TTV'+index} placement='auto' target={'IF'+index}>
             {'Aqui debes ingresar el coeficiente de '+vari.descripcion}
             </UncontrolledTooltip>
             <Input key={'IF'+index}
