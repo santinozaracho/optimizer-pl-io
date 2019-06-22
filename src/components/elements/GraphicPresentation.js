@@ -62,7 +62,15 @@ class GraphicPresentation extends React.Component{
                 expresiones.push({restriEquation,tipo:2})
                 let yEqu = (new Equation(restriEquation.solveFor('x'),0)).solveFor('y');
                 let xEqu = (new Equation(restriEquation.solveFor('y'),0)).solveFor('x');
-                if (xEqu > -1 && yEqu > -1) {return([{x:0,y:yEqu},{x:xEqu,y:0}])}
+                if (xEqu > -1 && yEqu > -1) {
+                    return([{x:0,y:yEqu},{x:xEqu,y:0}])
+                }else{
+                    if(yEqu > -1){
+                        return([{x:0,y:yEqu},{x:Math.abs(xEqu),y:yEqu+(Math.abs(xEqu)*yEqu)}])
+                    }else{
+                        return([{x:xEqu,y:0},{x:xEqu+(Math.abs(yEqu)*xEqu),y:(Math.abs(yEqu))}])
+                    }
+                }
             }else {
                 if (restri.coeficientes[0] !== 0) {                  
                     let x = new Expression('x').multiply(restri.coeficientes[0]);
@@ -117,16 +125,20 @@ class GraphicPresentation extends React.Component{
                         return ( calIzq <= restri.derecha )} 
                 })
         // Funcion que devuelve un punto verificado y que corta en un Eje.
-        const getPointAxFromExpC = ( exp ) => {       
+        const getPointAxFromExpCenX = ( exp ) => {       
             //Obtenemos el Corte sobre el Eje-Y
-            let expResultY = Number((new Equation(exp.solveFor('x'),0)).solveFor('y')).toFixed(4);
             let expResultX = Number((new Equation(exp.solveFor('y'),0)).solveFor('x')).toFixed(4);
             if ( expResultX > -1 ) {
                 //Generamos el Punto en X
                 let pointInAxX = {x:expResultX,y:0,P:points.length}
                 //Verificamos el punto en X con las Restricciones.
                 if (verifyPoint(pointInAxX,restricciones,points)){return pointInAxX} 
-            } 
+            }
+        };
+        // Funcion que devuelve un punto verificado y que corta en un Eje.
+        const getPointAxFromExpCenY = ( exp ) => {       
+            //Obtenemos el Corte sobre el Eje-Y
+            let expResultY = Number((new Equation(exp.solveFor('x'),0)).solveFor('y')).toFixed(4);
             if ( expResultY > -1 ) {
                 //Generamos el Punto en Y
                 let pointInAxY = {x:0,y:expResultY,P:points.length}
@@ -137,7 +149,6 @@ class GraphicPresentation extends React.Component{
         const getPointAxFromExpY = ( expY ) => {
             //Obtenemos el Corte sobre el Eje-Y
             let expResultY = Number(expY.solveFor('y')).toFixed(4);
-
             if ( expResultY > -1 ) {
                 //Generamos el Punto en Y
                 let pointInAxY = {x:0,y:expResultY,P:points.length}
@@ -149,7 +160,6 @@ class GraphicPresentation extends React.Component{
         const getPointAxFromExpX = (expX) => {
             //Obtenemos Cortes sobre el Eje-X
             let expResultX = Number(expX.solveFor('x')).toFixed(4);
-
             if ( expResultX > -1 ) {
                 //Generamos el Punto en X
                 let pointInAxX = {x:expResultX,y:0,P:points.length}
@@ -236,10 +246,10 @@ class GraphicPresentation extends React.Component{
         expresiones.forEach( exp => {
             if (exp.tipo === 2) {
                 //Si es Completa Corta en los dos Ejes
-                let point = getPointAxFromExpC(exp.restriEquation);
-                if (point) { points.push(point) }
-
-
+                let pointX = getPointAxFromExpCenX(exp.restriEquation);
+                if (pointX) { points.push(pointX) }
+                let pointY = getPointAxFromExpCenY(exp.restriEquation)
+                if (pointY) { points.push(pointY) }
             }else if(exp.tipo === 0){
                 //Solo Corta en X
                 let point = getPointAxFromExpX(exp.restriEquation);
