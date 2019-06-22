@@ -14,16 +14,21 @@ class Processing extends React.Component{
     }
 
     isValidated() {
-        //Verificando si los coeficientes de las variables no son nulos
+        //Verificando si los coeficientes de las variables y las restricciones no son nulos
         let verifQty = this.props.status.variables
         .filter(va => va.descripcion !== '')
         .every( va => va.coeficiente !== '')
-        if (verifQty) {
+        let veriResQty = this.props.status.restricciones
+        .filter(re => re.descripcion !== '')
+        .every(re=> (re.coeficientes.every(co=>co !== '') && re.derecha !== '') )  
+        if (verifQty && veriResQty) {
             this.props.lastStep(2);
             this.setState({faltaCoe:''})
             return true
         }else{
-            this.setState({faltaCoe:'Rellename pue todos los Coeficientes no seas Guampa'})
+            let faltaCoe;
+            faltaCoe = veriResQty ? 'Falta algun coeficiente del Funcional': 'Falta algun coeficiente en las Restricciones';
+            this.setState({faltaCoe})
             return false
         }
 
