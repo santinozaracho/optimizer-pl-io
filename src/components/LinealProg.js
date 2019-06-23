@@ -59,8 +59,8 @@ class LinealProg extends React.Component {
       { xi: 1, descripcion: "Camisas (u/día)", coeficiente: 1 }
     ];
     let restricciones = [
-      { ri: 0, descripcion: "Mano de obra (hs/día)", coeficientes: [2, 1], eq: "<=", derecha: 8 },
-      { ri: 1, descripcion: "Tela (m2)", coeficientes: [3, 1], eq: "<=", derecha: 30 }
+      { ri: 0, descripcion: "Mano de obra (hs/día)", coeficientes: [1, 1], eq: "<=", derecha: 8 },
+      { ri: 1, descripcion: "Minimo de Produccion (u/día)", coeficientes: [1, 6], eq: ">=", derecha: 14 }
     ];
     this.setState({ variables, restricciones, integer: false, method: "graph", objective: "max" });
   };
