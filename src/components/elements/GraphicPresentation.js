@@ -83,7 +83,7 @@ class GraphicPresentation extends React.Component{
                     //Si es Pendiente positiva solo corta en +x o en +y
                     if(yEqu >= 0){
                         //Si corta en +y , entonces calculamos el punto para el grafico en +x
-                        let relation = yEqu/Math.abs(xEqu)
+                        let relation = Math.abs(yEqu/xEqu)
                         let valY = yEqu+highestValueX*relation
                         //Si el valor calculado para Y es menor al maximo, lo llevamos hasta alli y actualizamos el Xmax
                         if (valY < highestValueY){
@@ -96,20 +96,22 @@ class GraphicPresentation extends React.Component{
                         }
                         return([{x:0,y:yEqu},{x:highestValueX,y:valY}])
                     }else{
-                        //Si corta en +x , entonces calculamos el punto para el grafico en +y
-                        let relation = xEqu/Math.abs(yEqu)
-                        let valX = xEqu+highestValueY*relation
-                        //Si el valor calculado para Y es menor al maximo, lo llevamos hasta alli y actualizamos el YMax
-                        if (valX < highestValueX){
-                            valX = highestValueX
-                            highestValueY = (highestValueX-xEqu)/relation
-                            console.log('NewYMAX: '+highestValueY);
-                        }else{
-                            highestValueX = valX
-                            console.log('NewXMAX: '+highestValueX);
+                        if (xEqu >= 0) {
+                            //Si corta en +x , entonces calculamos el punto para el grafico en +y
+                            let relation = Math.abs(xEqu/yEqu)
+                            let valX = xEqu+highestValueY*relation
+                            //Si el valor calculado para Y es menor al maximo, lo llevamos hasta alli y actualizamos el YMax
+                            if (valX < highestValueX){
+                                valX = highestValueX
+                                highestValueY = (highestValueX-xEqu)/relation
+                                console.log('NewYMAX: '+highestValueY);
+                            }else{
+                                highestValueX = valX
+                                console.log('NewXMAX: '+highestValueX);
+                            }
+                            console.log(xEqu+' '+yEqu);
+                            return([{x:xEqu,y:0},{x:valX,y:highestValueY}])
                         }
-                        console.log(xEqu+' '+yEqu);
-                        return([{x:xEqu,y:0},{x:valX,y:highestValueY}])
                     }
                 }
             }else {
@@ -294,25 +296,30 @@ class GraphicPresentation extends React.Component{
         };
         //Funcion que devuelve Un punto de Dos Expresiones
         const getPointFromTwoExp = (exp1,exp2) => {
-            //Verificamos los Tipos
-            if ( exp1.tipo === 2 && exp2.tipo === 2 ) {
-                //Caso de que son dos rectas Completas
-                return getPointFromTwoExpC(exp1,exp2)  
-            }else if( exp1.tipo === 2){
-                //La primera es Recta completa y la otra o solo de X o solo de Y
-                if( exp2.tipo === 0) { return getPointFromExpCExpX(exp1.restriEquation,exp2.restriEquation) 
-                }else return getPointFromExpCExpY(exp1.restriEquation,exp2.restriEquation)
-            }else if( exp2.tipo === 2 ){
-                //La seguna es la Recta completa entonces la otra es o solo de X o solo de Y
-                if( exp1.tipo === 0) { return getPointFromExpCExpX(exp2.restriEquation,exp1.restriEquation)
-                }else return getPointFromExpCExpY(exp2.restriEquation,exp1.restriEquation)
-            }else if (exp1.tipo === 0){
-                //Si la primera es una recta Solo de X y la otra puede ser de Y
-                if( exp2.tipo === 1) { return getPointFromExpXExpY(exp1.restriEquation,exp2.restriEquation) }
-            }else{
-                //Si la Primera es una recta solo de Y y la otra puede ser de X
-                if( exp2.tipo === 0) { return getPointFromExpXExpY(exp2.restriEquation,exp1.restriEquation) }
+            try {
+                //Verificamos los Tipos
+                if ( exp1.tipo === 2 && exp2.tipo === 2 ) {
+                    //Caso de que son dos rectas Completas
+                    return getPointFromTwoExpC(exp1,exp2)  
+                }else if( exp1.tipo === 2){
+                    //La primera es Recta completa y la otra o solo de X o solo de Y
+                    if( exp2.tipo === 0) { return getPointFromExpCExpX(exp1.restriEquation,exp2.restriEquation) 
+                    }else return getPointFromExpCExpY(exp1.restriEquation,exp2.restriEquation)
+                }else if( exp2.tipo === 2 ){
+                    //La seguna es la Recta completa entonces la otra es o solo de X o solo de Y
+                    if( exp1.tipo === 0) { return getPointFromExpCExpX(exp2.restriEquation,exp1.restriEquation)
+                    }else return getPointFromExpCExpY(exp2.restriEquation,exp1.restriEquation)
+                }else if (exp1.tipo === 0){
+                    //Si la primera es una recta Solo de X y la otra puede ser de Y
+                    if( exp2.tipo === 1) { return getPointFromExpXExpY(exp1.restriEquation,exp2.restriEquation) }
+                }else{
+                    //Si la Primera es una recta solo de Y y la otra puede ser de X
+                    if( exp2.tipo === 0) { return getPointFromExpXExpY(exp2.restriEquation,exp1.restriEquation) }
+                }  
+            } catch (error) {
+                console.log(error);     
             }
+            
         };
         
         //Limpiamos nuestro array de Puntos
