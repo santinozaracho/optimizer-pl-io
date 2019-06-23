@@ -82,21 +82,23 @@ class Presentation extends React.Component {
     let { result } = this.state;
     let printResults;
     if (result.feasible) {
-      //Obtenemos las Variables desde las props
-      let { variables, restricciones, method } = this.props.status;
-      if (method === "simplex") {
-        printResults = (
-          <SimplexPresentation variables={variables} restricciones={restricciones} result={result} />
-        );
-      } else {
-        printResults = (
-          <GraphicPresentation
-            variables={variables}
-            restricciones={restricciones}
-            graph={this.props.status.result}
-            result={result}
-          />
-        );
+      if (result.bounded) {
+        //Obtenemos las Variables desde las props
+        let { variables, restricciones, method } = this.props.status;
+        if (method === "simplex") {
+          printResults = (
+            <SimplexPresentation variables={variables} restricciones={restricciones} result={result} />
+          );
+        } else {
+          printResults = (
+            <GraphicPresentation
+              variables={variables}
+              restricciones={restricciones}
+              graph={this.props.status.result}
+              result={result}
+            />
+          );
+        }
       }
     }
 
@@ -107,8 +109,9 @@ class Presentation extends React.Component {
             <CardTitle>
               <h3>
                 {result.feasible
-                  ? "El resultado óptimo de la función objetivo es: " + result.evaluation
-                  : "Solución no factible"}
+                  ? result.bounded ? "El resultado óptimo de la función objetivo es: " + result.evaluation
+                    : "Solucion no Acotada"
+                  : "Solución no Factible" }
               </h3>
             </CardTitle>
           </CardHeader>
