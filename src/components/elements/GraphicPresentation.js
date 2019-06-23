@@ -128,12 +128,12 @@ class GraphicPresentation extends React.Component{
     
     getColorList = restricciones => restricciones.map( restri => Object({title: 'R'+restri.ri+' Tipo:'+restri.eq, color: randomColor()}))
 
-    getOptimPoint = (solSet) => {
+    getOptimPoint = solSet => {
         console.log('Generating Optim Point');
         //Analizamos el Punto Optimo.
         if ( solSet['0'] && solSet['1'] ) {return{x:Number(solSet['0']).toFixed(2),y:Number(solSet['1']).toFixed(2),P:'0 - OPTIMO'}
-        }else if ( solSet['0'] ) {return{x:Number(solSet['0']).toFixed(2),y:0,P:'0 - OPTIMO'}
-        }else { return{x:0,y:Number(solSet['1']).toFixed(2),P:'0 - OPTIMO'}}
+        }else if ( solSet['0'] ) {return{x:Number(solSet['0']).toFixed(2),y:(0).toFixed(2),P:'0 - OPTIMO'}
+        }else { return{x:(0).toFixed(2),y:Number(solSet['1']).toFixed(2),P:'0 - OPTIMO'}}
     }
 
     getPoints = (variables,restricciones,expresiones,solSet) => {
