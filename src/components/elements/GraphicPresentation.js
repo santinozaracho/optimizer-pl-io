@@ -58,6 +58,7 @@ class GraphicPresentation extends React.Component{
 
 
     getLinesAndExpressions = restricciones => {
+        //Tipos de Expresiones: 0: Constante en X; 1: Constante en Y; 2: Recta con pendiente.
         let expresiones = [];
         let arrayDeRestriccionesConLosDosCoef =  restricciones.filter(el=> ( el.coeficientes[0] > 0 && el.coeficientes[1] > 0) )
         let highestValueY = Math.max.apply(Math,arrayDeRestriccionesConLosDosCoef.map( restri => (restri.derecha / restri.coeficientes[1])));
@@ -65,6 +66,7 @@ class GraphicPresentation extends React.Component{
         console.log('Ymax: '+highestValueY+' Xmax:'+highestValueX);
         
         let lines = restricciones.map( restri => {
+            //Si posee ambos coeficientes entoces es una recta con pendiente.
             if (restri.coeficientes[0] !== 0  && restri.coeficientes[1] !== 0) {
                 let x = new Expression('x').multiply(restri.coeficientes[0]);
                 let y = new Expression('y').multiply(restri.coeficientes[1]);
@@ -87,6 +89,10 @@ class GraphicPresentation extends React.Component{
                         if (valY < highestValueY){
                             valY = highestValueY
                             highestValueX = (highestValueY-yEqu)/relation
+                            console.log('NewXMAX: '+highestValueX);
+                        }else{
+                            highestValueY = valY            
+                            console.log('NewYMAX: '+highestValueY);
                         }
                         return([{x:0,y:yEqu},{x:highestValueX,y:valY}])
                     }else{
@@ -97,13 +103,19 @@ class GraphicPresentation extends React.Component{
                         if (valX < highestValueX){
                             valX = highestValueX
                             highestValueY = (highestValueX-xEqu)/relation
+                            console.log('NewYMAX: '+highestValueY);
+                        }else{
+                            highestValueX = valX
+                            console.log('NewXMAX: '+highestValueX);
                         }
                         console.log(xEqu+' '+yEqu);
                         return([{x:xEqu,y:0},{x:valX,y:highestValueY}])
                     }
                 }
             }else {
-                if (restri.coeficientes[0] !== 0) {                  
+                //Sino, es una constante.
+                if (restri.coeficientes[0] !== 0) {
+                    //Constante en X
                     let x = new Expression('x').multiply(restri.coeficientes[0]);
                     let restriEquation = new Equation(x,restri.derecha)
                     expresiones.push({restriEquation,tipo:0})
@@ -112,6 +124,7 @@ class GraphicPresentation extends React.Component{
                         return([{x:xEqu,y:0},{x:xEqu,y:highestValueY}])
                     }
                 }else {
+                    //Constante en Y
                     let y = new Expression('y').multiply(restri.coeficientes[1]);
                     let restriEquation = new Equation(y,restri.derecha)
                     expresiones.push({restriEquation,tipo:1})
