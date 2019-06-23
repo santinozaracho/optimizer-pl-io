@@ -34,6 +34,8 @@ class GraphicPresentation extends React.Component{
         //Filtramos las restricciones y variables que no fueron filtradas antes.
         restricciones = restricciones.filter(elem => elem.descripcion!=='');
         variables = variables.filter(elem => elem.descripcion!=='');
+        //Obtenemos los coeficientes a evaluar en el Z
+        let coefToValueZ = this.getCoeficientesToEv(variables)
         //Obtenemos la paleta de colores.
         let referencias = this.getColorList(restricciones);
         //Obtenemos las Lineas y las Expresiones
@@ -44,8 +46,14 @@ class GraphicPresentation extends React.Component{
         let optimMark = []
         if( Object.entries(result).length ){ optimMark = [this.getOptimPoint(result)]}
         //Almacenamos el Estado.
-        this.setState({referencias,lines,points,optimMark});
-    } 
+        this.setState({referencias,lines,points,optimMark,coefToValueZ});
+    }
+    getCoeficientesToEv =  variables => {
+        let coef={x:0,y:0};
+        coef.x = variables[0].coeficiente;
+        coef.y = variables[1].coeficiente;
+        return coef
+    }
 
 
     getLinesAndExpressions = restricciones => {
@@ -53,6 +61,7 @@ class GraphicPresentation extends React.Component{
         let arrayDeRestriccionesConLosDosCoef =  restricciones.filter(el=> ( el.coeficientes[0] > 0 && el.coeficientes[1] > 0) )
         let highestValueY = Math.max.apply(Math,arrayDeRestriccionesConLosDosCoef.map( restri => (restri.derecha / restri.coeficientes[1])));
         let highestValueX = Math.max.apply(Math,arrayDeRestriccionesConLosDosCoef.map( restri => (restri.derecha / restri.coeficientes[0])));
+        console.log('Ymax: '+highestValueY+' Xmax:'+highestValueX);
         
         let lines = restricciones.map( restri => {
             if (restri.coeficientes[0] !== 0  && restri.coeficientes[1] !== 0) {
@@ -64,13 +73,26 @@ class GraphicPresentation extends React.Component{
                 expresiones.push({restriEquation,tipo:2})
                 let yEqu = (new Equation(restriEquation.solveFor('x'),0)).solveFor('y');
                 let xEqu = (new Equation(restriEquation.solveFor('y'),0)).solveFor('x');
-                if (xEqu > -1 && yEqu > -1) {
+                if (xEqu >= 0 && yEqu >= 0) {
                     return([{x:0,y:yEqu},{x:xEqu,y:0}])
                 }else{
-                    if(yEqu > -1){
-                        return([{x:0,y:yEqu},{x:Math.abs(xEqu),y:yEqu+(Math.abs(xEqu)*yEqu)}])
+                    if(yEqu >= 0){
+                        let relation = yEqu/Math.abs(xEqu)
+                        let valY = yEqu+highestValueX*relation
+                        if (valY < highestValueY){
+                            valY = highestValueY
+                            highestValueX = (highestValueY-yEqu)/relation
+                        }
+                        return([{x:0,y:yEqu},{x:highestValueX,y:valY}])
                     }else{
-                        return([{x:xEqu,y:0},{x:xEqu+(Math.abs(yEqu)*xEqu),y:(Math.abs(yEqu))}])
+                        let relation = xEqu/Math.abs(yEqu)
+                        let valX = xEqu+highestValueY*relation
+                        if (valX < highestValueX){
+                            valX = highestValueX
+                            highestValueY = (highestValueX-xEqu)/relation
+                        }
+                        console.log(xEqu+' '+yEqu);
+                        return([{x:xEqu,y:0},{x:valX,y:highestValueY}])
                     }
                 }
             }else {
@@ -79,13 +101,13 @@ class GraphicPresentation extends React.Component{
                     let restriEquation = new Equation(x,restri.derecha)
                     expresiones.push({restriEquation,tipo:0})
                     let xEqu = restriEquation.solveFor('x');
-                    if (xEqu > -1 ){return([{x:xEqu,y:0},{x:xEqu,y:highestValueY}])}
+                    if (xEqu >= 0 ){return([{x:xEqu,y:0},{x:xEqu,y:highestValueY}])}
                 }else {
                     let y = new Expression('y').multiply(restri.coeficientes[1]);
                     let restriEquation = new Equation(y,restri.derecha)
                     expresiones.push({restriEquation,tipo:1})
                     let yEqu = restriEquation.solveFor('y')
-                    if ( yEqu > -1) {return([{x:0,y:yEqu},{x:highestValueX,y:yEqu}])}               
+                    if ( yEqu >= 0) {return([{x:0,y:yEqu},{x:highestValueX,y:yEqu}])}               
                 } 
             }
         })
@@ -112,8 +134,10 @@ class GraphicPresentation extends React.Component{
 
         //Funcion que se encarga de realizar las verificaciones correspondientes para agregar un punto o no.
         const verifyPoint = (point, restricciones, points) => {
-            if ( !verifyPointInPoints(point,points) ) {
-                if ( verifyPointInRestrictions(point,restricciones) ) { return true } else return false
+            if (point.x >= 0 && point.y >= 0 ){
+                if ( !verifyPointInPoints(point,points) ) {
+                    if ( verifyPointInRestrictions(point,restricciones) ) { return true } else return false
+                }else return false
             }else return false
         }
 
@@ -134,7 +158,7 @@ class GraphicPresentation extends React.Component{
         const getPointAxFromExpCenX = ( exp ) => {       
             //Obtenemos el Corte sobre el Eje-Y
             let expResultX = Number((new Equation(exp.solveFor('y'),0)).solveFor('x')).toFixed(4);
-            if ( expResultX > -1 ) {
+            if ( expResultX >= 0 ) {
                 //Generamos el Punto en X
                 let pointInAxX = {x:expResultX,y:0,P:points.length}
                 //Verificamos el punto en X con las Restricciones.
@@ -145,7 +169,7 @@ class GraphicPresentation extends React.Component{
         const getPointAxFromExpCenY = ( exp ) => {       
             //Obtenemos el Corte sobre el Eje-Y
             let expResultY = Number((new Equation(exp.solveFor('x'),0)).solveFor('y')).toFixed(4);
-            if ( expResultY > -1 ) {
+            if ( expResultY >= 0 ) {
                 //Generamos el Punto en Y
                 let pointInAxY = {x:0,y:expResultY,P:points.length}
                 //Verificamos el punto en Y con las Restricciones.
@@ -155,7 +179,7 @@ class GraphicPresentation extends React.Component{
         const getPointAxFromExpY = ( expY ) => {
             //Obtenemos el Corte sobre el Eje-Y
             let expResultY = Number(expY.solveFor('y')).toFixed(4);
-            if ( expResultY > -1 ) {
+            if ( expResultY >= 0 ) {
                 //Generamos el Punto en Y
                 let pointInAxY = {x:0,y:expResultY,P:points.length}
                 //Verificamos el punto en Y con las Restricciones.
@@ -166,7 +190,7 @@ class GraphicPresentation extends React.Component{
         const getPointAxFromExpX = (expX) => {
             //Obtenemos Cortes sobre el Eje-X
             let expResultX = Number(expX.solveFor('x')).toFixed(4);
-            if ( expResultX > -1 ) {
+            if ( expResultX >= 0 ) {
                 //Generamos el Punto en X
                 let pointInAxX = {x:expResultX,y:0,P:points.length}
                 //Verificamos el punto en X con las Restricciones.
@@ -178,7 +202,7 @@ class GraphicPresentation extends React.Component{
             let xRes = Number(expX.solveFor('x')).toFixed(4);
             let yRes = Number(expY.solveFor('y')).toFixed(4);
             //Verificamos que no se corten en algun otro cuadrante que no sea el de analisis.
-            if ( xRes > -1  && yRes > -1 ) {
+            if ( xRes >= 0  && yRes >= 0 ) {
                 //Generamos el Punto.
                 let point = {x:xRes,y:yRes,P:points.length}
                 //Verificamos el Punto.
@@ -191,7 +215,7 @@ class GraphicPresentation extends React.Component{
             let expResultY = Number(expY.solveFor('y')).toFixed(4);
             let expResultX = Number((new Equation(expC.solveFor('y'),expY.solveFor('y'))).solveFor('x')).toFixed(4);
             //Verificamos que no se corten en algun otro cuadrante que no sea el de analisis.
-            if ( expResultX > -1  && expResultY > -1 ) {
+            if ( expResultX >= 0  && expResultY >= 0 ) {
                 //Generamos el Punto.
                 let point = {x:expResultX,y:expResultY,P:points.length}
                 //Verificamos el Punto.
@@ -203,7 +227,7 @@ class GraphicPresentation extends React.Component{
             let expResultX = Number(expX.solveFor('x')).toFixed(4);
             let expResultY = Number((new Equation(expC.solveFor('x'),expX.solveFor('x'))).solveFor('y')).toFixed(4);
             //Verificamos que no se corten en algun otro cuadrante que no sea el de analisis.
-            if ( expResultX > -1  && expResultY > -1 ) {
+            if ( expResultX >= 0  && expResultY >= 0 ) {
                 //Generamos el Punto.
                 let point = {x:expResultX,y:expResultY,P:points.length}
                 //Verificamos el Punto.
@@ -214,7 +238,7 @@ class GraphicPresentation extends React.Component{
             let expResultX = Number((new Equation(exp1.restriEquation.solveFor('y'),exp2.restriEquation.solveFor('y'))).solveFor('x')).toFixed(4);
             let expResultY = Number((new Equation(exp1.restriEquation.solveFor('x'),exp2.restriEquation.solveFor('x'))).solveFor('y')).toFixed(4);
             //Verificamos que no se corten en algun otro cuadrante que no sea el de analisis.
-            if ( expResultX > -1  && expResultY > -1 ) {
+            if ( expResultX >= 0  && expResultY >= 0 ) {
                 //Generamos el Punto.
                 let point = {x:expResultX,y:expResultY,P:points.length}
                 //Verificamos el Punto.
@@ -315,31 +339,21 @@ class GraphicPresentation extends React.Component{
                 <CardHeader>Grafico</CardHeader>
                 <CardBody>
                     <Row className='mx-auto'>
-                        <XYPlot
-                            onMouseLeave={() => this.setState({pointer: null})}
-                            width={500}
-                            height={400}>
-                                <HorizontalGridLines/>
-                                <VerticalGridLines/>
-                                <XAxis title='Variable X0' />
-                                <YAxis  title='Variable X1'/>
-                                
-                                {this.mapperLinesSeries(lines,referencias)}
+                        <XYPlot onMouseLeave={() => this.setState({pointer: null})} width={526} height={526}>
+                            <HorizontalGridLines/>
+                            <VerticalGridLines/>
+                            <XAxis title='Variable X0' />
+                            <YAxis  title='Variable X1'/>
                             
-                                <MarkSeries
-                                    onValueMouseOver={this.showPoint}
-                                    onValueMouseOut={this.hidePoint}
-                                    color={'blue'}
-                                    opacity={0.7}
-                                    data={points}
-                                    />
-                                <MarkSeries
-                                    onValueMouseOver={this.showPoint}
-                                    onValueMouseOut={this.hidePoint}
-                                    color={'green'}
-                                    data={optimMark}
-                                    />
-                                {value && <Hint value={value} />} 
+                            {this.mapperLinesSeries(lines,referencias)}
+                            
+                            <MarkSeries onValueMouseOver={this.showPoint} onValueMouseOut={this.hidePoint}
+                                        color={'blue'} opacity={0.7} data={points}/>
+                            
+                            <MarkSeries onValueMouseOver={this.showPoint} onValueMouseOut={this.hidePoint}
+                                        color={'green'} data={optimMark}/>
+                            {value && <Hint value={value} />}
+
                         </XYPlot>
                     </Row>
                     <Row className='mx-auto'><DiscreteColorLegend orientation="horizontal" items={referencias}/></Row>
