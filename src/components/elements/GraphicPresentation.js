@@ -352,7 +352,7 @@ class GraphicPresentation extends React.Component{
     getTableResult = (points,coeficientes) =>
         <Table>
             <thead><tr><th>Punto</th><th>Resultado</th><th>X0</th><th>X1</th></tr></thead>
-            <tbody>{points.map(point => <tr key={'T-P-'+point.P}><td>P:{point.P}</td><td>{coeficientes.x*point.x + coeficientes.y*point.y}</td><td>{point.x}</td><td>{point.y}</td></tr>)}</tbody>
+            <tbody>{points.map(point => <tr key={'T-P-'+point.P}><td>P:{point.P}</td><td>{(coeficientes.x*point.x + coeficientes.y*point.y).toFixed(2)}</td><td>{point.x}</td><td>{point.y}</td></tr>)}</tbody>
         </Table>
      
     //Funcion que encarga de ocultar la descripcion del punto.  
