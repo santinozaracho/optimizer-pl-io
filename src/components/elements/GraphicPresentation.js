@@ -66,7 +66,6 @@ class GraphicPresentation extends React.Component{
         
         let lines = restricciones.map( restri => {
             if (restri.coeficientes[0] !== 0  && restri.coeficientes[1] !== 0) {
-                console.log(restri.coeficientes);
                 let x = new Expression('x').multiply(restri.coeficientes[0]);
                 let y = new Expression('y').multiply(restri.coeficientes[1]);
                 let expressRestri = new Expression().add(x).add(y);  
@@ -74,20 +73,27 @@ class GraphicPresentation extends React.Component{
                 expresiones.push({restriEquation,tipo:2})
                 let yEqu = (new Equation(restriEquation.solveFor('x'),0)).solveFor('y');
                 let xEqu = (new Equation(restriEquation.solveFor('y'),0)).solveFor('x');
+                //Analizamos pendientes positivas y negativas
                 if (xEqu >= 0 && yEqu >= 0) {
+                    //Si es Pendiente negativa tenemos que corta en los puntos +x y +y
                     return([{x:0,y:yEqu},{x:xEqu,y:0}])
                 }else{
+                    //Si es Pendiente positiva solo corta en +x o en +y
                     if(yEqu >= 0){
+                        //Si corta en +y , entonces calculamos el punto para el grafico en +x
                         let relation = yEqu/Math.abs(xEqu)
                         let valY = yEqu+highestValueX*relation
+                        //Si el valor calculado para Y es menor al maximo, lo llevamos hasta alli y actualizamos el Xmax
                         if (valY < highestValueY){
                             valY = highestValueY
                             highestValueX = (highestValueY-yEqu)/relation
                         }
                         return([{x:0,y:yEqu},{x:highestValueX,y:valY}])
                     }else{
+                        //Si corta en +x , entonces calculamos el punto para el grafico en +y
                         let relation = xEqu/Math.abs(yEqu)
                         let valX = xEqu+highestValueY*relation
+                        //Si el valor calculado para Y es menor al maximo, lo llevamos hasta alli y actualizamos el YMax
                         if (valX < highestValueX){
                             valX = highestValueX
                             highestValueY = (highestValueX-xEqu)/relation
@@ -102,13 +108,17 @@ class GraphicPresentation extends React.Component{
                     let restriEquation = new Equation(x,restri.derecha)
                     expresiones.push({restriEquation,tipo:0})
                     let xEqu = restriEquation.solveFor('x');
-                    if (xEqu >= 0 ){return([{x:xEqu,y:0},{x:xEqu,y:highestValueY}])}
+                    if (xEqu >= 0 ){
+                        return([{x:xEqu,y:0},{x:xEqu,y:highestValueY}])
+                    }
                 }else {
                     let y = new Expression('y').multiply(restri.coeficientes[1]);
                     let restriEquation = new Equation(y,restri.derecha)
                     expresiones.push({restriEquation,tipo:1})
                     let yEqu = restriEquation.solveFor('y')
-                    if ( yEqu >= 0) {return([{x:0,y:yEqu},{x:highestValueX,y:yEqu}])}               
+                    if ( yEqu >= 0) {
+                        return([{x:0,y:yEqu},{x:highestValueX,y:yEqu}])
+                    }               
                 } 
             }
         })
@@ -291,7 +301,7 @@ class GraphicPresentation extends React.Component{
                 if( exp2.tipo === 0) { return getPointFromExpXExpY(exp2.restriEquation,exp1.restriEquation) }
             }
         };
-
+        
         //Limpiamos nuestro array de Puntos
         let points = [];
         
