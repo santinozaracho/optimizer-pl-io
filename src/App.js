@@ -2,7 +2,6 @@ import React from "react";
 import { Button, Jumbotron, Container, Row, Col, ButtonGroup } from "reactstrap";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import LinealProg from "./components/LinealProg";
-import GraphicPresentation from "./components/elements/GraphicPresentation";
 
 const LinealProgramacion = () => <LinealProg />;
 
