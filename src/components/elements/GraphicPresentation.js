@@ -17,33 +17,35 @@ class GraphicPresentation extends React.Component{
 
     componentDidMount() {
         if ( this.props.graph ){
-            let {variables,restricciones,result} = this.props
-            restricciones = restricciones.filter(elem => elem.descripcion!=='');
-            variables = variables.filter(elem => elem.descripcion!=='');
-            let coefToValueZ = {x:variables[0].coeficiente,y:variables[1].coeficiente}
-            let referencias = this.getColorList(restricciones);
-            let {lines,expresiones} = this.getLinesAndExpressions(restricciones);
-            
-            let points = this.getPoints(variables,restricciones,expresiones,result.solutionSet)
-            let optimMark = [points.shift()];
-            this.setState({coefToValueZ,referencias,lines,points,optimMark});
-            
+            this.updateState()
         }
     }
+
     componentDidUpdate(prevProps){
         if ( prevProps !== this.props ){
             if ( this.props.graph ){
-                let {variables,restricciones,result} = this.props
-                restricciones = restricciones.filter(elem => elem.descripcion!=='');
-                variables = variables.filter(elem => elem.descripcion!=='');
-                let referencias = this.getColorList(restricciones);
-                let {lines,expresiones} = this.getLinesAndExpressions(restricciones);
-                let points = this.getPoints(variables,restricciones,expresiones,result.solutionSet)
-                let optimMark = [points.shift()];
-                this.setState({referencias,lines,points,optimMark});
+                this.updateState()
             }
         }
     }
+
+    updateState = () =>{
+        let {variables,restricciones,result} = this.props
+        //Filtramos las restricciones y variables que no fueron filtradas antes.
+        restricciones = restricciones.filter(elem => elem.descripcion!=='');
+        variables = variables.filter(elem => elem.descripcion!=='');
+        //Obtenemos la paleta de colores.
+        let referencias = this.getColorList(restricciones);
+        //Obtenemos las Lineas y las Expresiones
+        let {lines,expresiones} = this.getLinesAndExpressions(restricciones);
+        //Obtenemos los Puntos de marca general
+        let points = this.getPoints(variables,restricciones,expresiones,result)
+        //Obtenemos el Punto Optimo
+        let optimMark = []
+        if( Object.entries(result).length ){ optimMark = [this.getOptimPoint(result)]}
+        //Almacenamos el Estado.
+        this.setState({referencias,lines,points,optimMark});
+    } 
 
 
     getLinesAndExpressions = restricciones => {
@@ -94,13 +96,17 @@ class GraphicPresentation extends React.Component{
     getColorList = restricciones => restricciones.map( restri => Object({title: 'R'+restri.ri+' Tipo:'+restri.eq, color: randomColor()}))
 
     getOptimPoint = (solSet) => {
-         //Analizamos el Punto Optimo.
-         if ( solSet['0'] && solSet['1'] ) {return{x:Number(solSet['0']).toFixed(4),y:Number(solSet['1']).toFixed(4),P:'0 - OPTIMO'}
+        console.log('Generating Optim Point');
+        //Analizamos el Punto Optimo.
+        if ( solSet['0'] && solSet['1'] ) {return{x:Number(solSet['0']).toFixed(4),y:Number(solSet['1']).toFixed(4),P:'0 - OPTIMO'}
         }else if ( solSet['0'] ) {return{x:Number(solSet['0']).toFixed(4),y:0,P:'0 - OPTIMO'}
         }else { return{x:0,y:Number(solSet['1']).toFixed(4),P:'0 - OPTIMO'}}
     }
 
     getPoints = (variables,restricciones,expresiones,solSet) => {
+        console.log('Getting Points');
+        console.log(solSet);
+        
 
         //Definimos las Funciones necesarias para el buen funcionamiento de esta Funcion.
 
@@ -239,8 +245,10 @@ class GraphicPresentation extends React.Component{
 
         //Limpiamos nuestro array de Puntos
         let points = [];
-        //El primer punto que obtenemos es el Optimo.
-        points.push(this.getOptimPoint(solSet))
+        
+        //El primer punto que obtenemos es el Optimo, ya que deseamos que no se repita.
+        if ( Object.entries(solSet).length ){ points.push(this.getOptimPoint(solSet)) }
+        
 
         //Analizamos las Rectas que cortan en los Ejes o Rectas sin pendiente.
         expresiones.forEach( exp => {
@@ -273,7 +281,9 @@ class GraphicPresentation extends React.Component{
                 } 
             })
         });
-        
+
+        //Debemos eliminar el punto optimo para que no se imprima en las marcas simples.
+        if( Object.entries(solSet).length ){ points.shift() }
         return points
     }
 

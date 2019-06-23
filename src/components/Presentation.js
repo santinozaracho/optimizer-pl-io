@@ -82,26 +82,22 @@ class Presentation extends React.Component {
     let { result } = this.state;
     let printResults;
     if (result.feasible) {
-      if (result.bounded) {
-        //Obtenemos las Variables desde las props
-        let { variables, restricciones, method } = this.props.status;
-        if (method === "simplex") {
-          printResults = (
-            <SimplexPresentation variables={variables} restricciones={restricciones} result={result} />
-          );
-        } else {
-          printResults = (
-            <GraphicPresentation
-              variables={variables}
-              restricciones={restricciones}
-              graph={this.props.status.result}
-              result={result}
-            />
-          );
+      //Obtenemos las Variables desde las props
+      let { variables, restricciones, method } = this.props.status;
+      if (method === "simplex") {
+        if (result.bounded) {
+            printResults = <SimplexPresentation variables={variables} restricciones={restricciones} result={result} />
+          } 
+      }else{
+            printResults = <GraphicPresentation
+                variables={variables}
+                restricciones={restricciones}
+                graph={this.props.status.result}
+                result={ result.bounded ? result.solutionSet : {} }
+              />
         }
       }
-    }
-
+      
     return (
       <>
         <Card outline color="info" className="w-100 mt-3 mx-auto">
