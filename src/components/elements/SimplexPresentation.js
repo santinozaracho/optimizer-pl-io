@@ -60,15 +60,16 @@ class SimplexPresentation extends React.Component{
                     //Creamos un nuevo item.
                     let item= {name:'',item:'',value:''};
                     //Verificamos si es Slack o Variable Real
-                    if ( indCol < slacksEnCero ) {        
+                    if (variablesList[indexByCol[indCol+1]].isSlack){
                         item.name = 'Valor Marginal';
                         item.item = 'R'+indexByCol[indCol+1];
                         item.value = Math.abs(col);
-                    }else {
+                    }else{
                         item.name = 'Costo de Oportunidad';
                         item.item = 'X'+variablesList[indexByCol[indCol+1]].id;
                         item.value = Math.abs(col);
                     }
+                    
                     //Empujamos el item a la tabla de resultados
                     tableResult.push(item)})
             
