@@ -48,6 +48,7 @@ class GraphicPresentation extends React.Component{
         //Almacenamos el Estado.
         this.setState({referencias,lines,points,optimMark,coefToValueZ});
     }
+
     getCoeficientesToEv =  variables => {
         let coef={x:0,y:0};
         coef.x = variables[0].coeficiente;
@@ -120,16 +121,13 @@ class GraphicPresentation extends React.Component{
     getOptimPoint = (solSet) => {
         console.log('Generating Optim Point');
         //Analizamos el Punto Optimo.
-        if ( solSet['0'] && solSet['1'] ) {return{x:Number(solSet['0']).toFixed(4),y:Number(solSet['1']).toFixed(4),P:'0 - OPTIMO'}
-        }else if ( solSet['0'] ) {return{x:Number(solSet['0']).toFixed(4),y:0,P:'0 - OPTIMO'}
-        }else { return{x:0,y:Number(solSet['1']).toFixed(4),P:'0 - OPTIMO'}}
+        if ( solSet['0'] && solSet['1'] ) {return{x:Number(solSet['0']).toFixed(2),y:Number(solSet['1']).toFixed(2),P:'0 - OPTIMO'}
+        }else if ( solSet['0'] ) {return{x:Number(solSet['0']).toFixed(2),y:0,P:'0 - OPTIMO'}
+        }else { return{x:0,y:Number(solSet['1']).toFixed(2),P:'0 - OPTIMO'}}
     }
 
     getPoints = (variables,restricciones,expresiones,solSet) => {
         console.log('Getting Points');
-        console.log(solSet);
-        
-
         //Definimos las Funciones necesarias para el buen funcionamiento de esta Funcion.
 
         //Funcion que se encarga de realizar las verificaciones correspondientes para agregar un punto o no.
@@ -142,11 +140,11 @@ class GraphicPresentation extends React.Component{
         }
 
         //Funcion que se encarga de Verificar si un punto ya se encuentra en la lista de puntos (o ya fue verificado antes).
-        const verifyPointInPoints = (point,points) => points.some( pointL => (pointL.x === point.x && pointL.y === point.y) )
+        const verifyPointInPoints = (point,points) => points.some( pointL => (pointL.x === point.x.toFixed(2) && pointL.y === point.y.toFixed(2)) )
         
         //Funcion que se encarga de verificar que un punto cumpla con todas las Restricciones.
         const verifyPointInRestrictions = (point,restricciones) => restricciones.every( restri => {
-                    let calIzq = (restri.coeficientes[0]*point.x + restri.coeficientes[1]*point.y).toFixed(4);
+                    let calIzq = (restri.coeficientes[0]*point.x + restri.coeficientes[1]*point.y);
                     if( restri.eq === '>=' ) {
                         console.log('P:('+point.x +','+point.y+') :'+calIzq+' >='+ restri.derecha );                        
                         return ( calIzq >= restri.derecha ) 
@@ -157,92 +155,119 @@ class GraphicPresentation extends React.Component{
         // Funcion que devuelve un punto verificado y que corta en un Eje.
         const getPointAxFromExpCenX = ( exp ) => {       
             //Obtenemos el Corte sobre el Eje-Y
-            let expResultX = Number((new Equation(exp.solveFor('y'),0)).solveFor('x')).toFixed(4);
+            let expResultX = Number((new Equation(exp.solveFor('y'),0)).solveFor('x'));
             if ( expResultX >= 0 ) {
                 //Generamos el Punto en X
-                let pointInAxX = {x:expResultX,y:0,P:points.length}
+                let point = {x:expResultX,y:0,P:points.length}
                 //Verificamos el punto en X con las Restricciones.
-                if (verifyPoint(pointInAxX,restricciones,points)){return pointInAxX} 
+                if (verifyPoint(point,restricciones,points)){
+                    point.x=point.x.toFixed(2)
+                    point.y=point.y.toFixed(2)
+                    return point} 
             }
         };
         // Funcion que devuelve un punto verificado y que corta en un Eje.
         const getPointAxFromExpCenY = ( exp ) => {       
             //Obtenemos el Corte sobre el Eje-Y
-            let expResultY = Number((new Equation(exp.solveFor('x'),0)).solveFor('y')).toFixed(4);
+            let expResultY = Number((new Equation(exp.solveFor('x'),0)).solveFor('y'));
             if ( expResultY >= 0 ) {
                 //Generamos el Punto en Y
-                let pointInAxY = {x:0,y:expResultY,P:points.length}
+                let point = {x:0,y:expResultY,P:points.length}
                 //Verificamos el punto en Y con las Restricciones.
-                if (verifyPoint(pointInAxY,restricciones,points)){return pointInAxY}
+                if (verifyPoint(point,restricciones,points)){
+                    point.x=point.x.toFixed(2)
+                    point.y=point.y.toFixed(2)
+                    return point} 
             }   
         };
         const getPointAxFromExpY = ( expY ) => {
             //Obtenemos el Corte sobre el Eje-Y
-            let expResultY = Number(expY.solveFor('y')).toFixed(4);
+            let expResultY = Number(expY.solveFor('y'));
             if ( expResultY >= 0 ) {
                 //Generamos el Punto en Y
-                let pointInAxY = {x:0,y:expResultY,P:points.length}
+                let point = {x:0,y:expResultY,P:points.length}
                 //Verificamos el punto en Y con las Restricciones.
-                if (verifyPoint(pointInAxY,restricciones,points)){return pointInAxY}
+                if (verifyPoint(point,restricciones,points)){
+                    point.x=point.x.toFixed(2)
+                    point.y=point.y.toFixed(2)
+                    return point} 
             }
             
         };
         const getPointAxFromExpX = (expX) => {
             //Obtenemos Cortes sobre el Eje-X
-            let expResultX = Number(expX.solveFor('x')).toFixed(4);
+            let expResultX = Number(expX.solveFor('x'));
             if ( expResultX >= 0 ) {
                 //Generamos el Punto en X
-                let pointInAxX = {x:expResultX,y:0,P:points.length}
+                let point = {x:expResultX,y:0,P:points.length}
                 //Verificamos el punto en X con las Restricciones.
-                if (verifyPoint(pointInAxX,restricciones,points)){return pointInAxX} 
+                if (verifyPoint(point,restricciones,points)){
+                    point.x=point.x.toFixed(2)
+                    point.y=point.y.toFixed(2)
+                    return point} 
             } 
         }
         //Funcion que devuelve un punto verificado con una Expresion en X y otra en Y
         const getPointFromExpXExpY = ( expX,expY ) => {
-            let xRes = Number(expX.solveFor('x')).toFixed(4);
-            let yRes = Number(expY.solveFor('y')).toFixed(4);
+            let xRes = Number(expX.solveFor('x'));
+            let yRes = Number(expY.solveFor('y'));
             //Verificamos que no se corten en algun otro cuadrante que no sea el de analisis.
             if ( xRes >= 0  && yRes >= 0 ) {
                 //Generamos el Punto.
                 let point = {x:xRes,y:yRes,P:points.length}
                 //Verificamos el Punto.
-                if (verifyPoint(point,restricciones,points)){return point}     
-                }
+                if (verifyPoint(point,restricciones,points)){
+                    point.x=point.x.toFixed(2)
+                    point.y=point.y.toFixed(2)
+                    return point} 
+            }
         };
         //Funcion que devuelve un punto verificado con una Expresion Completa y otra en Y
         const getPointFromExpCExpY = ( expC,expY ) => {
             console.log('EXP C y Recta Y');
-            let expResultY = Number(expY.solveFor('y')).toFixed(4);
-            let expResultX = Number((new Equation(expC.solveFor('y'),expY.solveFor('y'))).solveFor('x')).toFixed(4);
+            let expResultY = Number(expY.solveFor('y'));
+            let expResultX = Number((new Equation(expC.solveFor('y'),expY.solveFor('y'))).solveFor('x'));
             //Verificamos que no se corten en algun otro cuadrante que no sea el de analisis.
             if ( expResultX >= 0  && expResultY >= 0 ) {
                 //Generamos el Punto.
                 let point = {x:expResultX,y:expResultY,P:points.length}
                 //Verificamos el Punto.
-                if (verifyPoint(point,restricciones,points)){return point}}
+                if (verifyPoint(point,restricciones,points)){
+                    point.x=point.x.toFixed(2)
+                    point.y=point.y.toFixed(2)
+                    return point} 
+            }
         };
         //Funcion que devuelve un punto verificado con una Expresion Completa y otra en X
         const getPointFromExpCExpX = ( expC,expX ) => {
             console.log('EXP C y Recta X');
-            let expResultX = Number(expX.solveFor('x')).toFixed(4);
-            let expResultY = Number((new Equation(expC.solveFor('x'),expX.solveFor('x'))).solveFor('y')).toFixed(4);
+            let expResultX = Number(expX.solveFor('x'));
+            let expResultY = Number((new Equation(expC.solveFor('x'),expX.solveFor('x'))).solveFor('y'));
             //Verificamos que no se corten en algun otro cuadrante que no sea el de analisis.
             if ( expResultX >= 0  && expResultY >= 0 ) {
                 //Generamos el Punto.
                 let point = {x:expResultX,y:expResultY,P:points.length}
                 //Verificamos el Punto.
-                if (verifyPoint(point,restricciones,points)){return point}}
+                if (verifyPoint(point,restricciones,points)){
+                    point.x=point.x.toFixed(2)
+                    point.y=point.y.toFixed(2)
+                    return point}
+            } 
         };
         //Funcion que devuelve un punto verificado con dos Expresion Completas.
-        const getPointFromTwoExpC = (exp1,exp2) =>{
-            let expResultX = Number((new Equation(exp1.restriEquation.solveFor('y'),exp2.restriEquation.solveFor('y'))).solveFor('x')).toFixed(4);
-            let expResultY = Number((new Equation(exp1.restriEquation.solveFor('x'),exp2.restriEquation.solveFor('x'))).solveFor('y')).toFixed(4);
+        const getPointFromTwoExpC = (exp1,exp2) => {
+            let expResultX = Number((new Equation(exp1.restriEquation.solveFor('y'),exp2.restriEquation.solveFor('y'))).solveFor('x'));
+            let expResultY = Number((new Equation(exp1.restriEquation.solveFor('x'),exp2.restriEquation.solveFor('x'))).solveFor('y'));
             //Verificamos que no se corten en algun otro cuadrante que no sea el de analisis.
             if ( expResultX >= 0  && expResultY >= 0 ) {
                 //Generamos el Punto.
                 let point = {x:expResultX,y:expResultY,P:points.length}
                 //Verificamos el Punto.
-                if (verifyPoint(point,restricciones,points)){return point}}
+                if (verifyPoint(point,restricciones,points)){
+                    point.x=point.x.toFixed(2)
+                    point.y=point.y.toFixed(2)
+                    return point}
+                } 
         };
         //Funcion que devuelve Un punto de Dos Expresiones
         const getPointFromTwoExp = (exp1,exp2) => {
