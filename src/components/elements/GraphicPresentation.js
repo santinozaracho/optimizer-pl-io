@@ -1,7 +1,7 @@
 import React from 'react';
 import {CardBody, Card, CardHeader,CardFooter,Table,Row} from 'reactstrap';
 import {XYPlot, XAxis, YAxis, HorizontalGridLines,LineSeries, AreaSeries, VerticalGridLines,MarkSeries,DiscreteColorLegend,Hint} from 'react-vis';
-import {Expression, Equation} from 'algebra.js';
+import {Expression, Equation,Fraction} from 'algebra.js';
 var randomColor = require('randomcolor');
 
 
@@ -12,7 +12,7 @@ var randomColor = require('randomcolor');
 class GraphicPresentation extends React.Component{
     constructor (props){
         super(props)
-        this.state={convexPoints:[],coefToValueZ:{x:0,y:0},optimMark:[],points:[],lines:[],referencias:[],value:null}
+        this.state={lineFunctional:[],convexPoints:[],coefToValueZ:{x:0,y:0},optimMark:[],points:[],lines:[],referencias:[],value:null}
     }
 
     componentDidMount() {
@@ -39,14 +39,19 @@ class GraphicPresentation extends React.Component{
         //Obtenemos la paleta de colores.
         let referencias = this.getColorList(restricciones);
         //Obtenemos las Lineas y las Expresiones
-        let {lines,expresiones} = this.getLinesAndExpressions(restricciones);
+        let {lines,expresiones,highestValueX,highestValueY} = this.getLinesAndExpressions(restricciones);
+        
         //Obtenemos los Puntos de marca general
-        let {points,convexPoints} = this.getPoints(restricciones,expresiones,result,coefToValueZ)
+        let {points,convexPoints} = this.getPoints(restricciones,expresiones,result,coefToValueZ)    
         //Obtenemos el Punto Optimo
         let optimMark = []
         if( Object.entries(result).length ){ optimMark = [this.getOptimPoint(result)]}
+        //Obtenemos la Recta del Funcional.
+        console.log('Maximos X:'+highestValueX+', Y:e'+highestValueY);
+        let lineFunctional = this.getObjectiveFunctionLine(variables,optimMark[0],highestValueX,highestValueY);
+        console.log(lineFunctional);
         //Almacenamos el Estado.
-        this.setState({referencias,lines,points,optimMark,coefToValueZ,convexPoints});
+        this.setState({referencias,lines,points,optimMark,coefToValueZ,convexPoints,lineFunctional});
     }
 
     getCoeficientesToEv =  variables => {
@@ -142,10 +147,11 @@ class GraphicPresentation extends React.Component{
                 } 
             }
         })
-        return { lines,expresiones }
+        console.log('MAXS:'+highestValueX+'y:'+highestValueY);
+        
+        return { lines,expresiones,highestValueX,highestValueY }
     }
 
-    
     getColorList = restricciones => restricciones.map( restri => Object({title: 'R'+restri.ri+' Tipo:'+restri.eq, color: randomColor({hue: 'random',luminosity: 'ligth'})}))
 
     getOptimPoint = solSet => {
@@ -156,7 +162,123 @@ class GraphicPresentation extends React.Component{
         }else { return{x:(0).toFixed(2),y:Number(solSet['1']).toFixed(2),P:'0 - OPTIMO'}}
     }
 
-    getObjectiveFunctionLine = variables => {}
+    getObjectiveFunctionLine = (variables,optimPoint,xMax,yMax) => {
+        console.log('Getting OF Line');
+        //Funcion que devuelve una Fraccion de Algebra.js a partir de un numero real.
+        const getFrac = real => new Fraction(Math.pow(10,(real - real.toFixed()).toString().length - 2)*real, Math.pow(10,(real - real.toFixed()).toString().length - 2)) 
+        if (optimPoint){
+            try {
+                if (variables[0].coeficiente !== 0  && variables[1].coeficiente !== 0) {
+
+                    let xPoint = !Number.isInteger(Number(optimPoint.x)) ? getFrac(Number(optimPoint.x)):Number(optimPoint.x);
+
+                    let yPoint = !Number.isInteger(Number(optimPoint.y)) ? getFrac(Number(optimPoint.y)):Number(optimPoint.y);
+               
+                    let xExp = new Expression('x').subtract(xPoint).multiply(variables[0].coeficiente);
+                    let yExp = new Expression('y').subtract(yPoint).multiply(variables[1].coeficiente);
+                    
+                    let expFunObj = new Equation(new Expression().add(xExp).add(yExp),0);  
+          
+                    let xEqu = (new Equation(expFunObj.solveFor('y'),0)).solveFor('x');
+
+                    let yEqu = (new Equation(expFunObj.solveFor('x'),0)).solveFor('y');
+        
+                    //Analizamos pendientes positivas y negativas
+                    console.log('Result Y: '+yEqu.toString());
+                    console.log('yMax: '+yMax);
+                    console.log('Result X: '+xEqu.toString());
+                    console.log('xMax: '+xMax);
+                    //Analizamos los Puntos
+                    if (xEqu >= 0 && yEqu >=0){
+                        
+                            if (xEqu > xMax && yEqu > yMax) {
+                                let yRelation = (xEqu/yEqu)
+                                let xRelation = (yEqu/xEqu)
+                                let xVal = xEqu - yMax/xRelation
+                                let yVal = yEqu - xMax/yRelation
+                                return [{x:xMax,y:yVal},{x:xVal,y:yMax}]
+                            }else if (xEqu <= xMax && yEqu <= yMax) {
+                                return [{x:xEqu,y:0},{x:0,y:yEqu}]
+                            }else if (xEqu > xMax){
+                                    let yRelation = (xEqu/yEqu)
+                                    let yVal = yEqu - xMax/yRelation
+                                    return [{x:xMax,y:yVal},{x:0,y:yEqu}]
+                                }else{
+                                    let xRelation = (yEqu/xEqu)
+                                    let xVal = xEqu - yMax/xRelation
+                                    return [{x:xEqu,y:0},{x:xVal,y:yMax}]
+                                }
+                    }else if ( xEqu < 0 && yEqu < 0 ) {
+                        console.log('Los dos Neg');
+                        return [{x:xEqu,y:0},{x:0,y:yEqu}]
+                    }else if ( xEqu >= 0 ) {
+                        console.log('Solo xEqu pos');
+                        if (xEqu > xMax){
+                            let yRelation = (xEqu/yEqu)
+                            let yVal = yEqu - xMax/yRelation
+                            return [{x:xMax,y:yVal},{x:0,y:yEqu}]
+                        }else{
+                            let xRelation = (yEqu/xEqu)
+                            let xVal = xEqu - yMax/xRelation
+                            if (xVal > xMax){
+                                console.log('Caso XVal > xMax');
+                                
+                                let xRelation = Math.abs(yEqu/xEqu)
+                                let yVal = xMax*xRelation + yEqu
+                                return [{x:xEqu,y:0},{x:xMax,y:yVal}]
+                            }else{
+                                console.log('Caso Comun');            
+                                return [{x:xEqu,y:0},{x:xVal,y:yMax}]
+                            }    
+                        }
+                    }else{
+                        console.log('Solo yEqu pos')
+                        if (yEqu > yMax){
+                            console.log('Caso pendiente de desarrollo, Que hacemos? damos mas altura para mostrar la recta?');
+                            return []
+                        }else{
+                            let yRelation = Math.abs(yEqu/xEqu)
+                            let xVal = yRelation * (yMax - yEqu)
+                            if (xVal > xMax){
+                                console.log('Caso PENDIENTE DE VERIFICACION XVal > xMAx');
+                                let xRelation = Math.abs(xEqu/yEqu)
+                                let yVal = xMax*xRelation + yEqu
+                                return [{x:xEqu,y:0},{x:xMax,y:yVal}]
+                            }else{
+                                console.log('Caso Comun');            
+                                return [{x:0,y:yEqu},{x:xVal,y:yMax}]
+                            }    
+                        }
+                    }
+                }else if( variables[0].coeficiente !== 0) {
+                    console.log('Sin puendiente, Constante en X'); 
+                    //Constante en X
+                    
+                    let xPoint = !Number.isInteger(Number(optimPoint.x)) ? getFrac(Number(optimPoint.x)):Number(optimPoint.x);
+                    let xExp = new Expression('x').subtract(xPoint).multiply(variables[0].coeficiente);   
+                    let xEqu = (new Equation(xExp,0)).solveFor('x');
+                   
+                    if (xEqu >= 0 ){
+                        return([{x:xEqu,y:0},{x:xEqu,y:yMax}])
+                    }     
+                }else{
+                    console.log('Sin pendiente, Constante en Y');
+                     //Constante en Y
+                     let yPoint = !Number.isInteger(Number(optimPoint.y)) ? getFrac(Number(optimPoint.y)):Number(optimPoint.y);
+                     let yExp = new Expression('y').subtract(yPoint).multiply(variables[1].coeficiente);
+                     let yEqu = (new Equation(yExp,0)).solveFor('y');
+                     if (yEqu >= 0 ){
+                         return([{x:0,y:yEqu},{x:xMax,y:yEqu}])
+                     }     
+                }
+                
+            } catch (error) {
+                console.log(error);
+                return [] 
+            }
+
+        }else return []      
+    }
 
     getPoints = (restricciones,expresiones,solSet,coefToValueZ) => {
         console.log('Getting Points');
@@ -408,8 +530,6 @@ class GraphicPresentation extends React.Component{
         return {points,convexPoints}
     }
 
-  
-    
     //Funcion que se encarga de devolverme la tabla.
     getTableResult = (points,coeficientes) =>
         <Table>
@@ -432,7 +552,7 @@ class GraphicPresentation extends React.Component{
 
 
     render () {
-        let {referencias,lines,value,points,optimMark,coefToValueZ,convexPoints} = this.state;
+        let {referencias,lines,value,points,optimMark,coefToValueZ,convexPoints,lineFunctional} = this.state;
         return( 
         <CardBody>
             <Card>
@@ -450,6 +570,8 @@ class GraphicPresentation extends React.Component{
                             {this.mapperLinesSeries(lines,referencias)}
 
                             <AreaSeries fill='green' stroke='#fffff' style={{strokeWidth: 0}} opacity={0.6} data={convexPoints}/>
+
+                            <LineSeries color='red' strokeStyle='dashed' data={lineFunctional}/>
                             
                             <MarkSeries onValueMouseOver={this.showPoint} onValueMouseOut={this.hidePoint}
                                         color={'blue'} opacity={0.7} data={points}/>
