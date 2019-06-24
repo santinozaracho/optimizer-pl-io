@@ -42,7 +42,7 @@ class GraphicPresentation extends React.Component{
         let {lines,expresiones,highestValueX,highestValueY} = this.getLinesAndExpressions(restricciones);
         
         //Obtenemos los Puntos de marca general
-        let {points,convexPoints} = this.getPoints(restricciones,expresiones,result,coefToValueZ)    
+        let {points,convexPoints} = this.getPoints(restricciones,expresiones,result,highestValueX,highestValueY)    
         //Obtenemos el Punto Optimo
         let optimMark = []
         if( Object.entries(result).length ){ optimMark = [this.getOptimPoint(result)]}
@@ -280,7 +280,7 @@ class GraphicPresentation extends React.Component{
         }else return []      
     }
 
-    getPoints = (restricciones,expresiones,solSet,coefToValueZ) => {
+    getPoints = (restricciones,expresiones,solSet,xMax,yMax) => {
         console.log('Getting Points');
         //Definimos las Funciones necesarias para el buen funcionamiento de esta Funcion.
 
@@ -290,6 +290,9 @@ class GraphicPresentation extends React.Component{
             if ( verifyPoint({x:0,y:0},restricciones,points) ){
                             pointsList.push({x:0,y:0})
                         }
+            if (verifyPoint({x:xMax,y:yMax},restricciones,points)) {
+                pointsList.splice(0,0,{x:xMax,y:yMax})
+            }
             let orderedPoints = [];
             let point = pointsList[0];
             orderedPoints.push(point)
