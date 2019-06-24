@@ -287,12 +287,15 @@ class GraphicPresentation extends React.Component{
         const getAreaPointsForConvex = points => {
             const calcAng = (point,p) => Math.atan2(point.y - p.y, point.x - p.x) * 180 / Math.PI + 180;
             let pointsList = [...points];
+
             if ( verifyPoint({x:0,y:0},restricciones,points) ){
                             pointsList.push({x:0,y:0})
                         }
             if (verifyPoint({x:xMax,y:yMax},restricciones,points)) {
                 pointsList.splice(0,0,{x:xMax,y:yMax})
             }
+            pointsList.sort((a,b) => a.x<b.x && a.y<b.y ? 1:-1);
+
             let orderedPoints = [];
             let point = pointsList[0];
             orderedPoints.push(point)
