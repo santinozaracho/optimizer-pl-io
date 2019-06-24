@@ -12,7 +12,7 @@ var randomColor = require('randomcolor');
 class GraphicPresentation extends React.Component{
     constructor (props){
         super(props)
-        this.state={coefToValueZ:{x:0,y:0},optimMark:[],points:[],lines:[],referencias:[],value:null}
+        this.state={convexPoints:[],coefToValueZ:{x:0,y:0},optimMark:[],points:[],lines:[],referencias:[],value:null}
     }
 
     componentDidMount() {
@@ -41,12 +41,12 @@ class GraphicPresentation extends React.Component{
         //Obtenemos las Lineas y las Expresiones
         let {lines,expresiones} = this.getLinesAndExpressions(restricciones);
         //Obtenemos los Puntos de marca general
-        let points = this.getPoints(variables,restricciones,expresiones,result)
+        let {points,convexPoints} = this.getPoints(restricciones,expresiones,result,coefToValueZ)
         //Obtenemos el Punto Optimo
         let optimMark = []
         if( Object.entries(result).length ){ optimMark = [this.getOptimPoint(result)]}
         //Almacenamos el Estado.
-        this.setState({referencias,lines,points,optimMark,coefToValueZ});
+        this.setState({referencias,lines,points,optimMark,coefToValueZ,convexPoints});
     }
 
     getCoeficientesToEv =  variables => {
@@ -78,7 +78,12 @@ class GraphicPresentation extends React.Component{
                 //Analizamos pendientes positivas y negativas
                 if (xEqu >= 0 && yEqu >= 0) {
                     //Si es Pendiente negativa tenemos que corta en los puntos +x y +y
-                    return([{x:0,y:yEqu},{x:xEqu,y:0}])
+                    if (restri.eq === '>=') {
+                        return([{x:0,y:yEqu,y0:highestValueY},{x:xEqu,y:0,y0:highestValueY},{x:highestValueX,y:0,y0:highestValueY}])
+                    }else{
+                        return([{x:0,y:yEqu},{x:xEqu,y:0}])
+                    }
+                    
                 }else{
                     //Si es Pendiente positiva solo corta en +x o en +y
                     if(yEqu >= 0){
@@ -141,7 +146,7 @@ class GraphicPresentation extends React.Component{
     }
 
     
-    getColorList = restricciones => restricciones.map( restri => Object({title: 'R'+restri.ri+' Tipo:'+restri.eq, color: randomColor()}))
+    getColorList = restricciones => restricciones.map( restri => Object({title: 'R'+restri.ri+' Tipo:'+restri.eq, color: randomColor({hue: 'random',luminosity: 'ligth'})}))
 
     getOptimPoint = solSet => {
         console.log('Generating Optim Point');
@@ -151,10 +156,62 @@ class GraphicPresentation extends React.Component{
         }else { return{x:(0).toFixed(2),y:Number(solSet['1']).toFixed(2),P:'0 - OPTIMO'}}
     }
 
-    getPoints = (variables,restricciones,expresiones,solSet) => {
+    getPoints = (restricciones,expresiones,solSet,coefToValueZ) => {
         console.log('Getting Points');
         //Definimos las Funciones necesarias para el buen funcionamiento de esta Funcion.
 
+        const getAreaPointsForConvex = points => {
+            const calcAng = (point,p) => Math.atan2(point.y - p.y, point.x - p.x) * 180 / Math.PI + 180;
+            
+            let pointsList = [...points];
+            if ( verifyPoint({x:0,y:0},restricciones,points) ){
+                            pointsList.push({x:0,y:0})
+                        }
+            let orderedPoints = [];
+            let count = 0;
+            let point = pointsList[0];
+            orderedPoints.push(point)
+            pointsList.splice(0,1) 
+            while ( pointsList.length && count < 3 ) {
+                console.log('Nuevo Ciclo, Punto Actual');
+                console.log(point);
+                console.log(pointsList);
+                //Encuentra el punto que tiene el angulo minimo
+                let minAngle = pointsList.reduce( (min,p) => calcAng(point,p) < min ? calcAng(point,p) : min, 361);
+                // let arrayCalcResult = pointsList.map()
+                // let indexNewPoint = pointsList.find
+                // let newPoint = pointsList.find( p => p )
+                console.log(minAngle); 
+                if (minAngle < 361) {
+                    let indNewPoint = pointsList.findIndex(p => calcAng(point,p) === minAngle);
+                    point = pointsList[indNewPoint]
+                    console.log(point);
+                    orderedPoints.push(point)
+                    pointsList.splice(indNewPoint,1)           
+                }else{count++}
+            }
+            orderedPoints.push(orderedPoints[0])
+            return orderedPoints
+
+            // points.forEach( p => {
+
+            // })
+
+            // let pointsArea = [...points];
+
+            // if ( verifyPoint({x:0,y:0},restricciones,pointsArea) ){
+            //     pointsArea.push({x:0,y:0})
+            // }
+            
+            // pointsArea.sort( (a,b) => Math.atan2(a.y - b.y, a.x - b.x) ? 1 : -1 );
+            // console.log(pointsArea);
+            
+            // pointsArea.push(pointsArea[0])
+            // console.log(pointsArea);
+
+            // return pointsArea
+        }
+        
         //Funcion que se encarga de realizar las verificaciones correspondientes para agregar un punto o no.
         const verifyPoint = (point, restricciones, points) => {
             if (point.x >= 0 && point.y >= 0 ){
@@ -361,9 +418,15 @@ class GraphicPresentation extends React.Component{
             })
         });
 
+        //Obtenemos la secuencia de puntos que define nuestro Convexo.
+        let convexPoints = getAreaPointsForConvex(points);
+        console.log('Puntos:');
+        console.log(convexPoints);
+        
+
         //Debemos eliminar el punto optimo para que no se imprima en las marcas simples.
         if( Object.entries(solSet).length ){ points.shift() }
-        return points
+        return {points,convexPoints}
     }
 
   
@@ -382,12 +445,15 @@ class GraphicPresentation extends React.Component{
     showPoint = value => this.setState({ value })
 
 
-    mapperLinesSeries = (lines,referencias) => 
-        lines.map((data,index) => <LineSeries key={'L-S-A'+index} color={referencias.length > 0 ?referencias[index].color:'red'} data={data}/>)
+    mapperAreaSeries = (lines,referencias) => 
+        lines.map((data,index) => <AreaSeries key={'L-S-A'+index} opacity={0.3} color={referencias.length > 0 ?referencias[index].color:'red'} data={data}/>)
     
+    mapperLinesSeries = (lines,referencias) => 
+    lines.map((data,index) => <LineSeries key={'L-S-L'+index} color={referencias.length > 0 ?referencias[index].color:'red'} data={data}/>)
+
 
     render () {
-        let {referencias,lines,value,points,optimMark,coefToValueZ} = this.state;
+        let {referencias,lines,value,points,optimMark,coefToValueZ,convexPoints} = this.state;
         return( 
         <CardBody>
             <Card>
@@ -399,8 +465,12 @@ class GraphicPresentation extends React.Component{
                             <VerticalGridLines/>
                             <XAxis title='Variable X0' />
                             <YAxis  title='Variable X1'/>
+
+                            {this.mapperAreaSeries(lines,referencias)}
                             
                             {this.mapperLinesSeries(lines,referencias)}
+
+                            <AreaSeries color='green' opacity={0.6} data={convexPoints}/>
                             
                             <MarkSeries onValueMouseOver={this.showPoint} onValueMouseOut={this.hidePoint}
                                         color={'blue'} opacity={0.7} data={points}/>
