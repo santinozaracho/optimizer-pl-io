@@ -162,54 +162,31 @@ class GraphicPresentation extends React.Component{
 
         const getAreaPointsForConvex = points => {
             const calcAng = (point,p) => Math.atan2(point.y - p.y, point.x - p.x) * 180 / Math.PI + 180;
-            
             let pointsList = [...points];
             if ( verifyPoint({x:0,y:0},restricciones,points) ){
                             pointsList.push({x:0,y:0})
                         }
             let orderedPoints = [];
-            let count = 0;
             let point = pointsList[0];
             orderedPoints.push(point)
             pointsList.splice(0,1) 
-            while ( pointsList.length && count < 3 ) {
+            while ( pointsList.length ) {
                 console.log('Nuevo Ciclo, Punto Actual');
                 console.log(point);
                 console.log(pointsList);
                 //Encuentra el punto que tiene el angulo minimo
                 let minAngle = pointsList.reduce( (min,p) => calcAng(point,p) < min ? calcAng(point,p) : min, 361);
-                // let arrayCalcResult = pointsList.map()
-                // let indexNewPoint = pointsList.find
-                // let newPoint = pointsList.find( p => p )
-                console.log(minAngle); 
                 if (minAngle < 361) {
                     let indNewPoint = pointsList.findIndex(p => calcAng(point,p) === minAngle);
                     point = pointsList[indNewPoint]
-                    console.log(point);
                     orderedPoints.push(point)
                     pointsList.splice(indNewPoint,1)           
-                }else{count++}
+                } else { 
+                    console.log('Cant find any Angle');
+                    break}
             }
             orderedPoints.push(orderedPoints[0])
             return orderedPoints
-
-            // points.forEach( p => {
-
-            // })
-
-            // let pointsArea = [...points];
-
-            // if ( verifyPoint({x:0,y:0},restricciones,pointsArea) ){
-            //     pointsArea.push({x:0,y:0})
-            // }
-            
-            // pointsArea.sort( (a,b) => Math.atan2(a.y - b.y, a.x - b.x) ? 1 : -1 );
-            // console.log(pointsArea);
-            
-            // pointsArea.push(pointsArea[0])
-            // console.log(pointsArea);
-
-            // return pointsArea
         }
         
         //Funcion que se encarga de realizar las verificaciones correspondientes para agregar un punto o no.
