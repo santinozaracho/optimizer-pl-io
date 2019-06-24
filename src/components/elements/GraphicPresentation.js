@@ -156,6 +156,8 @@ class GraphicPresentation extends React.Component{
         }else { return{x:(0).toFixed(2),y:Number(solSet['1']).toFixed(2),P:'0 - OPTIMO'}}
     }
 
+    getObjectiveFunctionLine = variables => {}
+
     getPoints = (restricciones,expresiones,solSet,coefToValueZ) => {
         console.log('Getting Points');
         //Definimos las Funciones necesarias para el buen funcionamiento de esta Funcion.
@@ -447,7 +449,7 @@ class GraphicPresentation extends React.Component{
                             
                             {this.mapperLinesSeries(lines,referencias)}
 
-                            <AreaSeries color='green' opacity={0.6} data={convexPoints}/>
+                            <AreaSeries fill='green' stroke='#fffff' style={{strokeWidth: 0}} opacity={0.6} data={convexPoints}/>
                             
                             <MarkSeries onValueMouseOver={this.showPoint} onValueMouseOut={this.hidePoint}
                                         color={'blue'} opacity={0.7} data={points}/>
