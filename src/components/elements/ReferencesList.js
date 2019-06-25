@@ -23,9 +23,10 @@ class ReferencesList extends React.Component {
     array
       .filter(item => item.descripcion !== "")
       .map(item => (
-        <ListGroupItem key={"DLGIV" + item.xi} className="justify-content-between">
+        <ListGroupItem key={"DLGIV" + item.xi} className="text-left">
           <Badge>{"X" + item.xi}</Badge>
           {" " + item.descripcion}
+          <Badge className='float-right'>{'C: '+item.coeficiente}</Badge>
         </ListGroupItem>
       ));
 
@@ -33,9 +34,10 @@ class ReferencesList extends React.Component {
     array
       .filter(item => item.descripcion !== "")
       .map(item => (
-        <ListGroupItem key={"DLGIR" + item.ri} className="justify-content-between">
+        <ListGroupItem key={"DLGIR" + item.ri} className="text-left">
           <Badge>{"R" + item.ri}</Badge>
           {" " + item.descripcion}
+          <Badge className='float-right'>{item.coeficientes.map((co,indx) => co+' X'+indx+' ') + ' '+item.eq+' '+item.derecha}</Badge>
         </ListGroupItem>
       ));
 
@@ -67,9 +69,9 @@ class ReferencesList extends React.Component {
         </CardHeader>
         <Collapse isOpen={this.state.references}>
           <CardBody>
-            <h5 className="text-left">Variables:</h5>
+            <h5 className="text-center">Variables:</h5>
             <ListGroup>{this.listDescriptionsVarItems(variables)}</ListGroup>
-            <h5 className="text-left mt-5">Restricciones:</h5>
+            <h5 className="text-center mt-5">Restricciones:</h5>
             <ListGroup>{this.listDescriptionsResItems(restricciones)}</ListGroup>
           </CardBody>
         </Collapse>
