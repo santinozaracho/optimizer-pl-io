@@ -285,25 +285,22 @@ class GraphicPresentation extends React.Component{
         //Definimos las Funciones necesarias para el buen funcionamiento de esta Funcion.
 
         const getAreaPointsForConvex = points => {
+            //Funcion que calcula el Angulo entre dos puntos.
             const calcAng = (point,p) => Math.atan2(point.y - p.y, point.x - p.x) * 180 / Math.PI + 180;
+            //Precargamos puntos que podrian definir el convexo.
+            let possiblePoints = [{x:0,y:0},{x:xMax,y:yMax},{x:Number(points[0].x),y:0},{x:0,y:Number(points[0].y)},{x:xMax,y:Number(points[0].y)},{x:Number(points[0].x),y:xMax}]            
+            //Obtenemos la lista de puntos
             let pointsList = [...points];
-
-            if ( verifyPoint({x:0,y:0},restricciones,points) ){
-                            pointsList.push({x:0,y:0})
-                        }
-            if (verifyPoint({x:xMax,y:yMax},restricciones,points)) {
-                pointsList.splice(0,0,{x:xMax,y:yMax})
-            }
-            pointsList.sort((a,b) => a.x<b.x && a.y<b.y ? 1:-1);
-
+            //Verificamos puntos que podrian definir el convexo.
+            possiblePoints.forEach( p => (verifyPoint(p,restricciones,points)) && pointsList.push(p) ) 
+            //Nos aseguramos de tomar el punto que este en el extremo derecho.
+            pointsList.sort((a,b) => a.x<b.x ? 1:-1);
+            //Creamos nuestra Output
             let orderedPoints = [];
             let point = pointsList[0];
             orderedPoints.push(point)
             pointsList.splice(0,1) 
             while ( pointsList.length ) {
-                console.log('Nuevo Ciclo, Punto Actual');
-                console.log(point);
-                console.log(pointsList);
                 //Encuentra el punto que tiene el angulo minimo
                 let minAngle = pointsList.reduce( (min,p) => calcAng(point,p) < min ? calcAng(point,p) : min, 361);
                 if (minAngle < 361) {
@@ -571,7 +568,7 @@ class GraphicPresentation extends React.Component{
                             <XAxis title='Variable X0' />
                             <YAxis  title='Variable X1'/>
 
-                            {this.mapperAreaSeries(lines,referencias)}
+                            {/* {this.mapperAreaSeries(lines,referencias)} */}
                             
                             {this.mapperLinesSeries(lines,referencias)}
 
