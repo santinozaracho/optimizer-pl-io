@@ -13,7 +13,7 @@ var randomColor = require('randomcolor');
 class GraphicPresentation extends React.Component{
     constructor (props){
         super(props)
-        this.state={lineFunctional:[],convexPoints:[],coefToValueZ:{x:0,y:0},optimMark:[],points:[],lines:[],referencias:[],value:null,areaGraph:false}
+        this.state={lineFunctional:[],convexPoints:[],tableResult:'',optimMark:[],points:[],lines:[],referencias:[],value:null,areaGraph:false}
     }
 
     componentDidMount() {
@@ -47,11 +47,13 @@ class GraphicPresentation extends React.Component{
         let optimMark = []
         if( Object.entries(result).length ){ optimMark = [this.getOptimPoint(result)]}
         //Obtenemos la Recta del Funcional.
-        console.log('Maximos X:'+highestValueX+', Y:e'+highestValueY);
+        // console.log('Maximos X:'+highestValueX+', Y:e'+highestValueY);
         let lineFunctional = this.getObjectiveFunctionLine(variables,optimMark[0],highestValueX,highestValueY);
-        console.log(lineFunctional);
+        // console.log(lineFunctional);
+        //Obtenemos la Tabla de resultados.
+        let tableResult = this.getTableResult(optimMark.concat(points),coefToValueZ,restricciones)
         //Almacenamos el Estado.
-        this.setState({referencias,lines,points,optimMark,coefToValueZ,convexPoints,lineFunctional});
+        this.setState({referencias,lines,points,optimMark,convexPoints,lineFunctional,tableResult});
     }
 
     getCoeficientesToEv =  variables => {
@@ -68,7 +70,7 @@ class GraphicPresentation extends React.Component{
         let arrayDeRestriccionesConLosDosCoef =  restricciones.filter(el=> ( el.coeficientes[0] > 0 && el.coeficientes[1] > 0) )
         let highestValueY = Math.max.apply(Math,arrayDeRestriccionesConLosDosCoef.map( restri => (restri.derecha / restri.coeficientes[1])));
         let highestValueX = Math.max.apply(Math,arrayDeRestriccionesConLosDosCoef.map( restri => (restri.derecha / restri.coeficientes[0])));
-        console.log('Ymax: '+highestValueY+' Xmax:'+highestValueX);
+        // console.log('Ymax: '+highestValueY+' Xmax:'+highestValueX);
         
         let lines = restricciones.map( restri => {
             //Si posee ambos coeficientes entoces es una recta con pendiente.
@@ -99,10 +101,10 @@ class GraphicPresentation extends React.Component{
                         if (valY < highestValueY){
                             valY = highestValueY
                             highestValueX = (highestValueY-yEqu)/relation
-                            console.log('NewXMAX: '+highestValueX);
+                            // console.log('NewXMAX: '+highestValueX);
                         }else{
                             highestValueY = valY            
-                            console.log('NewYMAX: '+highestValueY);
+                            // console.log('NewYMAX: '+highestValueY);
                         }
                         return([{x:0,y:yEqu},{x:highestValueX,y:valY}])
                     }else{
@@ -114,12 +116,12 @@ class GraphicPresentation extends React.Component{
                             if (valX < highestValueX){
                                 valX = highestValueX
                                 highestValueY = (highestValueX-xEqu)/relation
-                                console.log('NewYMAX: '+highestValueY);
+                                // console.log('NewYMAX: '+highestValueY);
                             }else{
                                 highestValueX = valX
-                                console.log('NewXMAX: '+highestValueX);
+                                // console.log('NewXMAX: '+highestValueX);
                             }
-                            console.log(xEqu+' '+yEqu);
+                            // console.log(xEqu+' '+yEqu);
                             return([{x:xEqu,y:0},{x:valX,y:highestValueY}])
                         }
                     }
@@ -147,7 +149,7 @@ class GraphicPresentation extends React.Component{
                 } 
             }
         })
-        console.log('MAXS:'+highestValueX+'y:'+highestValueY);
+        // console.log('MAXS:'+highestValueX+'y:'+highestValueY);
         
         return { lines,expresiones,highestValueX,highestValueY }
     }
@@ -184,10 +186,10 @@ class GraphicPresentation extends React.Component{
                     let yEqu = (new Equation(expFunObj.solveFor('x'),0)).solveFor('y');
         
                     //Analizamos pendientes positivas y negativas
-                    console.log('Result Y: '+yEqu.toString());
-                    console.log('yMax: '+yMax);
-                    console.log('Result X: '+xEqu.toString());
-                    console.log('xMax: '+xMax);
+                    // console.log('Result Y: '+yEqu.toString());
+                    // console.log('yMax: '+yMax);
+                    // console.log('Result X: '+xEqu.toString());
+                    // console.log('xMax: '+xMax);
                     //Analizamos los Puntos
                     if (xEqu >= 0 && yEqu >=0){
                         
@@ -209,10 +211,10 @@ class GraphicPresentation extends React.Component{
                                     return [{x:xEqu,y:0},{x:xVal,y:yMax}]
                                 }
                     }else if ( xEqu < 0 && yEqu < 0 ) {
-                        console.log('Los dos Neg');
+                        // console.log('Los dos Neg');
                         return [{x:xEqu,y:0},{x:0,y:yEqu}]
                     }else if ( xEqu >= 0 ) {
-                        console.log('Solo xEqu pos');
+                        // console.log('Solo xEqu pos');
                         if (xEqu > xMax){
                             let yRelation = (xEqu/yEqu)
                             let yVal = yEqu - xMax/yRelation
@@ -221,18 +223,18 @@ class GraphicPresentation extends React.Component{
                             let xRelation = (yEqu/xEqu)
                             let xVal = xEqu - yMax/xRelation
                             if (xVal > xMax){
-                                console.log('Caso XVal > xMax');
+                                // console.log('Caso XVal > xMax');
                                 
                                 let xRelation = Math.abs(yEqu/xEqu)
                                 let yVal = xMax*xRelation + yEqu
                                 return [{x:xEqu,y:0},{x:xMax,y:yVal}]
                             }else{
-                                console.log('Caso Comun');            
+                                // console.log('Caso Comun');            
                                 return [{x:xEqu,y:0},{x:xVal,y:yMax}]
                             }    
                         }
                     }else{
-                        console.log('Solo yEqu pos')
+                        // console.log('Solo yEqu pos')
                         if (yEqu > yMax){
                             console.log('Caso pendiente de desarrollo, Que hacemos? damos mas altura para mostrar la recta?');
                             return []
@@ -245,13 +247,13 @@ class GraphicPresentation extends React.Component{
                                 let yVal = xMax*xRelation + yEqu
                                 return [{x:xEqu,y:0},{x:xMax,y:yVal}]
                             }else{
-                                console.log('Caso Comun');            
+                                // console.log('Caso Comun');            
                                 return [{x:0,y:yEqu},{x:xVal,y:yMax}]
                             }    
                         }
                     }
                 }else if( variables[0].coeficiente !== 0) {
-                    console.log('Sin puendiente, Constante en X'); 
+                    // console.log('Sin puendiente, Constante en X'); 
                     //Constante en X
                     
                     let xPoint = !Number.isInteger(Number(optimPoint.x)) ? getFrac(Number(optimPoint.x)):Number(optimPoint.x);
@@ -262,14 +264,15 @@ class GraphicPresentation extends React.Component{
                         return([{x:xEqu,y:0},{x:xEqu,y:yMax}])
                     }     
                 }else{
-                    console.log('Sin pendiente, Constante en Y');
-                     //Constante en Y
-                     let yPoint = !Number.isInteger(Number(optimPoint.y)) ? getFrac(Number(optimPoint.y)):Number(optimPoint.y);
-                     let yExp = new Expression('y').subtract(yPoint).multiply(variables[1].coeficiente);
-                     let yEqu = (new Equation(yExp,0)).solveFor('y');
-                     if (yEqu >= 0 ){
-                         return([{x:0,y:yEqu},{x:xMax,y:yEqu}])
-                     }     
+
+                    // console.log('Sin pendiente, Constante en Y');
+                    //Constante en Y
+                    let yPoint = !Number.isInteger(Number(optimPoint.y)) ? getFrac(Number(optimPoint.y)):Number(optimPoint.y);
+                    let yExp = new Expression('y').subtract(yPoint).multiply(variables[1].coeficiente);
+                    let yEqu = (new Equation(yExp,0)).solveFor('y');
+                    if (yEqu >= 0 ){
+                        return([{x:0,y:yEqu},{x:xMax,y:yEqu}])
+                    }     
                 }
                 
             } catch (error) {
@@ -332,10 +335,10 @@ class GraphicPresentation extends React.Component{
         const verifyPointInRestrictions = (point,restricciones) => restricciones.every( restri => {
                     let calIzq = (restri.coeficientes[0]*point.x + restri.coeficientes[1]*point.y);
                     if( restri.eq === '>=' ) {
-                        console.log('P:('+point.x +','+point.y+') :'+calIzq+' >='+ restri.derecha );                        
+                        // console.log('P:('+point.x +','+point.y+') :'+calIzq+' >='+ restri.derecha );                        
                         return ( calIzq >= restri.derecha ) 
                     }else { 
-                        console.log('P:('+point.x +','+point.y+') :'+calIzq+' <='+ restri.derecha );                        
+                        // console.log('P:('+point.x +','+point.y+') :'+calIzq+' <='+ restri.derecha );                        
                         return ( calIzq <= restri.derecha )} 
                 })
         // Funcion que devuelve un punto verificado y que corta en un Eje.
@@ -410,7 +413,7 @@ class GraphicPresentation extends React.Component{
         };
         //Funcion que devuelve un punto verificado con una Expresion Completa y otra en Y
         const getPointFromExpCExpY = ( expC,expY ) => {
-            console.log('EXP C y Recta Y');
+            // console.log('EXP C y Recta Y');
             let expResultY = Number(expY.solveFor('y'));
             let expResultX = Number((new Equation(expC.solveFor('y'),expY.solveFor('y'))).solveFor('x'));
             //Verificamos que no se corten en algun otro cuadrante que no sea el de analisis.
@@ -426,7 +429,7 @@ class GraphicPresentation extends React.Component{
         };
         //Funcion que devuelve un punto verificado con una Expresion Completa y otra en X
         const getPointFromExpCExpX = ( expC,expX ) => {
-            console.log('EXP C y Recta X');
+            // console.log('EXP C y Recta X');
             let expResultX = Number(expX.solveFor('x'));
             let expResultY = Number((new Equation(expC.solveFor('x'),expX.solveFor('x'))).solveFor('y'));
             //Verificamos que no se corten en algun otro cuadrante que no sea el de analisis.
@@ -524,21 +527,27 @@ class GraphicPresentation extends React.Component{
 
         //Obtenemos la secuencia de puntos que define nuestro Convexo.
         let convexPoints = getAreaPointsForConvex(points);
-        console.log('Puntos:');
-        console.log(convexPoints);
-        
-
+        // console.log('Puntos:');
+        // console.log(convexPoints);
         //Debemos eliminar el punto optimo para que no se imprima en las marcas simples.
         if( Object.entries(solSet).length ){ points.shift() }
         return {points,convexPoints}
     }
 
     //Funcion que se encarga de devolverme la tabla.
-    getTableResult = (points,coeficientes) =>
-        <Table>
-            <thead><tr><th>Punto</th><th>Resultado</th><th>X0</th><th>X1</th></tr></thead>
-            <tbody>{points.map(point => <tr key={'T-P-'+point.P}><td>P:{point.P}</td><td>{(coeficientes.x*point.x + coeficientes.y*point.y).toFixed(2)}</td><td>{point.x}</td><td>{point.y}</td></tr>)}</tbody>
-        </Table>
+    getTableResult = (points,coeficientes,restricciones) =>{
+        console.log('Drawing Table Results');    
+        const calcSlacksValue = point => {
+            return restricciones.map( restri => <td key={'S-C-'+point.P+'-'+restri.ri}>{(restri.coeficientes[0]*point.x+restri.coeficientes[1]*point.y - restri.derecha).toFixed(2)}</td>)
+        }
+        const calcResult = point =>{return (coeficientes.x*point.x + coeficientes.y*point.y).toFixed(2)}
+        let slacksTitles = restricciones.map(restri => <th key={'S-T-'+restri.ri}>{'S'+restri.ri}</th>)
+        return( <Table>
+                    <thead><tr><th>Punto</th><th>Resultado</th><th>X0</th><th>X1</th>{slacksTitles}</tr></thead>
+                    <tbody>{points.map(point => <tr key={'T-P-'+point.P}><td>P:{point.P}</td><td>{calcResult(point)}</td><td>{point.x}</td><td>{point.y}</td>{calcSlacksValue(point)}</tr>)}</tbody>
+                </Table>)
+    }
+       
      
     //Funcion que encarga de ocultar la descripcion del punto.  
     hidePoint = () => this.setState({value: null})
@@ -556,13 +565,13 @@ class GraphicPresentation extends React.Component{
 
     render () {
         let {variables,restricciones} = this.props
-        let {referencias,lines,value,points,optimMark,coefToValueZ,convexPoints,lineFunctional,areaGraph} = this.state;
+        let {referencias,lines,value,points,optimMark,convexPoints,lineFunctional,areaGraph,tableResult} = this.state;
         return( 
         <CardBody>
             <Card outline color='secondary'>
                 <CardHeader>
                     <Row>
-                        <Col className="text-left"><CardTitle><h5>Grafico:</h5></CardTitle></Col>
+                        <Col className="text-left"><CardTitle><h4>Grafico:</h4></CardTitle></Col>
                         <Col><Button outline size='sm'
                             onClick={() => this.setState({areaGraph:!this.state.areaGraph})} 
                             color={!this.state.areaGraph ? 'success':'danger'}>{!this.state.areaGraph ? 'Ver Sombra de Restricciones':'Ocultar Sombra de Restricciones'}</Button>
@@ -571,7 +580,7 @@ class GraphicPresentation extends React.Component{
                 </CardHeader>
                 <CardBody>
                     <Row className='mx-auto'>
-                        <XYPlot onMouseLeave={() => this.setState({pointer: null})} width={526} height={526}>
+                        <XYPlot onMouseLeave={() => this.setState({pointer: null})} width={500} height={500}>
                             <HorizontalGridLines/>
                             <VerticalGridLines/>
                             <XAxis title='Variable X0' />
@@ -598,7 +607,7 @@ class GraphicPresentation extends React.Component{
                     <Row><ReferencesList variables={variables} restricciones={restricciones}/></Row>
                 </CardBody>
                 <CardFooter>
-                    {this.getTableResult(optimMark.concat(points),coefToValueZ)}
+                    {tableResult}
                 </CardFooter>
             </Card>
         </CardBody> )
