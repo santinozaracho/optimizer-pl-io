@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "4bfe0579e2b64072e0d42400cfc37b01",
+    "revision": "ae6a86c4a9e5abf877aa33be29ea9c0c",
     "url": "/optimizer-pl-io/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/optimizer-pl-io/static/css/2.cd31d209.chunk.css"
   },
   {
-    "revision": "f16c3303827244677ae5",
+    "revision": "21c6136cbc7690e819da",
     "url": "/optimizer-pl-io/static/css/main.6270e4e8.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/optimizer-pl-io/static/js/2.b1e2110a.chunk.js"
   },
   {
-    "revision": "f16c3303827244677ae5",
-    "url": "/optimizer-pl-io/static/js/main.78e334b8.chunk.js"
+    "revision": "21c6136cbc7690e819da",
+    "url": "/optimizer-pl-io/static/js/main.8604c6c6.chunk.js"
   },
   {
     "revision": "94bc843c89792bd532e7",
