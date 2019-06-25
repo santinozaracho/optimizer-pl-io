@@ -1,7 +1,8 @@
 import React from 'react';
-import {CardBody, Card, CardHeader,CardFooter,Table,Row} from 'reactstrap';
+import {CardBody, Card, CardHeader,CardFooter,Table,Row,Col,CardTitle,Button} from 'reactstrap';
 import {XYPlot, XAxis, YAxis, HorizontalGridLines,LineSeries, AreaSeries, VerticalGridLines,MarkSeries,DiscreteColorLegend,Hint} from 'react-vis';
 import {Expression, Equation,Fraction} from 'algebra.js';
+import ReferencesList from './ReferencesList';
 var randomColor = require('randomcolor');
 
 
@@ -12,7 +13,7 @@ var randomColor = require('randomcolor');
 class GraphicPresentation extends React.Component{
     constructor (props){
         super(props)
-        this.state={lineFunctional:[],convexPoints:[],coefToValueZ:{x:0,y:0},optimMark:[],points:[],lines:[],referencias:[],value:null}
+        this.state={lineFunctional:[],convexPoints:[],coefToValueZ:{x:0,y:0},optimMark:[],points:[],lines:[],referencias:[],value:null,areaGraph:false}
     }
 
     componentDidMount() {
@@ -40,7 +41,6 @@ class GraphicPresentation extends React.Component{
         let referencias = this.getColorList(restricciones);
         //Obtenemos las Lineas y las Expresiones
         let {lines,expresiones,highestValueX,highestValueY} = this.getLinesAndExpressions(restricciones);
-        
         //Obtenemos los Puntos de marca general
         let {points,convexPoints} = this.getPoints(restricciones,expresiones,result,highestValueX,highestValueY)    
         //Obtenemos el Punto Optimo
@@ -555,11 +555,20 @@ class GraphicPresentation extends React.Component{
 
 
     render () {
-        let {referencias,lines,value,points,optimMark,coefToValueZ,convexPoints,lineFunctional} = this.state;
+        let {variables,restricciones} = this.props
+        let {referencias,lines,value,points,optimMark,coefToValueZ,convexPoints,lineFunctional,areaGraph} = this.state;
         return( 
         <CardBody>
-            <Card>
-                <CardHeader>Grafico</CardHeader>
+            <Card outline color='secondary'>
+                <CardHeader>
+                    <Row>
+                        <Col className="text-left"><CardTitle><h5>Grafico:</h5></CardTitle></Col>
+                        <Col><Button outline size='sm'
+                            onClick={() => this.setState({areaGraph:!this.state.areaGraph})} 
+                            color={!this.state.areaGraph ? 'success':'danger'}>{!this.state.areaGraph ? 'Ver Sombra de Restricciones':'Ocultar Sombra de Restricciones'}</Button>
+                        </Col>
+                    </Row>
+                </CardHeader>
                 <CardBody>
                     <Row className='mx-auto'>
                         <XYPlot onMouseLeave={() => this.setState({pointer: null})} width={526} height={526}>
@@ -568,7 +577,7 @@ class GraphicPresentation extends React.Component{
                             <XAxis title='Variable X0' />
                             <YAxis  title='Variable X1'/>
 
-                            {/* {this.mapperAreaSeries(lines,referencias)} */}
+                            {areaGraph && this.mapperAreaSeries(lines,referencias)}
                             
                             {this.mapperLinesSeries(lines,referencias)}
 
@@ -586,6 +595,7 @@ class GraphicPresentation extends React.Component{
                         </XYPlot>
                     </Row>
                     <Row className='mx-auto'><DiscreteColorLegend orientation="horizontal" items={referencias}/></Row>
+                    <Row><ReferencesList variables={variables} restricciones={restricciones}/></Row>
                 </CardBody>
                 <CardFooter>
                     {this.getTableResult(optimMark.concat(points),coefToValueZ)}
