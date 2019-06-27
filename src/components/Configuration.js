@@ -78,30 +78,36 @@ class Configuration extends React.Component {
   //Función que se encarga de Añadir una restriccion si es necesario.
   handleNewsRes = () => {
     let { restricciones } = this.props.status;
-    //Contador de Rescciones sin descripciones.
-    let counterWitheRes = restricciones.filter(element => element.descripcion.length === 0).length;
-    //Si el contador de restricciones vacias es igual a 0 entonces agregamos una restriccion mas.
-    if (counterWitheRes === 0) {
-      restricciones.push({
-        ri: restricciones.length,
-        descripcion: "",
-        coeficientes: [],
-        eq: ">=",
-        derecha: ""
-      });
-      this.props.handleRestricciones(restricciones);
-    }
-  };
+    //Agregamos Tope de Restricciones
+    if(restricciones.length < 30 ){
+      //Contador de Rescciones sin descripciones.
+      let counterWitheRes = restricciones.filter(element => element.descripcion.length === 0).length;
+      //Si el contador de restricciones vacias es igual a 0 entonces agregamos una restriccion mas.
+        if (counterWitheRes === 0) {
+          restricciones.push({
+            ri: restricciones.length,
+            descripcion: "",
+            coeficientes: [],
+            eq: ">=",
+            derecha: ""
+          });
+          this.props.handleRestricciones(restricciones);
+        }
+      }
+    };
+   
   //Función que se encarga de Añadir una Variable si es necesario.
   handleNewsVar = method => {
     let { variables } = this.props.status;
     if (method === "simplex") {
-      //Si el metodo es Simplex, se permite agregar más de dos variables.
-      let counterWitheVar = variables.filter(element => element.descripcion.length === 0).length;
-      //Si la cantidad de Variables Libres es igual a 0 se agrega una más.
-      if (counterWitheVar === 0) {
-        variables.push({ xi: variables.length, descripcion: "", coeficiente: "" });
-        this.props.handleVariables(variables);
+      if( variables.length < 20 ){
+        //Si el metodo es Simplex, se permite agregar más de dos variables.
+        let counterWitheVar = variables.filter(element => element.descripcion.length === 0).length;
+        //Si la cantidad de Variables Libres es igual a 0 se agrega una más.
+        if (counterWitheVar === 0) {
+          variables.push({ xi: variables.length, descripcion: "", coeficiente: "" });
+          this.props.handleVariables(variables);
+        }
       }
     } else {
       //Si no lo es, aseguramos que existan solo dos, entonces eliminamos lo que está de más.
