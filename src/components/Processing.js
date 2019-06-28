@@ -19,6 +19,8 @@ class Processing extends React.Component {
       .filter(re => re.descripcion !== "")
       .every(re => re.coeficientes.every(co => co !== "") && re.derecha !== "");
     if (verifQty && veriResQty) {
+      console.log(verifQty+'dff:'+veriResQty);
+      
       this.props.lastStep(2);
       this.setState({ faltaCoe: "" });
       return true;
@@ -50,13 +52,13 @@ class Processing extends React.Component {
 
     switch (name) {
       case "derecha":
-        restricciones[ri].derecha = parseInt(value);
+        restricciones[ri].derecha = Number(value);
         break;
       case "eq":
         restricciones[ri].eq = value;
         break;
       default:
-        restricciones[ri].coeficientes[name] = parseInt(value);
+        restricciones[ri].coeficientes[name] = Number(value);
         break;
     }
     console.log(restricciones);
