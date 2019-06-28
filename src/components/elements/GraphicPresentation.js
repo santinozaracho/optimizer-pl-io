@@ -65,6 +65,7 @@ class GraphicPresentation extends React.Component{
 
 
     getLinesAndExpressions = restricciones => {
+        const getFrac = real => new Fraction(Math.pow(10,(real - real.toFixed()).toString().length - 2)*real, Math.pow(10,(real - real.toFixed()).toString().length - 2)) 
         //Tipos de Expresiones: 0: Constante en X; 1: Constante en Y; 2: Recta con pendiente.
         let expresiones = [];
         let arrayDeRestriccionesConLosDosCoef =  restricciones.filter(el=> ( el.coeficientes[0] > 0 && el.coeficientes[1] > 0) )
@@ -73,10 +74,16 @@ class GraphicPresentation extends React.Component{
         // console.log('Ymax: '+highestValueY+' Xmax:'+highestValueX);
         
         let lines = restricciones.map( restri => {
+      
+
+            let xNum = !Number.isInteger(Number(restri.coeficientes[0])) ? getFrac(Number(restri.coeficientes[0])):Number(restri.coeficientes[0]);
+
+            let yNum = !Number.isInteger(Number(restri.coeficientes[1])) ? getFrac(Number(restri.coeficientes[1])):Number(restri.coeficientes[1]);
+ 
             //Si posee ambos coeficientes entoces es una recta con pendiente.
-            if (restri.coeficientes[0] !== 0  && restri.coeficientes[1] !== 0) {
-                let x = new Expression('x').multiply(restri.coeficientes[0]);
-                let y = new Expression('y').multiply(restri.coeficientes[1]);
+            if ( xNum !== 0  &&  yNum!== 0) {
+                let x = new Expression('x').multiply(xNum);
+                let y = new Expression('y').multiply(yNum);
                 let expressRestri = new Expression().add(x).add(y);  
                 let restriEquation = new Equation(expressRestri,restri.derecha)
                 expresiones.push({restriEquation,tipo:2})
@@ -128,9 +135,9 @@ class GraphicPresentation extends React.Component{
                 }
             }else {
                 //Sino, es una constante.
-                if (restri.coeficientes[0] !== 0) {
+                if (xNum !== 0) {
                     //Constante en X
-                    let x = new Expression('x').multiply(restri.coeficientes[0]);
+                    let x = new Expression('x').multiply(xNum);
                     let restriEquation = new Equation(x,restri.derecha)
                     expresiones.push({restriEquation,tipo:0})
                     let xEqu = restriEquation.solveFor('x');
@@ -139,7 +146,7 @@ class GraphicPresentation extends React.Component{
                     }
                 }else {
                     //Constante en Y
-                    let y = new Expression('y').multiply(restri.coeficientes[1]);
+                    let y = new Expression('y').multiply(yNum);
                     let restriEquation = new Equation(y,restri.derecha)
                     expresiones.push({restriEquation,tipo:1})
                     let yEqu = restriEquation.solveFor('y')
