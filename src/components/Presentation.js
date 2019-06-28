@@ -68,11 +68,9 @@ class Presentation extends React.Component {
   calculateResults = () => {
     //Convertimos la App en Modelo para Solver.js
     let model = convertAppToModelForSolverPrimal(this.props.status);
-    console.log(model);
 
     //solver.js soluciona y nos devuelve
     let result = solver.Solve(model, false, true);
-    console.log(result);
 
     this.setState({ result });
   };
