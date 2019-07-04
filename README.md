@@ -6,6 +6,8 @@ El proyecto esta basado graficamente en React.js y a modo de solucionar los mode
 
 Integrantes del Equipo de Desarrollo:
 -Cardozo, Edgar.
+-Garcia, Emmanuel
 -Solis, Santiago.
 -Vaernet, Ian.
+-Vazquez Diaz, Julian
 -Zaracho Simonetto, Carlos Santino.
