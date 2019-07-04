@@ -55,6 +55,9 @@ const Index = () => (
               <Button outline tag="a" href="https://github.com/juliandiazok">
                 DJ
               </Button>
+              <Button outline tag="a" href="https://github.com/egarcia1997">
+                GE
+              </Button>
               <Button outline tag="a" href="https://github.com/santisolis97">
                 SS
               </Button>
