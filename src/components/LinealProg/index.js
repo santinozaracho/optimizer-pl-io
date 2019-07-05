@@ -1,5 +1,6 @@
 import React from "react";
 import { Container, Col, Row, Progress } from "reactstrap";
+import ModalModels from "../Models"
 import ReactWizard from "react-bootstrap-wizard";
 import Configuration from "./Configuration";
 import Processing from "./Processing";
@@ -16,7 +17,8 @@ class LinealProg extends React.Component {
       objective: "max",
       integer: false,
       result: false,
-      barProg: 33
+      barProg: 33,
+      modelsOpen:false
     };
   }
   //Esta función maneja el cambio en las restricciones
@@ -53,19 +55,20 @@ class LinealProg extends React.Component {
     console.log("En algún momento va a imprimir resultados");
   };
 
-  loadExampleModel = () => {
-    let variables = [
-      { xi: 0, descripcion: "Pantalones (u/día)", coeficiente: 3 },
-      { xi: 1, descripcion: "Camisas (u/día)", coeficiente: 1 }
-    ];
-    let restricciones = [
-      { ri: 0, descripcion: "Mano de obra (hs/día)", coeficientes: [1, 1], eq: "<=", derecha: 8 },
-      { ri: 1, descripcion: "Minimo de Produccion (u/día)", coeficientes: [1, 6], eq: ">=", derecha: 14 }
-    ];
-    this.setState({ variables, restricciones, integer: false, method: "graph", objective: "max" });
+  showModels = () => this.setState({modelsOpen:!this.state.modelsOpen})
+
+  setModel = model => {
+    this.setState({ 
+      variables: model.variables, 
+      restricciones: model.restricciones, 
+      integer: model.integer, 
+      method: model.method, 
+      objective: model.objective 
+    });
   };
 
   render() {
+    let { modelsOpen } = this.state
     var steps = [
       // this step hasn't got a isValidated() function, so it will be considered to be true
       {
@@ -79,7 +82,8 @@ class LinealProg extends React.Component {
           handleRestricciones: this.handleRestricciones,
           lastStep: this.lastStep,
           toggleInteger: this.toggleInteger,
-          handleObjective: this.handleObjective
+          handleObjective: this.handleObjective,
+          showModels:this.showModels
         }
       },
       {
@@ -127,6 +131,7 @@ class LinealProg extends React.Component {
             />
           </Col>
         </Row>
+        <Row><ModalModels open={modelsOpen} setModel={this.setModel} handleClose={this.showModels}/></Row>
       </Container>
     );
   }

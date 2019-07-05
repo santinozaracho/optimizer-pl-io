@@ -1,15 +1,8 @@
 import React from "react";
 import { ButtonGroup, Button, Container, Row, Col, Card, CardBody, CardHeader, CardTitle } from "reactstrap";
-import {
-  Alert,
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText,
-  Input,
-  UncontrolledPopover,
-  PopoverBody,
-  PopoverHeader
-} from "reactstrap";
+import { Alert, UncontrolledPopover, PopoverBody, PopoverHeader } from "reactstrap";
+import Restrictions from "./Restrictions";
+import Variables from "./Variables";
 
 class Configuration extends React.Component {
   constructor(props) {
@@ -17,16 +10,6 @@ class Configuration extends React.Component {
     this.state = { faltaDescrip: "" };
   }
 
-  componentDidMount() {
-    this.handleNewsRes();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
-      this.handleNewsRes();
-      this.handleNewsVar(this.props.status.method);
-    }
-  }
   //Función que permite validar si se ingresaron todos los cambios correspondientes en la etapa
   isValidated() {
     let { variables, restricciones } = this.props.status;
@@ -43,149 +26,34 @@ class Configuration extends React.Component {
     }
     return false;
   }
-  //Función que se encarga de manejar las modificaciones en las variables.
-  handlerInputVar = event => {
-    let { value, name } = event.target;
-    let { variables } = this.props.status;
-    //Asignamos Valor y reasignamos el indice
-    variables[name].xi = name;
-    variables[name].descripcion = value;
-    if (name > 1 && value === "") {
-      //Si la desc esta vacía eliminamos la variable
-      variables.splice(name, 1);
-    }
-    //Pasasamos al Padre los cambios realizados en la variable
-    this.props.handleVariables(variables);
-    //llamamos a la función que se encarga de generar nuevas variables.
-    this.handleNewsVar(this.props.status.method);
-  };
-  //Función que se encarga de manejar las modificaciones de restricciones.
-  handlerInputRes = event => {
-    let { value, name } = event.target;
-    let { restricciones } = this.props.status;
-    //Asignamos el nuevo cambio
-    restricciones[name].ri = name;
-    restricciones[name].descripcion = value;
-    if (value === "") {
-      //si el cambio es dejarla vacia entonces eliminamos la restriccion
-      restricciones.splice(name, 1);
-    }
-    //pedimos al padre que almacene los cambios
-    this.props.handleRestricciones(restricciones);
-    //Llamamos a generar si corresponde nueva restriccion
-    this.handleNewsRes();
-  };
-  //Función que se encarga de Añadir una restriccion si es necesario.
-  handleNewsRes = () => {
-    let { restricciones } = this.props.status;
-    //Agregamos Tope de Restricciones
-    if(restricciones.length < 30 ){
-      //Contador de Rescciones sin descripciones.
-      let counterWitheRes = restricciones.filter(element => element.descripcion.length === 0).length;
-      //Si el contador de restricciones vacias es igual a 0 entonces agregamos una restriccion mas.
-        if (counterWitheRes === 0) {
-          restricciones.push({
-            ri: restricciones.length,
-            descripcion: "",
-            coeficientes: [],
-            eq: ">=",
-            derecha: ""
-          });
-          this.props.handleRestricciones(restricciones);
-        }
-      }
-    };
-   
-  //Función que se encarga de Añadir una Variable si es necesario.
-  handleNewsVar = method => {
-    let { variables } = this.props.status;
-    if (method === "simplex") {
-      if( variables.length < 20 ){
-        //Si el metodo es Simplex, se permite agregar más de dos variables.
-        let counterWitheVar = variables.filter(element => element.descripcion.length === 0).length;
-        //Si la cantidad de Variables Libres es igual a 0 se agrega una más.
-        if (counterWitheVar === 0) {
-          variables.push({ xi: variables.length, descripcion: "", coeficiente: "" });
-          this.props.handleVariables(variables);
-        }
-      }
-    } else {
-      //Si no lo es, aseguramos que existan solo dos, entonces eliminamos lo que está de más.
-      if (variables.length > 2) {
-        variables.splice(2);
-        this.props.handleVariables(variables);
-      }
-    }
-  };
+  
+  //Funcion que se encarga de traspasar los cambios al padre
+  handleRestrictions = restricciones => this.props.handleRestricciones(restricciones)
+  
+  //Funcion que se encarga de traspasar los cambios al padre
+  handleVariables = variables => this.props.handleVariables(variables)
+  
+  //Modelos
+  showModels = () => this.props.showModels()
 
   render() {
     //Obtenemos de las props, las varaibles y restricciones.
-    let { variables } = this.props.status;
-    let { restricciones } = this.props.status;
-    // Generamos los inputs para las Variables
-    let variablesARenderizar = variables.map((variable, index) => (
-      <InputGroup className="mt-1" id={"XTT" + index} key={"VTD" + index}>
-        <InputGroupAddon addonType="prepend">
-          <InputGroupText name="xi" id="variable">
-            {"X" + index}
-          </InputGroupText>
-        </InputGroupAddon>
-        <Input
-          name={index}
-          placeholder="Descripcion de la Variable"
-          aria-label="Descripcion"
-          aria-describedby="variable"
-          onChange={this.handlerInputVar}
-          value={variable.descripcion}
-        />
-        <UncontrolledPopover flip={false} trigger="focus hover" placement="auto" target={"XTT" + index}>
-          <PopoverBody>Aquí debes ingresar qué representa la variable en el modelo.</PopoverBody>
-        </UncontrolledPopover>
-      </InputGroup>
-    ));
-    //Generamos los imputs para las restricciones
-    let restriccionesARenderizar = restricciones.map((restriccion, index) => (
-      <InputGroup className="mt-1" id={"TTR" + index} key={"RTD" + index}>
-        <InputGroupAddon addonType="prepend">
-          <InputGroupText name="ri" id="restriccion">
-            {"R" + index}
-          </InputGroupText>
-        </InputGroupAddon>
-        <Input
-          name={index}
-          placeholder="Descripcion de la Restriccion"
-          aria-label="Descripcion"
-          aria-describedby="restriccion"
-          onChange={this.handlerInputRes}
-          value={restriccion.descripcion}
-        />
-        <UncontrolledPopover flip={false} trigger="focus hover" placement="auto" target={"TTR" + index}>
-          <PopoverBody>Aquí debes ingresar qué representa la restricción en el modelo.</PopoverBody>
-        </UncontrolledPopover>
-      </InputGroup>
-    ));
+    let {variables,restricciones,method } = this.props.status;
+
     let buttonsMethods = (
       <ButtonGroup id="ButtUtil">
         <Button
           outline
-          onClick={() => {
-            this.props.handleMethod("graph");
-            this.handleNewsVar("graph");
-          }}
+          onClick={ () => this.props.handleMethod("graph")}
           active={this.props.status.method === "graph"}
-          color="primary"
-        >
+          color="primary">
           Gráfico
         </Button>
         <Button
           outline
-          onClick={() => {
-            this.props.handleMethod("simplex");
-            this.handleNewsVar("simplex");
-          }}
+          onClick={ () => this.props.handleMethod("simplex")}
           active={this.props.status.method === "simplex"}
-          color="primary"
-        >
+          color="primary">
           Simplex
         </Button>
       </ButtonGroup>
@@ -243,8 +111,8 @@ class Configuration extends React.Component {
               <Card outline color="secondary" id="CardModel" className="mt-2 mx-auto">
                 <CardHeader>Modelo de ejemplo</CardHeader>
                 <CardBody>
-                  <Button color="warning" outline onClick={this.props.loadExampleModel}>
-                    Cargar
+                  <Button color="warning" outline onClick={this.showModels}>
+                    Modelos
                   </Button>
                 </CardBody>
               </Card>
@@ -290,7 +158,7 @@ class Configuration extends React.Component {
                   <h4>Variables</h4>
                 </CardTitle>
               </CardHeader>
-              <CardBody>{variablesARenderizar}</CardBody>
+              <CardBody><Variables method={method} handleVariables={this.handleVariables} variables={variables}/></CardBody>
             </Card>
           </Row>
           <Row>
@@ -307,7 +175,7 @@ class Configuration extends React.Component {
                   <h4>Restricciones</h4>
                 </CardTitle>
               </CardHeader>
-              <CardBody>{restriccionesARenderizar}</CardBody>
+              <CardBody><Restrictions handleRestrictions={this.handleRestrictions} restricciones={restricciones}/></CardBody>
             </Card>
           </Row>
           {this.state.faltaDescrip !== "" && (
