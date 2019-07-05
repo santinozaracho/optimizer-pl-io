@@ -1,8 +1,8 @@
 import React from "react";
 import { Container, Row, Card, CardBody, CardHeader, CardTitle, Alert } from "reactstrap";
-import Restriccion from "./elements/Restriccion";
-import FuncionObj from "./elements/FuncionObj";
-import ReferencesList from "./elements/ReferencesList";
+import Restriccion from "./Restriccion";
+import FuncionObj from "./FuncionObj";
+import ReferencesList from "../ReferencesList";
 
 class Processing extends React.Component {
   constructor(props) {

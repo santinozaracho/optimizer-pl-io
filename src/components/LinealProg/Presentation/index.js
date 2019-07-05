@@ -1,8 +1,8 @@
 import React from "react";
 import { Card, CardTitle, CardHeader } from "reactstrap";
 import solver from "javascript-lp-solver";
-import SimplexPresentation from "./elements/SimplexPresentation";
-import GraphicPresentation from "./elements/GraphicPresentation";
+import SimplexPresentation from "./SimplexPresentation";
+import GraphicPresentation from "./GraphicPresentation";
 
 let convertAppToModelForSolverPrimal = datosApp => {
   //Obtenemos los Datos de la aplicacion

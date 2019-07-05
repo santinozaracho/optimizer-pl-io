@@ -4,7 +4,7 @@ import ReactWizard from "react-bootstrap-wizard";
 import Configuration from "./Configuration";
 import Processing from "./Processing";
 import Presentation from "./Presentation";
-import logo from "../logo.svg";
+import logo from "./logo.svg";
 
 class LinealProg extends React.Component {
   constructor(props) {

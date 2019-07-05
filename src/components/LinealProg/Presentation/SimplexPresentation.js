@@ -1,6 +1,6 @@
 import React from 'react';
 import {Card,CardTitle,CardBody,CardText,CardHeader,Table,CardFooter,Row,Col,Button,Collapse} from 'reactstrap';
-import ReferencesList from './ReferencesList'
+import ReferencesList from '../ReferencesList'
 
 class SimplexPresentation extends React.Component{
     constructor (props){

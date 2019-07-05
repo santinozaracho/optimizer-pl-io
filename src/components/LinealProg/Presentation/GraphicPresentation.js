@@ -2,7 +2,7 @@ import React from 'react';
 import {CardBody, Card, CardHeader,CardFooter,Table,Row,Col,CardTitle,Button} from 'reactstrap';
 import {XYPlot, XAxis, YAxis, HorizontalGridLines,LineSeries, AreaSeries, VerticalGridLines,MarkSeries,DiscreteColorLegend,Hint} from 'react-vis';
 import {Expression, Equation,Fraction} from 'algebra.js';
-import ReferencesList from './ReferencesList';
+import ReferencesList from '../ReferencesList';
 var randomColor = require('randomcolor');
 
 
@@ -545,9 +545,9 @@ class GraphicPresentation extends React.Component{
     getTableResult = (points,coeficientes,restricciones) =>{
         console.log('Drawing Table Results');    
         const calcSlacksValue = point => {
-            return restricciones.map( restri => <td key={'S-C-'+point.P+'-'+restri.ri}>{(restri.coeficientes[0]*point.x+restri.coeficientes[1]*point.y - restri.derecha).toFixed(2)}</td>)
+            return restricciones.map( restri => <td key={'S-C-'+point.P+'-'+restri.ri}>{(Math.abs(restri.coeficientes[0]*point.x+restri.coeficientes[1]*point.y - restri.derecha)).toFixed(2)}</td>)
         }
-        const calcResult = point =>{return (coeficientes.x*point.x + coeficientes.y*point.y).toFixed(2)}
+        const calcResult = point =>{return (Math.abs(coeficientes.x*point.x + coeficientes.y*point.y)).toFixed(2)}
         let slacksTitles = restricciones.map(restri => <th key={'S-T-'+restri.ri}>{'S'+restri.ri}</th>)
         return( <Table>
                     <thead><tr><th>Punto</th><th>Resultado</th><th>X0</th><th>X1</th>{slacksTitles}</tr></thead>
