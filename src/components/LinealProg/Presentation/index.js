@@ -51,14 +51,14 @@ class Presentation extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.status.result) {
+    if (this.props.result) {
       this.calculateResults();
     }
   }
 
   componentDidUpdate(prevProps) {
     if (this.props !== prevProps) {
-      if (this.props.status.result) {
+      if (this.props.result) {
         this.calculateResults();
       }
     }
@@ -90,7 +90,7 @@ class Presentation extends React.Component {
             printResults = <GraphicPresentation
                 variables={variables}
                 restricciones={restricciones}
-                graph={this.props.status.result}
+                graph={this.props.result}
                 result={ result.bounded ? result.solutionSet : {} }
               />
         }

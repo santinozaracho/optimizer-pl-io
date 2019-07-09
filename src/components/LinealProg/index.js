@@ -11,11 +11,14 @@ class LinealProg extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      variables: [{ xi: 0, descripcion: "", coeficiente: "" }, { xi: 1, descripcion: "", coeficiente: "" }],
-      restricciones: [{ ri: 0, descripcion: "", coeficientes: [], eq: ">=", derecha: "" }],
-      method: "graph",
-      objective: "max",
-      integer: false,
+      model:{
+        variables: [{ xi: 0, descripcion: "", coeficiente: "" }, { xi: 1, descripcion: "", coeficiente: "" }],
+        restricciones: [{ ri: 0, descripcion: "", coeficientes: [], eq: ">=", derecha: "" }],
+        method: "graph",
+        objective: "max",
+        integer: false
+      },
+      
       result: false,
       barProg: 33,
       modelsOpen:false
@@ -23,21 +26,34 @@ class LinealProg extends React.Component {
   }
   //Esta función maneja el cambio en las restricciones
   handleRestricciones = restricciones => {
-    this.setState({ restricciones, result: false });
+    let { model } = this.state;
+    model.restricciones = restricciones;
+    this.setState({ model, result: false });
   };
   //Esta función maneja el cambio en las variables
   handleVariables = variables => {
-    this.setState({ variables, result: false });
+    let { model } = this.state;
+    model.variables = variables;
+    this.setState({ model, result: false });
   };
   //Esta función maneja el cambio del metodo
   handleMethod = method => {
-    this.setState({ method, result: false });
+    let { model } = this.state;
+    model.method = method;
+    this.setState({ model, result: false });
   };
   //Esta función maneja el cambio del objetivo de optimización
   handleObjective = objective => {
-    this.setState({ objective, result: false });
+    let { model } = this.state;
+    model.objective = objective;
+    this.setState({ model, result: false });
   };
-  toggleInteger = () => this.setState({ integer: !this.state.integer });
+  toggleInteger = () => {
+    let { model } = this.state;
+    model.integer = !model.integer;
+    this.setState({ model, result: false });
+
+  }
   //Esta función guarda el resultado (inutilizada por el momento)
   handleResult = result => {
     this.setState({ result });
@@ -57,25 +73,17 @@ class LinealProg extends React.Component {
 
   showModels = () => this.setState({modelsOpen:!this.state.modelsOpen})
 
-  setModel = model => {
-    this.setState({ 
-      variables: model.variables, 
-      restricciones: model.restricciones, 
-      integer: model.integer, 
-      method: model.method, 
-      objective: model.objective 
-    });
-  };
+  setModel = model => this.setState({ model })
 
   render() {
-    let { modelsOpen } = this.state
+    let { modelsOpen,model} = this.state
     var steps = [
       // this step hasn't got a isValidated() function, so it will be considered to be true
       {
         stepName: "Configuración del Modelo",
         component: Configuration,
         stepProps: {
-          status: this.state,
+          status: model,
           loadExampleModel: this.loadExampleModel,
           handleMethod: this.handleMethod,
           handleVariables: this.handleVariables,
@@ -90,7 +98,7 @@ class LinealProg extends React.Component {
         stepName: "Detalles del Modelo",
         component: Processing,
         stepProps: {
-          status: this.state,
+          status: model,
           handleVariables: this.handleVariables,
           lastStep: this.lastStep,
           handleRestricciones: this.handleRestricciones
@@ -100,7 +108,8 @@ class LinealProg extends React.Component {
         stepName: "Presentación de los Resultados",
         component: Presentation,
         stepProps: {
-          status: this.state,
+          status: model,
+          result:this.state.result,
           handleResult: this.handleResult,
           lastStep: this.lastStep
         }
@@ -131,7 +140,7 @@ class LinealProg extends React.Component {
             />
           </Col>
         </Row>
-        <Row><ModalModels open={modelsOpen} setModel={this.setModel} handleClose={this.showModels}/></Row>
+        <Row><ModalModels open={modelsOpen} model={model} setModel={this.setModel} handleClose={this.showModels}/></Row>
       </Container>
     );
   }

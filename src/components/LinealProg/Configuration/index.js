@@ -109,7 +109,7 @@ class Configuration extends React.Component {
                 </PopoverBody>
               </UncontrolledPopover>
               <Card outline color="secondary" id="CardModel" className="mt-2 mx-auto">
-                <CardHeader>Modelo de ejemplo</CardHeader>
+                <CardHeader>Gestion de Modelos</CardHeader>
                 <CardBody>
                   <Button color="warning" outline onClick={this.showModels}>
                     Modelos

@@ -4,10 +4,12 @@ import Variable from './Variable';
 const Variables = props => {
     let { variables,method } = props
         //Función que se encarga de manejar las modificaciones en las variables.
-        const deleteVar = ri => {
+        const deleteVar = xi => {
             if (variables.length > 2){
-                variables.splice(ri, 1)
-                variables.forEach( (vari,index) => vari.ri = index )
+                variables.splice(xi, 1)
+                variables.forEach( (vari,index) => vari.xi = index )
+            }else{
+                variables[xi].descripcion = ''
             }
         }
         //Función que se encarga de manejar las modificaciones de restricciones.
@@ -16,8 +18,6 @@ const Variables = props => {
             if (desc === '') { deleteVar(xi) }else{ variables[xi].descripcion = desc }
             //pedimos al padre que almacene los cambios
             props.handleVariables(variables);
-            //Llamamos a generar si corresponde nueva restriccion
-            handleNewsVar();
         };
         //Función que se encarga de Añadir una Variable si es necesario.
     const handleNewsVar = () => {
