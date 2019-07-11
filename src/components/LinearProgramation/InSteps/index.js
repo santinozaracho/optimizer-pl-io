@@ -1,13 +1,13 @@
 import React from "react";
 import { Container, Col, Row, Progress } from "reactstrap";
-import ModalModels from "../Models"
+import ModalModels from "../../Models"
 import ReactWizard from "react-bootstrap-wizard";
-import Configuration from "./Configuration";
-import Processing from "./Processing";
-import Presentation from "./Presentation";
-import logo from "./logo.svg";
+import Configuration from "../Configuration";
+import Processing from "../Processing";
+import Presentation from "../Presentation";
+import logo from "../logo.svg";
 
-class LinealProg extends React.Component {
+class InSteps extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -146,4 +146,4 @@ class LinealProg extends React.Component {
   }
 }
 
-export default LinealProg;
+export default InSteps;
