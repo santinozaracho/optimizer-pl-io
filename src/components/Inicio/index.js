@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import { Button, Jumbotron, Container, Row, Col, ButtonGroup } from "reactstrap";
+import { Button, Jumbotron, Container, Row, Col, ButtonGroup, UncontrolledTooltip } from "reactstrap";
 
 const Inicio = () =>{
     return(
@@ -32,22 +32,28 @@ const Inicio = () =>{
                     </Row>
                     <Row>
                         <ButtonGroup className="mx-auto">
-                            <Button outline tag="a" href="https://github.com/EdgarCardozo">
+                            <UncontrolledTooltip target='btnce'>Cardozo, Edgar</UncontrolledTooltip>
+                            <Button id='btnce' outline tag="a" href="https://github.com/EdgarCardozo">
                                 CE
                             </Button>
-                            <Button outline tag="a" href="https://github.com/juliandiazok">
+                            <UncontrolledTooltip target='btndj'>Diaz, Julian</UncontrolledTooltip>
+                            <Button id='btndj' outline tag="a" href="https://github.com/juliandiazok">
                                 DJ
                             </Button>
-                            <Button outline tag="a" href="https://github.com/egarcia1997">
+                            <UncontrolledTooltip target='btnge'>Garcia, Emmanuel</UncontrolledTooltip>
+                            <Button id='btnge' outline tag="a" href="https://github.com/egarcia1997">
                                 GE
                             </Button>
-                            <Button outline tag="a" href="https://github.com/santisolis97">
+                            <UncontrolledTooltip target='btnss'>Solis, Santiago</UncontrolledTooltip>
+                            <Button id='btnss' outline tag="a" href="https://github.com/santisolis97">
                                 SS
                             </Button>
-                            <Button outline tag="a" href="https://github.com/ianv97">
+                            <UncontrolledTooltip target='btnvi'>Vaernet, Ian</UncontrolledTooltip>
+                            <Button id='btnvi' outline tag="a" href="https://github.com/ianv97">
                                 VI
                             </Button>
-                            <Button outline tag="a" href="https://github.com/santinozaracho">
+                            <UncontrolledTooltip target='btnzs'>Zaracho Simonetto, Carlos Santino</UncontrolledTooltip>
+                            <Button id='btnzs' outline tag="a" href="https://github.com/santinozaracho">
                                 ZS
                             </Button>
                         </ButtonGroup>
