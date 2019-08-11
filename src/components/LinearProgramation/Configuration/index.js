@@ -104,8 +104,7 @@ class Configuration extends React.Component {
             <Col>
               <UncontrolledPopover flip={false} trigger="hover" placement="top" target="CardModel">
                 <PopoverBody>
-                  Esta función cargará un modelo predefinido con el objeto de probar el funcionamiento de la
-                  aplicación.
+                  En esta seccion usted podra almacenar en la base de datos los modelos deseados, realizando el registro con su cuenta de Google.
                 </PopoverBody>
               </UncontrolledPopover>
               <Card outline color="secondary" id="CardModel" className="mt-2 mx-auto">
