@@ -14,19 +14,19 @@ const Inicio = () =>{
                     <Row className="mt-3 mx-auto">
                         <Col>
                             <Link to={"/LinearProgramation"}>
-                            <Button size='lg' outline color="success">Programación Lineal </Button>
-
+                                <Button size='lg' outline color="success">Programación Lineal </Button>
                             </Link>
                         </Col>
                     </Row>
+                    
                     <Row className="mt-3 mx-auto">
                         <Col>
-                        <Link to={"/NoLinearProgramation"}>
-                            <Button size='lg' outline color="success">Programación No Lineal </Button>
-                        </Link>
-                            
+                            <Link to={"/NoLinearProgramation"}>
+                                <Button size='lg' outline color="success">Programación No Lineal </Button>
+                            </Link>     
                         </Col>
                     </Row>
+                    
                     <Row className="mt-5">
                         <h5>Colaboradores:</h5>
                     </Row>
@@ -57,6 +57,18 @@ const Inicio = () =>{
                                 ZS
                             </Button>
                         </ButtonGroup>
+                    </Row>
+                    <Row className="mt-3">
+                        <Col>
+                            <Button href="https://github.com/santinozaracho/optimizer-pl-io/issues" 
+                                outline>
+                                <img height='25px' src="https://img.icons8.com/ios-filled/50/000000/github.png"/>
+                                Report Issues
+                            </Button>
+                        </Col>
+                        <Col>
+                        <Button href="mailto:carlosszaracho@gmail.com" outline>Contact Us</Button>
+                        </Col>  
                     </Row>
                 </Jumbotron>
             </Col>

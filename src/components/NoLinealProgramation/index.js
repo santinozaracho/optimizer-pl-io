@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 import { Button, Jumbotron, Container, Row, Col } from "reactstrap";
 
 const NoLinealProg = () => {
@@ -11,7 +12,7 @@ const NoLinealProg = () => {
               <h2>La Programación No-Lineal aún no está disponible.</h2>
             </Row>
             <Row>
-                <a href='/'><Button className="fluid-left">Volver</Button></a>
+                <Link href='/'><Button className="fluid-left">Volver</Button></Link>
             </Row>
           </Jumbotron>
         </Col>
