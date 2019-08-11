@@ -25,7 +25,7 @@ let convertAppToModelForSolverPrimal = datosApp => {
     let newVari = {};
     newVari.coeficiente = vari.coeficiente;
     restricciones.forEach(restri => (newVari["r" + restri.ri] = restri.coeficientes[vari.xi]));
-    console.log(newVari);
+    // console.log(newVari);
     model.variables[vari.xi] = newVari;
   });
   //Tratamos las Restricciones
@@ -47,39 +47,59 @@ let convertAppToModelForSolverPrimal = datosApp => {
 class Presentation extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { result: false, details: false };
+    this.state = { result: false , details: false };
   }
 
   componentDidMount() {
-    if (this.props.result) {
-      this.calculateResults();
+    let result = false ;
+    if ( this.validateCoeficientes(this.props) ){
+      console.log('Validado..');
+      result = this.calculateResults();
+    }
+    console.log(result);
+    this.setState({ result })
+  }
+
+  componentWillReceiveProps(futureProps) {
+    if (this.props !== futureProps) {
+      let result = false ;
+      if ( this.validateCoeficientes(futureProps) ){
+        console.log('Validado..');
+        result = this.calculateResults();
+      }
+      console.log(result);
+      this.setState({ result })
     }
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.props !== prevProps) {
-      if (this.props.result) {
-        this.calculateResults();
-      }
-    }
-  }
+   //Funcion que Valida si es posible operar con los datos ingresados
+   validateCoeficientes = props => {
+    console.log('Validando..');
+    let {variables, restricciones } = props.status;
+    //Verificando si los coeficientes de las variables y las restricciones no son nulos
+    let varsOperatives = variables.filter(va => va.descripcion !== "");
+    let verifQty = varsOperatives.length ? varsOperatives.every(va => va.coeficiente !== "") : false; 
+    let restOperatives = restricciones.filter(re => re.descripcion !== "");
+    let veriResQty = restOperatives.length ? restOperatives.every(re => re.coeficientes.every(co => co !== "") && re.derecha !== ""):false;
+    return (verifQty && veriResQty) ? true : false;
+  };
 
   //Funcion de Calculo del modelo.
   calculateResults = () => {
+    console.log('Calculating..');  
     //Convertimos la App en Modelo para Solver.js
     let model = convertAppToModelForSolverPrimal(this.props.status);
 
     //solver.js soluciona y nos devuelve
-    let result = solver.Solve(model, false, true);
-
-    this.setState({ result });
+    return solver.Solve(model, false, true);
   };
 
   render() {
     //Obtenemos el resultado almacenado
     let { result } = this.state;
     let printResults;
-    if (result.feasible) {
+    console.log('Factible?:'+result.feasible);
+    if ( result.feasible ) {
       //Obtenemos las Variables desde las props
       let { variables, restricciones, method } = this.props.status;
       if (method === "simplex") {
@@ -90,7 +110,7 @@ class Presentation extends React.Component {
             printResults = <GraphicPresentation
                 variables={variables}
                 restricciones={restricciones}
-                graph={this.props.result}
+                graph={result.feasible}
                 result={ result.bounded ? result.solutionSet : {} }
               />
         }

@@ -17,23 +17,10 @@ class SinglePage extends React.Component {
         objective: "max",
         integer: false
       },
-      result: false,
+      result: true,
       modelsOpen:false
     };
   }
-componentDidMount(){
-    let result = this.validateCoeficientes();
-    this.setState({result});
-  }
-
-componentDidUpdate(prevState){
-    if ( prevState !== this.state ) {
-        if ( this.state.changes ){
-            let result = this.validateCoeficientes();
-            this.setState({ result, changes:false });
-            }
-        }    
-    }
 
   //Esta función maneja el cambio en las restricciones
   handleRestricciones = restricciones => {
@@ -67,35 +54,19 @@ componentDidUpdate(prevState){
   }
   //Esta función guarda el resultado (inutilizada por el momento)
   handleResult = result => this.setState({ result });
-
   //Esta función habilita el cálculo en el último paso
   lastStep = step => console.log('Changes')
-
+  
   finishButtonClick = result => console.log("En algún momento va a imprimir resultados");
 
-  validateCoeficientes = () =>{
-
-    let {variables, restricciones }= this.state.model;
-    //Verificando si los coeficientes de las variables y las restricciones no son nulos
-    let varsOperatives = variables.filter(va => va.descripcion !== ""); 
-    let verifQty = varsOperatives.length ? varsOperatives.every(va => va.coeficiente !== "") : false; 
-    console.log(verifQty);
-    let restOperatives = restricciones.filter(re => re.descripcion !== "");
-    let veriResQty = restOperatives.length ? restOperatives.every(re => re.coeficientes.every(co => co !== "") && re.derecha !== ""):false;
-    console.log(veriResQty);
-    
-    if (verifQty && veriResQty) { 
-        console.log('True')
-        return true } else return false
-
-  };
-  
   showModels = () => this.setState({modelsOpen:!this.state.modelsOpen});
 
   setModel = model => this.setState({ model, changes:true });
 
   render() {
     let { modelsOpen, model, result } = this.state
+    console.log('PRESENTATION:'+result);
+    
     return (
       <Container fluid className="App">
         <Row className="">
@@ -128,7 +99,7 @@ componentDidUpdate(prevState){
 
             <Row>
                 <Jumbotron className='w-100'>
-                    <Presentation status={model} result={result} handleResult={this.handleResult} lastStep={this.lastStep}/>
+                    <Presentation status={model} handleResult={this.handleResult} lastStep={this.lastStep}/>
                 </Jumbotron>
             </Row>
           

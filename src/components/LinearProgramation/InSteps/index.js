@@ -17,8 +17,7 @@ class InSteps extends React.Component {
         method: "graph",
         objective: "max",
         integer: false
-      },
-      
+      }, 
       result: false,
       barProg: 33,
       modelsOpen:false
@@ -55,15 +54,14 @@ class InSteps extends React.Component {
 
   }
   //Esta función guarda el resultado (inutilizada por el momento)
-  handleResult = result => {
-    this.setState({ result });
-  };
+  handleResult = result => this.setState({ result });
+
   //Esta función habilita el cálculo en el último paso
   lastStep = step => {
     if (step === 2) {
-      this.setState({ result: true, barProg: 100 });
+      this.setState({ barProg: 100 });
     } else {
-      this.setState({ result: false, barProg: 66 });
+      this.setState({ barProg: 66 });
     }
   };
 
@@ -109,7 +107,6 @@ class InSteps extends React.Component {
         component: Presentation,
         stepProps: {
           status: model,
-          result:this.state.result,
           handleResult: this.handleResult,
           lastStep: this.lastStep
         }
