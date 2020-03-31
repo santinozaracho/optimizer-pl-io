@@ -2,7 +2,7 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import { Button, Jumbotron, Container, Row, Col } from "reactstrap";
 
-const NoLinealProg = () => {
+const NoLinealProgramming = () => {
     return(
     <Container fluid className="App">
       <Row className="">
@@ -12,7 +12,7 @@ const NoLinealProg = () => {
               <h2>La Programación No-Lineal aún no está disponible.</h2>
             </Row>
             <Row>
-                <Link href='/'><Button className="fluid-left">Volver</Button></Link>
+                <Link to='/home'><Button className="fluid-left">Volver</Button></Link>
             </Row>
           </Jumbotron>
         </Col>
@@ -20,4 +20,4 @@ const NoLinealProg = () => {
     </Container>
     )
     };
-export default NoLinealProg;
+export default NoLinealProgramming;

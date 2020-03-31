@@ -1,23 +1,25 @@
 import React from "react";
-import { Switch, Route } from "react-router-dom";
-import InSteps from "./components/LinearProgramation/InSteps";
-import NoLinealProg from "./components/NoLinealProgramation";
-import LinearProgramation from './components/LinearProgramation'
+import { Switch, Route, Redirect } from "react-router-dom";
+import InSteps from "./components/LinealProgramming/InSteps";
+import NoLinealProgramming from "./components/NoLinealProgramming";
+import LinealProgramming from './components/LinealProgramming'
 import Inicio from "./components/Inicio";
-import SinglePage from "./components/LinearProgramation/SinglePage";
+import SinglePage from "./components/LinealProgramming/SinglePage";
 
 
-const NoLinearProgramation = () => <NoLinealProg />;
+const NoLinealProgrammingPage = () => <NoLinealProgramming />;
 
 const Index = () => <Inicio/>;
 
 const App = () => 
     <Switch>
-      <Route exact path="/" component={Index} />
-      <Route exact path="/LinearProgramming" component={LinearProgramation} />
-      <Route exact path="/LinearProgramming/InSteps" component={InSteps} />
-      <Route exact path="/LinearProgramming/SinglePage" component={SinglePage} />
-      <Route exact path="/NoLinearProgramming" component={NoLinearProgramation} />
+      <Route exact path="/home" component={Index} />
+      <Route exact path="/optimizer-pl-io/" component={Index} />
+      <Route exact path="/LinealProgramming" component={LinealProgramming} />
+      <Route exact path="/LinealProgramming/InSteps" component={InSteps} />
+      <Route exact path="/LinealProgramming/SinglePage" component={SinglePage} />
+      <Route exact path="/NoLinealProgramming" component={NoLinealProgrammingPage} />
+      <Redirect to="/home" />
     </Switch>;
 
 export default App;

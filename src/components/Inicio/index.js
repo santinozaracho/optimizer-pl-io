@@ -13,7 +13,7 @@ const Inicio = () =>{
                     </Row>
                     <Row className="mt-3 mx-auto">
                         <Col>
-                            <Link to={"/LinearProgramation"}>
+                            <Link to={"/LinealProgramming"}>
                                 <Button size='lg' outline color="success">Programación Lineal </Button>
                             </Link>
                         </Col>
@@ -21,7 +21,7 @@ const Inicio = () =>{
                     
                     <Row className="mt-3 mx-auto">
                         <Col>
-                            <Link to={"/NoLinearProgramation"}>
+                            <Link to={"/NoLinealProgramming"}>
                                 <Button size='lg' outline color="success">Programación No Lineal </Button>
                             </Link>     
                         </Col>

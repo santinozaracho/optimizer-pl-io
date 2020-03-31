@@ -2,7 +2,7 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import { Button, Jumbotron, Container, Row, Col } from "reactstrap";
 
-const LinearProgramation = () =>{
+const LinealProgramming = () =>{
     return(
         <Container fluid className="App">
         <Row className="">
@@ -13,7 +13,7 @@ const LinearProgramation = () =>{
                     </Row>
                     <Row className="mt-3 mx-auto">
                         <Col>
-                            <Link to={"/LinearProgramation/InSteps"}>
+                            <Link to={"/LinealProgramming/InSteps"}>
                                 <Button size='lg' outline color="success">Guiado por Pasos</Button>
                             </Link>
                                 
@@ -21,7 +21,7 @@ const LinearProgramation = () =>{
                     </Row>
                     <Row className="mt-3 mx-auto">
                         <Col>
-                            <Link to={"/LinearProgramation/SinglePage"} >
+                            <Link to={"/LinealProgramming/SinglePage"} >
                                 <Button size='lg' outline color="success">En Unica Pagina</Button>
 
                             </Link>
@@ -34,4 +34,4 @@ const LinearProgramation = () =>{
   )
 };
 
-export default LinearProgramation;
+export default LinealProgramming;
