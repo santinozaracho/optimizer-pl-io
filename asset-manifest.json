@@ -1,18 +1,26 @@
 {
   "files": {
-    "main.css": "/optimizer-pl-io/static/css/main.e7723a0c.chunk.css",
-    "main.js": "/optimizer-pl-io/static/js/main.dbb0c442.chunk.js",
-    "main.js.map": "/optimizer-pl-io/static/js/main.dbb0c442.chunk.js.map",
-    "runtime~main.js": "/optimizer-pl-io/static/js/runtime~main.718f7bf5.js",
-    "runtime~main.js.map": "/optimizer-pl-io/static/js/runtime~main.718f7bf5.js.map",
-    "static/css/2.cd31d209.chunk.css": "/optimizer-pl-io/static/css/2.cd31d209.chunk.css",
-    "static/js/2.884045af.chunk.js": "/optimizer-pl-io/static/js/2.884045af.chunk.js",
-    "static/js/2.884045af.chunk.js.map": "/optimizer-pl-io/static/js/2.884045af.chunk.js.map",
+    "main.css": "/optimizer-pl-io/static/css/main.f4b785f1.chunk.css",
+    "main.js": "/optimizer-pl-io/static/js/main.45f147a5.chunk.js",
+    "main.js.map": "/optimizer-pl-io/static/js/main.45f147a5.chunk.js.map",
+    "runtime-main.js": "/optimizer-pl-io/static/js/runtime-main.4a332c2c.js",
+    "runtime-main.js.map": "/optimizer-pl-io/static/js/runtime-main.4a332c2c.js.map",
+    "static/css/2.2f8ebd95.chunk.css": "/optimizer-pl-io/static/css/2.2f8ebd95.chunk.css",
+    "static/js/2.73a3d0af.chunk.js": "/optimizer-pl-io/static/js/2.73a3d0af.chunk.js",
+    "static/js/2.73a3d0af.chunk.js.map": "/optimizer-pl-io/static/js/2.73a3d0af.chunk.js.map",
     "index.html": "/optimizer-pl-io/index.html",
-    "precache-manifest.7cc5483f269675f6876bc5add150b5ff.js": "/optimizer-pl-io/precache-manifest.7cc5483f269675f6876bc5add150b5ff.js",
+    "precache-manifest.83d0385e87d64e24c42327a2a56e654a.js": "/optimizer-pl-io/precache-manifest.83d0385e87d64e24c42327a2a56e654a.js",
     "service-worker.js": "/optimizer-pl-io/service-worker.js",
-    "static/css/2.cd31d209.chunk.css.map": "/optimizer-pl-io/static/css/2.cd31d209.chunk.css.map",
-    "static/css/main.e7723a0c.chunk.css.map": "/optimizer-pl-io/static/css/main.e7723a0c.chunk.css.map",
-    "static/media/logo.svg": "/optimizer-pl-io/static/media/logo.5d5d9eef.svg"
-  }
+    "static/css/2.2f8ebd95.chunk.css.map": "/optimizer-pl-io/static/css/2.2f8ebd95.chunk.css.map",
+    "static/css/main.f4b785f1.chunk.css.map": "/optimizer-pl-io/static/css/main.f4b785f1.chunk.css.map",
+    "static/js/2.73a3d0af.chunk.js.LICENSE.txt": "/optimizer-pl-io/static/js/2.73a3d0af.chunk.js.LICENSE.txt",
+    "static/media/logo.svg": "/optimizer-pl-io/static/media/logo.ee7cd8ed.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.4a332c2c.js",
+    "static/css/2.2f8ebd95.chunk.css",
+    "static/js/2.73a3d0af.chunk.js",
+    "static/css/main.f4b785f1.chunk.css",
+    "static/js/main.45f147a5.chunk.js"
+  ]
 }
