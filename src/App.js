@@ -14,10 +14,10 @@ const Index = () => <Inicio/>;
 const App = () => 
     <Switch>
       <Route exact path="/" component={Index} />
-      <Route exact path="/LinearProgramation" component={LinearProgramation} />
-      <Route exact path="/LinearProgramation/InSteps" component={InSteps} />
-      <Route exact path="/LinearProgramation/SinglePage" component={SinglePage} />
-      <Route exact path="/NoLinearProgramation" component={NoLinearProgramation} />
+      <Route exact path="/LinearProgramming" component={LinearProgramation} />
+      <Route exact path="/LinearProgramming/InSteps" component={InSteps} />
+      <Route exact path="/LinearProgramming/SinglePage" component={SinglePage} />
+      <Route exact path="/NoLinearProgramming" component={NoLinearProgramation} />
     </Switch>;
 
 export default App;
