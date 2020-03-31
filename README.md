@@ -2,7 +2,9 @@
 
 Clickeado [Aqui](https://santinozaracho.github.io/optimizer-pl-io), usted puede acceder para observar el avance del proyecto.
 
-El proyecto esta basado graficamente en React.js y a modo de solucionar los modelos se utiliza "javascript-lp-solver" instalable desde el npm.
+El proyecto esta basado en React.js y a modo de solucionar los modelos se utiliza "javascript-lp-solver" instalable desde el npm.
+
+Para el almacenamiento de datos se usa Firebase de Google Cloud
 
 Integrantes del Equipo de Desarrollo:
 -Cardozo, Edgar.
