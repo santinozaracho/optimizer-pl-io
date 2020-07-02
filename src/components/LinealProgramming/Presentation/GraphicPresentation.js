@@ -586,7 +586,7 @@ class GraphicPresentation extends React.Component{
                     </Row>
                 </CardHeader>
                 <CardBody>
-                    <Row className='mx-auto'>
+                    <Row className='mx-auto GraphClass'>
                         <XYPlot onMouseLeave={() => this.setState({pointer: null})} width={500} height={500}>
                             <HorizontalGridLines/>
                             <VerticalGridLines/>

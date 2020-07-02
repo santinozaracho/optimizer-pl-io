@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://santinozaracho.github.io/optimizer-pl-io",
   "dependencies": {
+    "@react-pdf/renderer": "^2.0.0-beta.6",
     "algebra.js": "^0.2.6",
     "bootstrap": "^4.3.1",
     "firebase": "^6.2.4",

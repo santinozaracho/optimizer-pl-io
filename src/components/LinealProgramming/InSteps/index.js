@@ -6,6 +6,8 @@ import Configuration from "../Configuration";
 import Processing from "../Processing";
 import Presentation from "../Presentation";
 import logo from "../logo.svg";
+import PrintResults from "../PrintResults";
+import ReactPDF from '@react-pdf/renderer';
 
 class InSteps extends React.Component {
   constructor(props) {
@@ -66,8 +68,9 @@ class InSteps extends React.Component {
   };
 
   finishButtonClick = result => {
-    console.log('Variable: ' + this.state.model.variables[0].xi);
-    console.log('Variable descripcion: ' + this.state.model.variables[0].descripcion);
+    let {model} = this.state;
+    console.log('Variable: ' + model.variables[0].xi);
+    console.log('Variable descripcion: ' + model.variables[0].descripcion);
 
     console.log('Variable: ' + this.state.model.variables[1].xi);
     console.log('Variable descripcion: ' + this.state.model.variables[1].descripcion);
@@ -80,7 +83,7 @@ class InSteps extends React.Component {
 
     console.log('Metodo: ' + this.state.model.method);
     console.log('Objetivo: ' + this.state.model.objective);
-
+      window.print()
   };
 
   showModels = () => this.setState({modelsOpen:!this.state.modelsOpen})
@@ -128,14 +131,8 @@ class InSteps extends React.Component {
     ];
     return (
       <Container fluid className="App">
-        <Row className="">
-          <Col xs={12} md={6} className="mx-auto">
-            <img src={logo} className="App-logo" alt="logo" height="200" />
-            <Progress animated color="blue" value={this.state.barProg} />
-          </Col>
-        </Row>
         <Row>
-          <Col xs={12} md={6} className="my-4 mx-auto">
+          <Col xs={12} md={8} className="my-4 mx-auto">
             <ReactWizard
               steps={steps}
               title="Programación Lineal"
