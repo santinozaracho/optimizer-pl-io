@@ -66,7 +66,21 @@ class InSteps extends React.Component {
   };
 
   finishButtonClick = result => {
-    console.log("En algún momento va a imprimir resultados");
+    console.log('Variable: ' + this.state.model.variables[0].xi);
+    console.log('Variable descripcion: ' + this.state.model.variables[0].descripcion);
+
+    console.log('Variable: ' + this.state.model.variables[1].xi);
+    console.log('Variable descripcion: ' + this.state.model.variables[1].descripcion);
+
+    console.log('Restriccion: ' + this.state.model.restricciones[0].ri);
+    console.log('Restriccion: ' + this.state.model.restricciones[0].descripcion);
+
+    console.log('Restriccion: ' + this.state.model.restricciones[1].ri);
+    console.log('Restriccion: ' + this.state.model.restricciones[1].descripcion);
+
+    console.log('Metodo: ' + this.state.model.method);
+    console.log('Objetivo: ' + this.state.model.objective);
+
   };
 
   showModels = () => this.setState({modelsOpen:!this.state.modelsOpen})
