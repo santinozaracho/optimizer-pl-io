@@ -5,9 +5,7 @@ import ReactWizard from "react-bootstrap-wizard";
 import Configuration from "../Configuration";
 import Processing from "../Processing";
 import Presentation from "../Presentation";
-import logo from "../logo.svg";
-import PrintResults from "../PrintResults";
-import ReactPDF from '@react-pdf/renderer';
+
 
 class InSteps extends React.Component {
   constructor(props) {
@@ -69,20 +67,6 @@ class InSteps extends React.Component {
 
   finishButtonClick = result => {
     let {model} = this.state;
-    console.log('Variable: ' + model.variables[0].xi);
-    console.log('Variable descripcion: ' + model.variables[0].descripcion);
-
-    console.log('Variable: ' + this.state.model.variables[1].xi);
-    console.log('Variable descripcion: ' + this.state.model.variables[1].descripcion);
-
-    console.log('Restriccion: ' + this.state.model.restricciones[0].ri);
-    console.log('Restriccion: ' + this.state.model.restricciones[0].descripcion);
-
-    console.log('Restriccion: ' + this.state.model.restricciones[1].ri);
-    console.log('Restriccion: ' + this.state.model.restricciones[1].descripcion);
-
-    console.log('Metodo: ' + this.state.model.method);
-    console.log('Objetivo: ' + this.state.model.objective);
       window.print()
   };
 

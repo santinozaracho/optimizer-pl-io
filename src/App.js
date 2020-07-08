@@ -6,6 +6,7 @@ import StockProblems from "./components/StockProblems";
 import LinealProgramming from './components/LinealProgramming'
 import Inicio from "./components/Inicio";
 import SinglePage from "./components/LinealProgramming/SinglePage";
+import modelStockSimple from "./components/StockProblems/ModelStockSimple";
 
 
 const NoLinealProgrammingPage = () => <NoLinealProgramming />;
@@ -21,6 +22,7 @@ const App = () =>
       <Route exact path="/LinealProgramming/SinglePage" component={SinglePage} />
       <Route exact path="/NoLinealProgramming" component={NoLinealProgrammingPage} />
       <Route exact path="/StockProblems" component={StockProblems} />
+      <Route exact path="/StockProblems/ModelStockSimple" component={modelStockSimple} />
       <Redirect to="/home" />
     </Switch>;
 
