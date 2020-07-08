@@ -9,7 +9,8 @@ class modelStockSimple extends React.Component{
         this.state={
             demanda: null, //D
             costoDePreparacion: null, //K
-            costoDeAlmacenamiento: null//h
+            costoDeAlmacenamiento: null,//h
+            tiempoDeEntrega:null//L
         }
     }
 
@@ -20,23 +21,50 @@ class modelStockSimple extends React.Component{
         this.calcularCosto();
     }
     
-    calcularCosto(){
+    //NO SE QUE COSTO ESTAS SACANDO ACA, NO REPRESENTA NINGUNA FUNCION
+    /*calcularCosto(){
         let {demanda, costoDePreparacion, costoDeAlmacenamiento} = this.state;
         return Number(costoDePreparacion) + Number(costoDeAlmacenamiento);
+    }*/
+
+    calcularCostoInventario()
+    {
+        let {demanda, costoDePreparacion, costoDeAlmacenamiento} = this.state;
+        let promedioInventario = this.calcularInventarioOptimo / 2;
+        return costoDePreparacion/(this.calcularInventarioOptimo/demanda)+costoDeAlmacenamiento*promedioInventario; //TCL(y)
     }
 
     calcularInventarioOptimo(){
         let {demanda, costoDePreparacion, costoDeAlmacenamiento} = this.state;
-        return (Math.sqrt((2*Number(costoDePreparacion)*Number(demanda))/(Number(costoDeAlmacenamiento)))); 
+        return (Math.sqrt((2*Number(costoDePreparacion)*Number(demanda))/(Number(costoDeAlmacenamiento)))); //y*
     }
 
     calcularLongitud(){
         let {demanda, costoDePreparacion, costoDeAlmacenamiento} = this.state;
-        let inventario = this.calcularInventarioOptimo();
-        return (inventario/Number(demanda)); 
+        let inventario = this.calcularInventarioOptimo();//y*
+        return (inventario/Number(demanda)); //n
     }
-    
+    calcularPuntoDeReorden(){
+        let {demanda, costoDePreparacion, costoDeAlmacenamiento,tiempoDeEntrega} = this.state;
+        let inventario = this.calcularInventarioOptimo();//y*
+        let duracionCicloDePedido = this.calcularLongitud();//to*
+        if(tiempoDeEntrega> duracionCicloDePedido)
+        {//para politica 1
+            let numeroEntero = Math.trunc(tiempoDeEntrega/duracionCicloDePedido);//n
+            let tiempoEfectivoDeEntrega= tiempoDeEntrega- numeroEntero* duracionCicloDePedido;//Lc
+            return puntoDeReorden= tiempoEfectivoDeEntrega * demanda;//punto de reorden
+        }else{
+            //para politica 2
+            return tiempoDeEntrega;
+        }
+    }
 
+
+    //El orden es el siguiente
+    //Calculas y*
+    //Despues el punto de reorden
+    //Despues pones la politica que te toco (pueden ser 2 proximo commit te subo si queres los metodos que te definan)
+    //y por ultimo el costo del inventario
     render() { 
         let {demanda, costoDePreparacion, costoDeAlmacenamiento} = this.state;
         let costo = this.calcularCosto();
