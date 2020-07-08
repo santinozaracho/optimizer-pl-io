@@ -40,25 +40,9 @@ const Inicio = () =>{
                     </Row>
                     <Row>
                         <ButtonGroup className="mx-auto">
-                            <UncontrolledTooltip target='btnce'>Cardozo, Edgar</UncontrolledTooltip>
-                            <Button id='btnce' outline tag="a" href="https://github.com/EdgarCardozo">
-                                CE
-                            </Button>
-                            <UncontrolledTooltip target='btndj'>Diaz, Julian</UncontrolledTooltip>
-                            <Button id='btndj' outline tag="a" href="https://github.com/juliandiazok">
-                                DJ
-                            </Button>
-                            <UncontrolledTooltip target='btnge'>Garcia, Emmanuel</UncontrolledTooltip>
-                            <Button id='btnge' outline tag="a" href="https://github.com/egarcia1997">
-                                GE
-                            </Button>
-                            <UncontrolledTooltip target='btnss'>Solis, Santiago</UncontrolledTooltip>
-                            <Button id='btnss' outline tag="a" href="https://github.com/santisolis97">
-                                SS
-                            </Button>
-                            <UncontrolledTooltip target='btnvi'>Vaernet, Ian</UncontrolledTooltip>
-                            <Button id='btnvi' outline tag="a" href="https://github.com/ianv97">
-                                VI
+                            <UncontrolledTooltip target='btnce'>Alegre, Nicolas</UncontrolledTooltip>
+                            <Button id='btnce' outline tag="a" href="https://github.com/nicmalegre">
+                                AN
                             </Button>
                             <UncontrolledTooltip target='btnzs'>Zaracho Simonetto, Carlos Santino</UncontrolledTooltip>
                             <Button id='btnzs' outline tag="a" href="https://github.com/santinozaracho">
