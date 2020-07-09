@@ -14,7 +14,7 @@ class modelStockSimple extends React.Component{
             costoDeAlmacenamiento: null,//h
             tiempoDeEntrega:null,//L
             politica:null,// establece que politica usar
-            unidadCostoDeAlmacenamiento:null,
+            unidadCostoDeAlmacenamiento:1,
             unidadesDemanda:null
         }
     }
@@ -34,7 +34,7 @@ class modelStockSimple extends React.Component{
     
     calcularInventarioOptimo(){
         let {demanda, costoDePreparacion, costoDeAlmacenamiento, unidadCostoDeAlmacenamiento} = this.state;
-        return (Math.sqrt((2*Number(costoDePreparacion)*Number(demanda))/(Number(costoDeAlmacenamiento)*Number(unidadCostoDeAlmacenamiento)))); //y*
+        return (Math.sqrt((2*Number(costoDePreparacion)*Number(demanda))/(Number(costoDeAlmacenamiento)*unidadCostoDeAlmacenamiento))); //y*
     }
 
     calcularCostoInventario()
@@ -77,7 +77,7 @@ class modelStockSimple extends React.Component{
     //sino
     //Pedir la cantidad {CalcularInventarioOptimo()} siempre que la cantidad de inventario baje de {CalcularPuntoDeReorden()} unidades
     render() { 
-        let {demanda, costoDePreparacion, costoDeAlmacenamiento, tiempoDeEntrega} = this.state;
+        let {demanda, costoDePreparacion, costoDeAlmacenamiento, tiempoDeEntrega,unidadCostoDeAlmacenamiento} = this.state;
         //let costo = this.calcularCosto();
         let inventario = this.calcularInventarioOptimo();
         let longitud = this.calcularLongitud();
