@@ -1,6 +1,8 @@
 import React from "react";
 import { ButtonGroup, Button, Container, Row, Col, Card, CardBody, CardHeader, CardTitle, Jumbotron} from "reactstrap";
+import {InputGroupText,InputGroup, Input,InputGroupAddon,UncontrolledPopover,PopoverBody} from 'reactstrap';
 import {Link} from 'react-router-dom';
+import '../index.css'
 
 
 class modelStockSimple extends React.Component{
@@ -18,15 +20,8 @@ class modelStockSimple extends React.Component{
         this.setState({
             [event.target.name]: event.target.value
         })
-        this.calcularCosto();
     }
     
-    //NO SE QUE COSTO ESTAS SACANDO ACA, NO REPRESENTA NINGUNA FUNCION
-    /*calcularCosto(){
-        let {demanda, costoDePreparacion, costoDeAlmacenamiento} = this.state;
-        return Number(costoDePreparacion) + Number(costoDeAlmacenamiento);
-    }*/
-
     calcularCostoInventario()
     {
         let {demanda, costoDePreparacion, costoDeAlmacenamiento} = this.state;
@@ -44,15 +39,16 @@ class modelStockSimple extends React.Component{
         let inventario = this.calcularInventarioOptimo();//y*
         return (inventario/Number(demanda)); //n
     }
+
     calcularPuntoDeReorden(){
         let {demanda, costoDePreparacion, costoDeAlmacenamiento,tiempoDeEntrega} = this.state;
         let inventario = this.calcularInventarioOptimo();//y*
         let duracionCicloDePedido = this.calcularLongitud();//to*
-        if(tiempoDeEntrega> duracionCicloDePedido)
+        if(tiempoDeEntrega > duracionCicloDePedido)
         {//para politica 1
             let numeroEntero = Math.trunc(tiempoDeEntrega/duracionCicloDePedido);//n
             let tiempoEfectivoDeEntrega= tiempoDeEntrega- numeroEntero* duracionCicloDePedido;//Lc
-            return puntoDeReorden= tiempoEfectivoDeEntrega * demanda;//punto de reorden
+            //return puntoDeReorden= tiempoEfectivoDeEntrega * demanda;//punto de reorden
         }else{
             //para politica 2
             return tiempoDeEntrega;
@@ -67,7 +63,7 @@ class modelStockSimple extends React.Component{
     //y por ultimo el costo del inventario
     render() { 
         let {demanda, costoDePreparacion, costoDeAlmacenamiento} = this.state;
-        let costo = this.calcularCosto();
+        //let costo = this.calcularCosto();
         let inventario = this.calcularInventarioOptimo();
         let longitud = this.calcularLongitud();
         
@@ -79,31 +75,89 @@ class modelStockSimple extends React.Component{
                     <Col>
                         <h1>Cargar el modelo</h1>                   
                     </Col>
-
-                    <Col>
-                        <div>
-                            <form>
-                                <p><input type="text" placeholder="Ingresar demanda" name="demanda" onChange={this.handleInputChange}></input></p>
-                                <p><input type="text" placeholder="Ingresar costo de preparacion" name="costoDePreparacion" onChange={this.handleInputChange}></input></p>
-                                <p><input type="text" placeholder="Ingresar costo de almacenamiento" name="costoDeAlmacenamiento" onChange={this.handleInputChange}></input></p>
-                            </form>
-                        </div>              
+                   
+                    <Col> 
+                        <InputGroup id={"demanda"} key={"demanda"}>
+                            <InputGroupAddon addonType="prepend">
+                                <InputGroupText name="demanda" id="demanda">
+                                    {"D"}
+                                </InputGroupText>
+                            </InputGroupAddon>
+                            <Input
+                            className="input-demanda"
+                            name={"demanda"}
+                            placeholder="Ingresar la demanda"
+                            aria-label="Demanda"
+                            aria-describedby="demanda"
+                            onChange={this.handleInputChange}
+                            />
+                        </InputGroup>
                     </Col>
+                    <Col>
+                        <InputGroup className="mt-1" id={"costoDePreparacion"} key={"costoDePreparacion"}>
+                            <InputGroupAddon addonType="prepend">
+                                <InputGroupText name="costoDePreparacion" id="costoDePreparacion">
+                                    {"K"}
+                                </InputGroupText>
+                            </InputGroupAddon>
+                            <Input
+                            name={"costoDePreparacion"}
+                            placeholder="Ingresar el costo de preparacion/producción"
+                            aria-label="costoDePreparacion"
+                            aria-describedby="costoDePreparacion"
+                            onChange={this.handleInputChange}
+                            />
+                        </InputGroup>
+                    </Col>
+                    <Col>
+                        <InputGroup className="mt-1" id={"costoDeAlmacenamiento"} key={"costoDeAlmacenamiento"}>
+                            <InputGroupAddon addonType="prepend">
+                                <InputGroupText name="costoDeAlmacenamiento" id="costoDeAlmacenamiento">
+                                    {"h"}
+                                </InputGroupText>
+                            </InputGroupAddon>
+                            <Input
+                            name={"costoDeAlmacenamiento"}
+                            placeholder="Ingresar el costo de almacenamiento"
+                            aria-label="costoDePreparacion"
+                            aria-describedby="costoDePreparacion"
+                            onChange={this.handleInputChange}
+                            />
+                        </InputGroup>
+                    </Col>
+                    <Col>
+                        <InputGroup className="mt-1" id={"tiempoDeEntrega"} key={"tiempoDeEntrega"}>
+                            <InputGroupAddon addonType="prepend">
+                            <InputGroupText name="tiempoDeEntrega" id="tiempoDeEntrega">
+                                {"L"}
+                            </InputGroupText>
+                            </InputGroupAddon>
+                            <Input
+                            name={"tiempoDeEntrega"}
+                            placeholder="Ingresar el tiempo de entrega."
+                            aria-label="tiempoDeEntrega"
+                            aria-describedby="tiempoDeEntrega"
+                            onChange={this.handleInputChange}
+                            />
+                        </InputGroup>
+                    </Col>
+
 
                     <Col>
                         <h6>Tu demanda es: {demanda}</h6>
                         <h6>Tu costo de preparacion es: ${costoDePreparacion}</h6>
                         <h6>Tu costo de almacenamiento es: ${costoDeAlmacenamiento}</h6>
-                        <h4>El costo total es de: ${costo}</h4>
+                        <h6>El tiempo de entrega es: ${this.state.tiempoDeEntrega}</h6>
                         <h4>Cantidad economica de pedido y*= {inventario}</h4>
                         <h4>Longitud del ciclo t0*= {longitud}</h4>
                     </Col>
 
                     <Row className="btn-volver justify-content-center">
-                        <Button href="#" color="primary">Calcular</Button>
+                        <Link to='./'><Button>Volver</Button></Link>
+                        <Button className="btn-Calcular" color="success">Calcular</Button>
                     </Row>
                     <Row>
-                        <Link to='./'><Button>Volver</Button></Link>
+                        
                     </Row>
                 </Jumbotron>
               </Col>
