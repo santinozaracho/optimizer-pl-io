@@ -26,7 +26,7 @@ const StockProblems = () => {
             <Row className="mt-3 mx-auto">
               <Col>
                   <Link to={"/StockProblems/ModelStockDiscontinuidadDePrecio"} >
-                      <Button size='lg' outline color="success">Modelo con stock discontinuidad</Button>
+                      <Button size='lg' outline color="success">Modelo stock discontinuidad del precio</Button>
                   </Link>
               </Col>
             </Row>

@@ -60,20 +60,20 @@ class modelStockSimple extends React.Component{
     }
     calcularCostoInventarioMenorIgual()
     {
-        let {demanda, costoDePreparacion, costoDeAlmacenamiento,unidadCostoDeAlmacenamiento} = this.state;
+        let {demanda, costoDePreparacion, costoDeAlmacenamiento,unidadCostoDeAlmacenamiento, precioC1} = this.state;
         let y = this.calcularInventarioOptimo();
         let promedioInventario = (y / 2);
         return (demanda*precioC1+(costoDePreparacion*demanda)/y+y*costoDeAlmacenamiento); //TCL(y)
     }
     calcularCostoInventarioMayor()
     {
-        let {demanda, costoDePreparacion, costoDeAlmacenamiento,unidadCostoDeAlmacenamiento} = this.state;
+        let {demanda, costoDePreparacion, costoDeAlmacenamiento,unidadCostoDeAlmacenamiento, precioC2} = this.state;
         let y = this.calcularInventarioOptimo();
         let promedioInventario = (y / 2);
         return (demanda*precioC2+(costoDePreparacion*demanda)/y+y*costoDeAlmacenamiento); //TCL(y)
     }
     calcularCostoInventario(){
-        
+        let {limite} = this.state;
         let y = this.calcularInventarioOptimo();//to*
         if(y<=limite)
         {
@@ -86,7 +86,7 @@ class modelStockSimple extends React.Component{
     }
     calularQ()
     {
-        let {demanda,costoDeAlmacenamiento, costoDePreparacion} = this.state;
+        let {demanda,costoDeAlmacenamiento, costoDePreparacion, precioC2} = this.state;
         let TCL = this.calcularCostoInventario();
         let a = 1;
         let b = (2*(precioC2*demanda-TCL))/costoDeAlmacenamiento;
