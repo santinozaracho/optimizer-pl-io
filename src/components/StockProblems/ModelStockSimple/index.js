@@ -10,7 +10,8 @@ class modelStockSimple extends React.Component{
             demanda: null, //D
             costoDePreparacion: null, //K
             costoDeAlmacenamiento: null,//h
-            tiempoDeEntrega:null//L
+            tiempoDeEntrega:null,//L
+            politica:null// establece que politica usar
         }
     }
 
@@ -40,16 +41,16 @@ class modelStockSimple extends React.Component{
     }
 
     calcularLongitud(){
-        let {demanda, costoDePreparacion, costoDeAlmacenamiento} = this.state;
+        let {demanda} = this.state;
         let inventario = this.calcularInventarioOptimo();//y*
-        return (inventario/Number(demanda)); //n
+        return (inventario/Number(demanda)); //to*
     }
     calcularPuntoDeReorden(){
-        let {demanda, costoDePreparacion, costoDeAlmacenamiento,tiempoDeEntrega} = this.state;
-        let inventario = this.calcularInventarioOptimo();//y*
+        let {demanda,politica,tiempoDeEntrega} = this.state;
         let duracionCicloDePedido = this.calcularLongitud();//to*
         if(tiempoDeEntrega> duracionCicloDePedido)
         {//para politica 1
+            politica=true;
             let numeroEntero = Math.trunc(tiempoDeEntrega/duracionCicloDePedido);//n
             let tiempoEfectivoDeEntrega= tiempoDeEntrega- numeroEntero* duracionCicloDePedido;//Lc
             return puntoDeReorden= tiempoEfectivoDeEntrega * demanda;//punto de reorden
@@ -65,6 +66,10 @@ class modelStockSimple extends React.Component{
     //Despues el punto de reorden
     //Despues pones la politica que te toco (pueden ser 2 proximo commit te subo si queres los metodos que te definan)
     //y por ultimo el costo del inventario
+    //si la politica es true entonces la politica es :
+    //Pedir {CalcularInventarioOptimo()} unidades cada {CalcularLongitud()} unidades de tiempo
+    //sino
+    //Pedir la cantidad {CalcularInventarioOptimo()} siempre que la cantidad de inventario baje de {CalcularPuntoDeReorden()} unidades
     render() { 
         let {demanda, costoDePreparacion, costoDeAlmacenamiento} = this.state;
         let costo = this.calcularCosto();
