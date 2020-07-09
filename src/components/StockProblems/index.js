@@ -25,8 +25,8 @@ const StockProblems = () => {
             </Row>
             <Row className="mt-3 mx-auto">
               <Col>
-                  <Link to={"/LinealProgramming/SinglePage"} >
-                      <Button size='lg' outline color="success">Modelo con stock de protección</Button>
+                  <Link to={"/StockProblems/ModelStockDiscontinuidadDePrecio"} >
+                      <Button size='lg' outline color="success">Modelo con stock discontinuidad</Button>
                   </Link>
               </Col>
             </Row>
