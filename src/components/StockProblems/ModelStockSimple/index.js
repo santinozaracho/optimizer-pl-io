@@ -77,7 +77,7 @@ class modelStockSimple extends React.Component{
 
         //AGREGAMOS ESTA FUNCION PARA CONTROLAR QUE DEPENDIENDO DEL TIPO DE POLITICA IMPRIMA UNA COSA O LA OTRA
         let controlarPolitica = a => (tiempoDeEntrega > longitud) ? 
-        <h4>Pedir {inventario} unidades cuando el inventario baje de {puntoDeReorden} unidades</h4> : <h4>Pedir {inventario} unidades cada {longitud} unidades de tiempo</h4>; 
+        <h4>Pedir {inventario.toFixed(2)} unidades cuando el inventario baje de {puntoDeReorden.toFixed(2)} unidades</h4> : <h4>Pedir {inventario.toFixed(2)} unidades cada {longitud.toFixed(2)} unidades de tiempo</h4>; 
         
         
         
@@ -162,10 +162,10 @@ class modelStockSimple extends React.Component{
                         <h6>Tu costo de preparacion es: ${costoDePreparacion}</h6>
                         <h6>Tu costo de almacenamiento es: ${costoDeAlmacenamiento}</h6>
                         <h6>El tiempo de entrega es: ${this.state.tiempoDeEntrega}</h6>
-                        <h4>Cantidad economica de pedido y*= {inventario}</h4>
-                        <h4>Longitud del ciclo t0*= {longitud}</h4>
-                        <h4>El costo de inventario TCU(y) es: {TCU}</h4>
-                        <h4>El punto de reorden es: {puntoDeReorden}</h4>
+                        <h4>Cantidad economica de pedido y*= {inventario.toFixed(2)}</h4>
+                        <h4>Longitud del ciclo t0*= {longitud.toFixed(2)}</h4>
+                        <h4>El costo de inventario TCU(y) es: {TCU.toFixed(2)}</h4>
+                        <h4>El punto de reorden es: {puntoDeReorden.toFixed(2)}</h4>
                         {controlarPolitica()}
                     </Col>
 
