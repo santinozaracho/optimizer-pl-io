@@ -1,6 +1,6 @@
 import React from "react";
-import { ButtonGroup, Button, Container, Row, Col, Card, CardBody, CardHeader, CardTitle, Jumbotron} from "reactstrap";
-import {InputGroupText,InputGroup, Input,InputGroupAddon,UncontrolledPopover,PopoverBody} from 'reactstrap';
+import { ButtonGroup, Button, Container, Row, Col, Card, CardBody, CardHeader, CardTitle, Jumbotron, Dropdown, DropdownItem, ButtonDropdown, DropdownMenu, DropdownToggle} from "reactstrap";
+import {InputGroupText,InputGroup, Input,InputGroupAddon,PopoverBody} from 'reactstrap';
 import {Link} from 'react-router-dom';
 import '../index.css'
 
@@ -13,9 +13,18 @@ class modelStockSimple extends React.Component{
             costoDePreparacion: null, //K
             costoDeAlmacenamiento: null,//h
             tiempoDeEntrega:null,//L
-            politica:null// establece que politica usar
+            politica:null,// establece que politica usar
+            unidadCostoDeAlmacenamiento:null,
+            unidadesDemanda:null
         }
     }
+
+     unidadDeTiempo = [
+        { label: "Dia", value: 1 },
+        { label: "Semana", value: 7 },
+        { label: "Mes", value: 31 },
+        { label: "Año", value: 365 }
+      ];
 
     handleInputChange = (event) =>{
         this.setState({
@@ -24,16 +33,16 @@ class modelStockSimple extends React.Component{
     }
     
     calcularInventarioOptimo(){
-        let {demanda, costoDePreparacion, costoDeAlmacenamiento} = this.state;
-        return (Math.sqrt((2*Number(costoDePreparacion)*Number(demanda))/(Number(costoDeAlmacenamiento)))); //y*
+        let {demanda, costoDePreparacion, costoDeAlmacenamiento, unidadCostoDeAlmacenamiento} = this.state;
+        return (Math.sqrt((2*Number(costoDePreparacion)*Number(demanda))/(Number(costoDeAlmacenamiento)*Number(unidadCostoDeAlmacenamiento)))); //y*
     }
 
     calcularCostoInventario()
     {
-        let {demanda, costoDePreparacion, costoDeAlmacenamiento} = this.state;
+        let {demanda, costoDePreparacion, costoDeAlmacenamiento,unidadCostoDeAlmacenamiento} = this.state;
         let y = this.calcularInventarioOptimo();
         let promedioInventario = (y / 2);
-        return ((costoDePreparacion/(y /demanda))+ (costoDeAlmacenamiento*promedioInventario)); //TCL(y)
+        return ((costoDePreparacion/(y /demanda))+ (costoDeAlmacenamiento*unidadCostoDeAlmacenamiento*promedioInventario)); //TCL(y)
     }
 
     calcularLongitud(){
@@ -105,6 +114,19 @@ class modelStockSimple extends React.Component{
                             aria-describedby="demanda"
                             onChange={this.handleInputChange}
                             />
+                             <InputGroupAddon addonType="prepend">
+                                <InputGroupText name="demanda" id="demanda">
+                                    {"Unidades"}
+                                </InputGroupText>
+                            </InputGroupAddon>
+                            <Input
+                            className="input-unidadesDemanda"
+                            name={"unidadesDemanda"}
+                            placeholder="Ingresar las unidades"
+                            aria-label="UnidadDemanda"
+                            aria-describedby="unidadDemanda"
+                            onChange={this.handleInputChange}
+                            />
                         </InputGroup>
                     </Col>
                     <Col>
@@ -114,6 +136,11 @@ class modelStockSimple extends React.Component{
                                     {"K"}
                                 </InputGroupText>
                             </InputGroupAddon>
+                            <InputGroupAddon addonType="prepend">
+                                <InputGroupText name="costoDePreparacion" id="costoDePreparacion">
+                                    {"$"}
+                                </InputGroupText>
+                            </InputGroupAddon>
                             <Input
                             name={"costoDePreparacion"}
                             placeholder="Ingresar el costo de preparacion/producción"
@@ -121,6 +148,11 @@ class modelStockSimple extends React.Component{
                             aria-describedby="costoDePreparacion"
                             onChange={this.handleInputChange}
                             />
+                            <InputGroupAddon addonType="prepend">
+                                <InputGroupText name="costoDePreparacion" id="costoDePreparacion">
+                                    {"x pedido"}
+                                </InputGroupText>
+                            </InputGroupAddon>
                         </InputGroup>
                     </Col>
                     <Col>
@@ -130,6 +162,11 @@ class modelStockSimple extends React.Component{
                                     {"h"}
                                 </InputGroupText>
                             </InputGroupAddon>
+                            <InputGroupAddon addonType="prepend">
+                                <InputGroupText name="costoDeAlmacenamiento" id="costoDeAlmacenamiento">
+                                    {"$"}
+                                </InputGroupText>
+                            </InputGroupAddon>
                             <Input
                             name={"costoDeAlmacenamiento"}
                             placeholder="Ingresar el costo de almacenamiento"
@@ -137,6 +174,24 @@ class modelStockSimple extends React.Component{
                             aria-describedby="costoDePreparacion"
                             onChange={this.handleInputChange}
                             />
+                            
+                        <InputGroupAddon addonType="prepend">
+                                <InputGroupText name="costoDeAlmacenamiento" id="costoDeAlmacenamiento">
+                                    {"x dia a"}
+                                </InputGroupText>
+                            </InputGroupAddon>
+                        
+                        
+                        <InputGroupAddon addonType="prepend">
+                            <Input type="select" name={"unidadCostoDeAlmacenamiento"} 
+                            id="unidadCostoDeAlmacenamiento"
+                            onChange={this.handleInputChange}>
+                                <option value="1" >Dia</option>
+                                <option value="7">Semana</option>
+                                <option value="30">Mes</option>
+                                <option value="365">Año</option>
+                            </Input>
+                        </InputGroupAddon>
                         </InputGroup>
                     </Col>
                     <Col>
@@ -153,6 +208,12 @@ class modelStockSimple extends React.Component{
                             aria-describedby="tiempoDeEntrega"
                             onChange={this.handleInputChange}
                             />
+                            <InputGroupAddon addonType="prepend">
+                            <InputGroupText name="costoDeAlmacenamiento" id="costoDeAlmacenamiento">
+                                    {"x dia"}
+                                </InputGroupText>
+                            </InputGroupAddon>
+                        
                         </InputGroup>
                     </Col>
 
@@ -161,7 +222,7 @@ class modelStockSimple extends React.Component{
                         <h6>Tu demanda es: {demanda}</h6>
                         <h6>Tu costo de preparacion es: ${costoDePreparacion}</h6>
                         <h6>Tu costo de almacenamiento es: ${costoDeAlmacenamiento}</h6>
-                        <h6>El tiempo de entrega es: ${this.state.tiempoDeEntrega}</h6>
+                        <h6>El tiempo de entrega es: {this.state.tiempoDeEntrega}</h6>
                         <h4>Cantidad economica de pedido y*= {inventario.toFixed(2)}</h4>
                         <h4>Longitud del ciclo t0*= {longitud.toFixed(2)}</h4>
                         <h4>El costo de inventario TCU(y) es: {TCU.toFixed(2)}</h4>
