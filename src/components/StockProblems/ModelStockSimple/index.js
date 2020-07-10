@@ -210,6 +210,18 @@ class modelStockSimple extends React.Component{
                             />                        
                         </InputGroup>
                     </Col>
+                    <Col>
+                        <InputGroup className="mt-3" id={""} key={""}>
+                            <InputGroupAddon addonType="prepend">
+                            <InputGroupText><b>{"t0*"}</b></InputGroupText>
+                            </InputGroupAddon>
+                            <Input
+                            name={"longitudCiclo"}
+                            placeholder="Ingresar la longitud del ciclo."
+                            onChange={this.handleInputChange}
+                            />                        
+                        </InputGroup>
+                    </Col>
 
 
                     <Col>
