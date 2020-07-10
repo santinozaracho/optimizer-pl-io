@@ -3,6 +3,7 @@ import { ButtonGroup, Button, Container, Row, Col, Card, CardBody, CardHeader, C
 import {InputGroupText,InputGroup, Input,InputGroupAddon,PopoverBody} from 'reactstrap';
 import {Link} from 'react-router-dom';
 import '../index.css'
+import { Variable } from "javascript-lp-solver/src/expressions";
 
 
 class modelStockSimple extends React.Component{
@@ -19,15 +20,27 @@ class modelStockSimple extends React.Component{
             unidadesDemanda:null,
             cantidadEconomica:null,
             mostrarResultados: false,
+            caso0: false,
+            caso1: false,
+            caso2: false,
+            caso3: false,
+            inputUpdated: false,
+            incompleto: false,
         }
-        this.calcularResultados = this.calcularResultados.bind(this);
     }
 
-     
+    componentDidUpdate(prevProps, prevState){
+        if(this.state.inputUpdated){
+            this.setState({inputUpdated:false})
+            this.controlarCasos();
+        } 
+    }
 
+    
     handleInputChange = (event) =>{
         this.setState({
-            [event.target.name]: event.target.value
+            [event.target.name]: event.target.value,
+            inputUpdated: true,
         })
     }
     
@@ -65,8 +78,30 @@ class modelStockSimple extends React.Component{
         }
     }
 
-    calcularResultados(){
-        this.setState({mostrarResultados: true});
+    
+    controlarCasos = () => { //Con esta funcion vamos a controlar que datos nos ingresa el usuario para ver que calculamos
+        this.controlarCaso0();
+        this.setState({mostrarResultados:false})
+    }
+
+    controlarCaso0 = () =>{
+        let {demanda, costoDePreparacion, costoDeAlmacenamiento, tiempoDeEntrega} = this.state;
+        console.log(this.state)
+        let camposAControlar = [demanda, costoDePreparacion, costoDeAlmacenamiento, tiempoDeEntrega]
+        let caso0 = camposAControlar.every(campo => campo)
+
+        console.log(camposAControlar)
+
+        this.setState({caso0});  
+    }
+    
+    calcularResultados = () => {
+        let {caso0, caso1, caso2, caso3} = this.state;
+        let casosAControlar = [caso0, caso1, caso2, caso3]
+        let mostrarResultados = casosAControlar.some(caso => caso);
+        let incompleto = !casosAControlar.some(caso => caso);
+        this.setState({mostrarResultados, incompleto}) //Esto asigna mostrarResultados (la variable) a mostrarResultados el estado del objeto
+
     }
 
 
@@ -80,7 +115,8 @@ class modelStockSimple extends React.Component{
     //sino
     //Pedir la cantidad {CalcularInventarioOptimo()} siempre que la cantidad de inventario baje de {CalcularPuntoDeReorden()} unidades
     render() { 
-        let {demanda, costoDePreparacion, costoDeAlmacenamiento, tiempoDeEntrega,unidadCostoDeAlmacenamiento} = this.state;
+        let {demanda, costoDePreparacion, costoDeAlmacenamiento, tiempoDeEntrega,unidadCostoDeAlmacenamiento, incompleto} = this.state;
+        let {caso0, caso1, caso2, caso3, mostrarResultados} = this.state;
         //let costo = this.calcularCosto();
         let inventario = this.calcularInventarioOptimo();
         let longitud = this.calcularLongitud();
@@ -91,7 +127,7 @@ class modelStockSimple extends React.Component{
         let controlarPolitica = a => (tiempoDeEntrega > longitud) ? 
         <h4>Pedir {inventario.toFixed(2)} {this.state.unidadesDemanda} cuando el inventario baje de {puntoDeReorden.toFixed(2)} {this.state.unidadesDemanda}</h4> : <h4>Pedir {inventario.toFixed(2)} {this.state.unidadesDemanda} cada {longitud.toFixed(2)} {this.state.unidadesAlmacenamiento}</h4>; 
         
-      
+              
         
         return (
             <Container fluid className="App"> 
@@ -237,22 +273,29 @@ class modelStockSimple extends React.Component{
                             />                        
                         </InputGroup>
                     </Col>
-
-                    {this.state.mostrarResultados && //SI MOSTRAR RESULTADOS ES TRUE ENTONCES MOSTRAMOS ESTO.
-                                                    //MOSTRAR RESULTADOS SE PONE EN TRUE CUANDO APRETAMOS CALCULAR
-                        <Col>
-                            <h6>Tu demanda es: {demanda}</h6>
-                            <h6>Tu costo de preparacion es: ${costoDePreparacion}</h6>
-                            <h6>Tu costo de almacenamiento es: ${costoDeAlmacenamiento}</h6>
-                            <h6>El tiempo de entrega es: {this.state.tiempoDeEntrega}</h6>
-                            <h4>Cantidad economica de pedido y*= {inventario.toFixed(2)} {this.state.unidadesDemanda}</h4>
-                            <h4>Longitud del ciclo t0*= {longitud.toFixed(2)} {this.state.unidadesAlmacenamiento}</h4>
-                            <h4>El costo de inventario TCU(y) es: ${TCU.toFixed(2)}</h4>
-                            <h4>El punto de reorden es: {puntoDeReorden.toFixed(2)}</h4>
-                            {controlarPolitica()}
-                        </Col>
+                    
+                    
+                    {mostrarResultados && caso0 && (     
+                    <Col>
+                        <h4>TU CASO ES EL 0</h4>
+                        <h6>Tu demanda es: {demanda}</h6>
+                        <h6>Tu costo de preparacion es: ${costoDePreparacion}</h6>
+                        <h6>Tu costo de almacenamiento es: ${costoDeAlmacenamiento}</h6>
+                        <h6>El tiempo de entrega es: {this.state.tiempoDeEntrega}</h6>
+                        <h4>Cantidad economica de pedido y*= {inventario.toFixed(2)} {this.state.unidadesDemanda}</h4>
+                        <h4>Longitud del ciclo t0*= {longitud.toFixed(2)} {this.state.unidadesAlmacenamiento}</h4>
+                        <h4>El costo de inventario TCU(y) es: ${TCU.toFixed(2)}</h4>
+                        <h4>El punto de reorden es: {puntoDeReorden.toFixed(2)}</h4>
+                        {controlarPolitica()}
+                    </Col>)
                     }
-
+                    {caso1 && <h4>TU CASO ES EL 1</h4>}
+                    {caso2 && <h4>TU CASO ES EL 2</h4>}
+                    {caso3 && <h4>TU CASO ES EL 3</h4>}
+                       
+                    {incompleto && <h1>INCOMPLETO</h1>}
+                    
+                    
                     <Row className="btn-volver justify-content-center">
                         <Link to='./'><Button>Volver</Button></Link>
                         <Button className="btn-Calcular" color="success" onClick={this.calcularResultados}>Calcular</Button>
