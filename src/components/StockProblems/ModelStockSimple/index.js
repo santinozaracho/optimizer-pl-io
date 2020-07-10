@@ -16,16 +16,14 @@ class modelStockSimple extends React.Component{
             politica:null,// establece que politica usar
             unidadCostoDeAlmacenamiento:1, //ESTA NO ESTAMOS OCUPANDO POR EL MOMENTO
             unidadesAlmacenamiento: null,
-            unidadesDemanda:null
+            unidadesDemanda:null,
+            cantidadEconomica:null,
+            mostrarResultados: false,
         }
+        this.calcularResultados = this.calcularResultados.bind(this);
     }
 
-     unidadDeTiempo = [
-        { label: "Dia", value: 1 },
-        { label: "Semana", value: 7 },
-        { label: "Mes", value: 31 },
-        { label: "Año", value: 365 }
-      ];
+     
 
     handleInputChange = (event) =>{
         this.setState({
@@ -67,6 +65,10 @@ class modelStockSimple extends React.Component{
         }
     }
 
+    calcularResultados(){
+        this.setState({mostrarResultados: true});
+    }
+
 
     //El orden es el siguiente
     //Calculas y*
@@ -89,10 +91,10 @@ class modelStockSimple extends React.Component{
         let controlarPolitica = a => (tiempoDeEntrega > longitud) ? 
         <h4>Pedir {inventario.toFixed(2)} {this.state.unidadesDemanda} cuando el inventario baje de {puntoDeReorden.toFixed(2)} {this.state.unidadesDemanda}</h4> : <h4>Pedir {inventario.toFixed(2)} {this.state.unidadesDemanda} cada {longitud.toFixed(2)} {this.state.unidadesAlmacenamiento}</h4>; 
         
-        
+      
         
         return (
-            <Container fluid className="App">
+            <Container fluid className="App"> 
             <Row>
               <Col xs={12} md={8} className="my-4 mx-auto">
                 <Jumbotron>
@@ -211,7 +213,7 @@ class modelStockSimple extends React.Component{
                         </InputGroup>
                     </Col>
                     <Col>
-                        <InputGroup className="mt-3" id={""} key={""}>
+                        <InputGroup className="mt-3">
                             <InputGroupAddon addonType="prepend">
                             <InputGroupText><b>{"t0*"}</b></InputGroupText>
                             </InputGroupAddon>
@@ -223,22 +225,37 @@ class modelStockSimple extends React.Component{
                         </InputGroup>
                     </Col>
 
-
                     <Col>
-                        <h6>Tu demanda es: {demanda}</h6>
-                        <h6>Tu costo de preparacion es: ${costoDePreparacion}</h6>
-                        <h6>Tu costo de almacenamiento es: ${costoDeAlmacenamiento}</h6>
-                        <h6>El tiempo de entrega es: {this.state.tiempoDeEntrega}</h6>
-                        <h4>Cantidad economica de pedido y*= {inventario.toFixed(2)} {this.state.unidadesDemanda}</h4>
-                        <h4>Longitud del ciclo t0*= {longitud.toFixed(2)} {this.state.unidadesAlmacenamiento}</h4>
-                        <h4>El costo de inventario TCU(y) es: ${TCU.toFixed(2)}</h4>
-                        <h4>El punto de reorden es: {puntoDeReorden.toFixed(2)}</h4>
-                        {controlarPolitica()}
+                        <InputGroup className="mt-3">
+                            <InputGroupAddon addonType="prepend">
+                            <InputGroupText><b>{"y*"}</b></InputGroupText>
+                            </InputGroupAddon>
+                            <Input
+                            name={"cantidadEconomica"}
+                            placeholder="Ingresar la longitud del ciclo."
+                            onChange={this.handleInputChange}
+                            />                        
+                        </InputGroup>
                     </Col>
+
+                    {this.state.mostrarResultados && //SI MOSTRAR RESULTADOS ES TRUE ENTONCES MOSTRAMOS ESTO.
+                                                    //MOSTRAR RESULTADOS SE PONE EN TRUE CUANDO APRETAMOS CALCULAR
+                        <Col>
+                            <h6>Tu demanda es: {demanda}</h6>
+                            <h6>Tu costo de preparacion es: ${costoDePreparacion}</h6>
+                            <h6>Tu costo de almacenamiento es: ${costoDeAlmacenamiento}</h6>
+                            <h6>El tiempo de entrega es: {this.state.tiempoDeEntrega}</h6>
+                            <h4>Cantidad economica de pedido y*= {inventario.toFixed(2)} {this.state.unidadesDemanda}</h4>
+                            <h4>Longitud del ciclo t0*= {longitud.toFixed(2)} {this.state.unidadesAlmacenamiento}</h4>
+                            <h4>El costo de inventario TCU(y) es: ${TCU.toFixed(2)}</h4>
+                            <h4>El punto de reorden es: {puntoDeReorden.toFixed(2)}</h4>
+                            {controlarPolitica()}
+                        </Col>
+                    }
 
                     <Row className="btn-volver justify-content-center">
                         <Link to='./'><Button>Volver</Button></Link>
-                        <Button className="btn-Calcular" color="success">Calcular</Button>
+                        <Button className="btn-Calcular" color="success" onClick={this.calcularResultados}>Calcular</Button>
                     </Row>
                     <Row>
                         
