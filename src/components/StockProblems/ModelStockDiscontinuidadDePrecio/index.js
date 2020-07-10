@@ -144,7 +144,7 @@ class modelStockSimple extends React.Component{
               <Col xs={12} md={8} className="my-4 mx-auto">
                 <Jumbotron>
                     <Col>
-                        <h2>Modelo clasico con cantidad economica de pedido</h2><br></br>                   
+                        <h2>Modelo cantidad económica de pedido con discontinuidades de precio</h2><br></br>                   
                     </Col>
                    
                     <Col> 
