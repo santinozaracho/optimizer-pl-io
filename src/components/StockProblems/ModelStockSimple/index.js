@@ -14,7 +14,8 @@ class modelStockSimple extends React.Component{
             costoDeAlmacenamiento: null,//h
             tiempoDeEntrega:null,//L
             politica:null,// establece que politica usar
-            unidadCostoDeAlmacenamiento:1,
+            unidadCostoDeAlmacenamiento:1, //ESTA NO ESTAMOS OCUPANDO POR EL MOMENTO
+            unidadesAlmacenamiento: null,
             unidadesDemanda:null
         }
     }
@@ -55,14 +56,14 @@ class modelStockSimple extends React.Component{
         let {demanda,politica,tiempoDeEntrega} = this.state;
         let duracionCicloDePedido = this.calcularLongitud();//to*
         if(tiempoDeEntrega > duracionCicloDePedido){ //SI L > to*, calculamos Le
-        //para politica 1
-            
+        //para politica 1 
             let n = Math.trunc(tiempoDeEntrega/duracionCicloDePedido);//n
             let tiempoEfectivoDeEntrega= tiempoDeEntrega - (n * duracionCicloDePedido);//Le
             return (tiempoEfectivoDeEntrega * demanda);//punto de reorden
         }else{
             //para politica 2
-            return duracionCicloDePedido;
+
+            return (tiempoDeEntrega * demanda); //punto de reorden en esta politica se calcula L*demanda
         }
     }
 
@@ -86,7 +87,7 @@ class modelStockSimple extends React.Component{
 
         //AGREGAMOS ESTA FUNCION PARA CONTROLAR QUE DEPENDIENDO DEL TIPO DE POLITICA IMPRIMA UNA COSA O LA OTRA
         let controlarPolitica = a => (tiempoDeEntrega > longitud) ? 
-        <h4>Pedir {inventario.toFixed(2)} unidades cuando el inventario baje de {puntoDeReorden.toFixed(2)} unidades</h4> : <h4>Pedir {inventario.toFixed(2)} unidades cada {longitud.toFixed(2)} unidades de tiempo</h4>; 
+        <h4>Pedir {inventario.toFixed(2)} {this.state.unidadesDemanda} cuando el inventario baje de {puntoDeReorden.toFixed(2)} {this.state.unidadesDemanda}</h4> : <h4>Pedir {inventario.toFixed(2)} unidades cada {longitud.toFixed(2)} {this.state.unidadesAlmacenamiento}</h4>; 
         
         
         
@@ -98,13 +99,21 @@ class modelStockSimple extends React.Component{
                     <Col>
                         <h2>Modelo clasico con cantidad economica de pedido</h2><br></br>                   
                     </Col>
+                    {/*<Col>
+                    <div>
+                        <div className="justify-content-center">
+                            <div className="info-descarga">
+                            <i class="fas fa-info-circle"></i>
+                            <a>Las números decimales ingresar con . (Ejemplo: 0.02)</a>
+                            </div>
+                        </div>
+                    </div>
+                    </Col>*/}
                    
                     <Col> 
-                        <InputGroup id={"demanda"} key={"demanda"}>
+                        <InputGroup className="mt-3" id={"demanda"} key={"demanda"}>
                             <InputGroupAddon addonType="prepend">
-                                <InputGroupText name="demanda" id="demanda">
-                                    {"D"}
-                                </InputGroupText>
+                            <InputGroupText><b>{"D"}</b></InputGroupText>
                             </InputGroupAddon>
                             <Input
                             className="input-demanda"
@@ -114,10 +123,8 @@ class modelStockSimple extends React.Component{
                             aria-describedby="demanda"
                             onChange={this.handleInputChange}
                             />
-                             <InputGroupAddon addonType="prepend">
-                                <InputGroupText name="demanda" id="demanda">
-                                    {"Unidades"}
-                                </InputGroupText>
+                            <InputGroupAddon className="input-unidades" addonType="prepend">
+                            <InputGroupText><b>{"Unidades"}</b></InputGroupText>
                             </InputGroupAddon>
                             <Input
                             className="input-unidadesDemanda"
@@ -130,42 +137,30 @@ class modelStockSimple extends React.Component{
                         </InputGroup>
                     </Col>
                     <Col>
-                        <InputGroup className="mt-1" id={"costoDePreparacion"} key={"costoDePreparacion"}>
+                        <InputGroup className="mt-3" id={"costoDePreparacion"} key={"costoDePreparacion"}>
                             <InputGroupAddon addonType="prepend">
-                                <InputGroupText name="costoDePreparacion" id="costoDePreparacion">
-                                    {"K"}
-                                </InputGroupText>
+                            <InputGroupText><b>{"K"}</b></InputGroupText>
                             </InputGroupAddon>
                             <InputGroupAddon addonType="prepend">
-                                <InputGroupText name="costoDePreparacion" id="costoDePreparacion">
-                                    {"$"}
-                                </InputGroupText>
+                            <InputGroupText>{"$"}</InputGroupText>
                             </InputGroupAddon>
                             <Input
                             name={"costoDePreparacion"}
-                            placeholder="Ingresar el costo de preparacion/producción"
+                            placeholder="Ingresar el costo por pedido"
                             aria-label="costoDePreparacion"
                             aria-describedby="costoDePreparacion"
                             onChange={this.handleInputChange}
                             />
-                            <InputGroupAddon addonType="prepend">
-                                <InputGroupText name="costoDePreparacion" id="costoDePreparacion">
-                                    {"x pedido"}
-                                </InputGroupText>
-                            </InputGroupAddon>
+                            
                         </InputGroup>
                     </Col>
                     <Col>
-                        <InputGroup className="mt-1" id={"costoDeAlmacenamiento"} key={"costoDeAlmacenamiento"}>
+                        <InputGroup className="mt-3" id={"costoDeAlmacenamiento"} key={"costoDeAlmacenamiento"}>
                             <InputGroupAddon addonType="prepend">
-                                <InputGroupText name="costoDeAlmacenamiento" id="costoDeAlmacenamiento">
-                                    {"h"}
-                                </InputGroupText>
+                                <InputGroupText><b>{"h"}</b></InputGroupText>
                             </InputGroupAddon>
                             <InputGroupAddon addonType="prepend">
-                                <InputGroupText name="costoDeAlmacenamiento" id="costoDeAlmacenamiento">
-                                    {"$"}
-                                </InputGroupText>
+                                <InputGroupText >{"$"}</InputGroupText>
                             </InputGroupAddon>
                             <Input
                             name={"costoDeAlmacenamiento"}
@@ -175,14 +170,19 @@ class modelStockSimple extends React.Component{
                             onChange={this.handleInputChange}
                             />
                             
-                        <InputGroupAddon addonType="prepend">
-                                <InputGroupText name="costoDeAlmacenamiento" id="costoDeAlmacenamiento">
-                                    {"x dia a"}
-                                </InputGroupText>
+                            
+                            <InputGroupAddon className="unidadesAlmacenamiento" addonType="prepend">
+                                <InputGroupText><b>{"Unidades"}</b></InputGroupText>
                             </InputGroupAddon>
+                            <Input
+                            className=""
+                            name={"unidadesAlmacenamiento"}
+                            placeholder="Ingresar las unidades de tiempo"
+                            onChange={this.handleInputChange}
+                            />
                         
                         
-                        <InputGroupAddon addonType="prepend">
+                         {/*<InputGroupAddon addonType="prepend">
                             <Input type="select" name={"unidadCostoDeAlmacenamiento"} 
                             id="unidadCostoDeAlmacenamiento"
                             onChange={this.handleInputChange}>
@@ -191,14 +191,14 @@ class modelStockSimple extends React.Component{
                                 <option value="30">Mes</option>
                                 <option value="365">Año</option>
                             </Input>
-                        </InputGroupAddon>
+                        </InputGroupAddon>*/} {/* ESTO DEJO COMENTADO PQ POR EL MOMENTO NO VAMOS OCUPAR */}
                         </InputGroup>
                     </Col>
                     <Col>
-                        <InputGroup className="mt-1" id={"tiempoDeEntrega"} key={"tiempoDeEntrega"}>
+                        <InputGroup className="mt-3" id={"tiempoDeEntrega"} key={"tiempoDeEntrega"}>
                             <InputGroupAddon addonType="prepend">
                             <InputGroupText name="tiempoDeEntrega" id="tiempoDeEntrega">
-                                {"L"}
+                                <b>{"L"}</b>
                             </InputGroupText>
                             </InputGroupAddon>
                             <Input
@@ -207,13 +207,7 @@ class modelStockSimple extends React.Component{
                             aria-label="tiempoDeEntrega"
                             aria-describedby="tiempoDeEntrega"
                             onChange={this.handleInputChange}
-                            />
-                            <InputGroupAddon addonType="prepend">
-                            <InputGroupText name="costoDeAlmacenamiento" id="costoDeAlmacenamiento">
-                                    {"x dia"}
-                                </InputGroupText>
-                            </InputGroupAddon>
-                        
+                            />                        
                         </InputGroup>
                     </Col>
 

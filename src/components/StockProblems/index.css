@@ -6,6 +6,32 @@
     margin-left: 30px;
 }
 
-.input-demanda{
-    width: 1px;
+.input-unidades{
+    margin-left: 30px;
 }
+
+.unidades-almacenamiento{
+    margin-left: 0px;
+}
+
+.info-descarga{ 
+    background-color: #343a40;
+    color: white;
+    border: 1px solid;
+    border-radius: 20px;
+    margin-right: 50%;
+    margin-bottom: 20px;
+    display: flex; /* ESTO ES PARA QUE EL ICON Y LA ETIQUETA a QUEDEN BIEN ALINEADOS */
+    align-items: center;
+  }
+
+.info-descarga i{ 
+      font-size:30px; 
+      padding: 5px 5px 5px 5px;
+      }
+
+.info-descarga a{
+    text-align: left;
+    margin: 5px 5px;
+    padding: 0; 
+  }
