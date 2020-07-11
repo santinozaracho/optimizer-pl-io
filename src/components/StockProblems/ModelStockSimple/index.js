@@ -49,7 +49,7 @@ class modelStockSimple extends React.Component{
     //CALCULAR t0*
     calcularLongitud(){
         let {demanda, cantidadEconomica} = this.state;
-        this.setState({longitudCiclo:(cantidadEconomica/Number(demanda))}); //to*
+        this.setState({longitudCiclo:(Number(cantidadEconomica)/Number(demanda))}); //to*
     }
     
     //CALCULAR y*
@@ -86,7 +86,8 @@ class modelStockSimple extends React.Component{
     //CALCULAR K
     calcularCostoPorPedido(){
         let {demanda, costoDeAlmacenamiento, cantidadEconomica} = this.state;
-        this.setState({costoDePreparacion:( (Number(costoDeAlmacenamiento)*Math.pow(Number(cantidadEconomica,2)))/ 2*Number(demanda) ) }); //D
+        this.setState({costoDePreparacion:( (Number(costoDeAlmacenamiento)*Math.pow(Number(cantidadEconomica),2))/ 2*Number(demanda) ) }); //D
+        console.log((Number(costoDeAlmacenamiento)*Math.pow(Number(cantidadEconomica),2))/ 2*Number(demanda) )
 
     }
 
