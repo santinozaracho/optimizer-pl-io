@@ -33,7 +33,7 @@ class modelStockSimple extends React.Component{
         if(this.state.inputUpdated){
             this.setState({inputUpdated:false})
             this.controlarCasos();
-            this.calcularResultados()
+            
         } 
     }
 
@@ -45,10 +45,15 @@ class modelStockSimple extends React.Component{
     }
     
     //CALCULAR t0*
-    calcularLongitud(){
-        let {demanda, cantidadEconomica} = this.state;
+    calcularLongitud(cantidadEconomic){
+        let {demanda, cantidadEconomica} = this.state
+       
+        if (cantidadEconomic){
+            cantidadEconomica = cantidadEconomic 
+            console.log("Cantidad economica")
+        }
         this.setState({longitudCiclo:(Number(cantidadEconomica)/Number(demanda))}); //to*
-        console.log(demanda, cantidadEconomica)
+        
     }
     
     //CALCULAR y*
@@ -66,7 +71,9 @@ class modelStockSimple extends React.Component{
     //CALCULAR y* PERO CON LA OTRA FORMULA (la formula de la raiz con K,D, h)
     calcularInventarioOptimo(){ 
         let {demanda, costoDePreparacion, costoDeAlmacenamiento, unidadCostoDeAlmacenamiento} = this.state;
-        this.setState({cantidadEconomica:(Math.sqrt((2*Number(costoDePreparacion)*Number(demanda))/(Number(costoDeAlmacenamiento)*unidadCostoDeAlmacenamiento)))}); //y*
+        let cantidadEconomica = (Math.sqrt((2*Number(costoDePreparacion)*Number(demanda))/(Number(costoDeAlmacenamiento)*unidadCostoDeAlmacenamiento)))
+        this.setState({cantidadEconomica}); //y*
+        return cantidadEconomica;
     }
 
     //CALCULAR h
@@ -118,20 +125,8 @@ class modelStockSimple extends React.Component{
         this.setState({mostrarResultados:false})
     }
 
-    mostrarResultados = () => {
-        let {demanda,tiempoDeEntrega,longitudCiclo, costoDeAlmacenamiento, costoDePreparacion, cantidadEconomica} = this.state;
-        let controlCampos = [demanda,tiempoDeEntrega,longitudCiclo, costoDeAlmacenamiento, costoDePreparacion, cantidadEconomica]
-        let camposLlenos = !controlCampos.every(caso => caso); //Si todos esos campos no estan llenos faltan completar campos
-        
-        if(camposLlenos){
-            this.setState({incompleto:true})
-        }else{
-            this.setState({mostrarResultados: true})
-            this.setState({incompleto: false})
-        }
-    }
 
-    calcularResultados = () => {
+    mostrarResultados = () => {
         let {demanda, costoDePreparacion, costoDeAlmacenamiento, tiempoDeEntrega,longitudCiclo, cantidadEconomica, mostrarResultados} = this.state;
         let combinacion1 = [cantidadEconomica, demanda] //Calculamos longitudCiclo
         let combinacion2 = [longitudCiclo, demanda] //Calculamos cantidadEconomica
@@ -141,17 +136,6 @@ class modelStockSimple extends React.Component{
         let control2 = combinacion2.every(caso => caso);
         let control3 = combinacion3.every(caso => caso);
         
-        if(control1){ //CON ESTOS IF CONTROLAMOS LOS CALCULOS PARA LA PRIMER ECUACION
-            this.calcularLongitud()
-            
-        } else if (control2){
-            this.calcularInventarioOptimoEcuacionSimple()
-            
-        } else if(control3){
-            this.calcularDemandaEcuacionSimple()
-            
-        }
-
         let combinacion4 = [demanda,costoDePreparacion,costoDeAlmacenamiento] //Calculamos cantidadEconomica y*
         let combinacion5 = [demanda,costoDePreparacion,cantidadEconomica] //Calculamos costoDeAlmacenamiento h
         let combinacion6 = [costoDeAlmacenamiento,costoDePreparacion,cantidadEconomica] //Calculamos demanda D
@@ -162,26 +146,50 @@ class modelStockSimple extends React.Component{
         let control7 = combinacion7.every(caso => caso);
 
 
-        if(control4){
-            this.calcularInventarioOptimo();
-            this.calcularLongitud()
+        if(control1 || control2 || control3 || control4 || control5 || control6 || control7 || tiempoDeEntrega){
+            if(control1){ //CON ESTOS IF CONTROLAMOS LOS CALCULOS PARA LA PRIMER ECUACION
+                //Como aca tendriamos que calcular longitud, o sea t0, como siempre necesitamos calcularlo lo sacamos de aca y pusimos abajo afuera del if               
+            } else if (control2){
+                this.calcularInventarioOptimoEcuacionSimple()
+                
+            } else if(control3){
+                this.calcularDemandaEcuacionSimple()    
+            }
+    
+            if(control4){
+                let cantidadEconomic = this.calcularInventarioOptimo();
+                this.calcularLongitud(cantidadEconomic)   
+            }else if (control5){
+                this.calcularCostoAlmacenamiento()
+               
+            }else if(control6){
+                this.calcularDemanda()
+                
+            }else if (control7){
+                this.calcularCostoPorPedido()
+                
+            }
             
-        }else if (control5){
-            this.calcularCostoAlmacenamiento()
-            this.calcularLongitud()
-           
-        }else if(control6){
-            this.calcularDemanda()
-            this.calcularLongitud()
+            setTimeout(() => {
+                this.calcularLongitud()
+                this.calcularCostoInventario();
+                this.calcularPuntoDeReorden();
+            }, 1);
             
-        }else if (control7){
-            this.calcularCostoPorPedido()
-            this.calcularLongitud()
-            
-        }
+            this.setState({mostrarResultados: true})
+            this.setState({incompleto: false})
 
-        this.calcularCostoInventario();
-        this.calcularPuntoDeReorden();
+        }else{
+            this.setState({incompleto:true})
+        } 
+
+
+        
+        
+        
+        
+        
+               
     }
 
     render() { 
