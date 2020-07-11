@@ -18,7 +18,8 @@ class modelStockSimple extends React.Component{
             unidadCostoDeAlmacenamiento:1, //ESTA NO ESTAMOS OCUPANDO POR EL MOMENTO
             unidadesAlmacenamiento: null,
             unidadesDemanda:null,
-            cantidadEconomica:null,
+            longitudCiclo:null, //t*
+            cantidadEconomica:null, //y*
             mostrarResultados: false,
             caso0: false,
             caso1: false,
@@ -26,17 +27,18 @@ class modelStockSimple extends React.Component{
             caso3: false,
             inputUpdated: false,
             incompleto: false,
+            puntoDeReorden: null,
+            TCU: null,
         }
     }
 
-    componentDidUpdate(prevProps, prevState){
+    componentDidUpdate(prevProps, prevState){ //Para comparar mi estado actual con el estado anterior. Verificamos si se actualizo algun campo de los input.
         if(this.state.inputUpdated){
             this.setState({inputUpdated:false})
             this.controlarCasos();
         } 
     }
 
-    
     handleInputChange = (event) =>{
         this.setState({
             [event.target.name]: event.target.value,
@@ -44,32 +46,57 @@ class modelStockSimple extends React.Component{
         })
     }
     
-    calcularInventarioOptimo(){
-        let {demanda, costoDePreparacion, costoDeAlmacenamiento, unidadCostoDeAlmacenamiento} = this.state;
-        return (Math.sqrt((2*Number(costoDePreparacion)*Number(demanda))/(Number(costoDeAlmacenamiento)*unidadCostoDeAlmacenamiento))); //y*
+    //CALCULAR t0*
+    calcularLongitud(){
+        let {demanda, cantidadEconomica} = this.state;
+        //let inventario = this.calcularInventarioOptimo();//y*
+        this.setState({longitudCiclo:(cantidadEconomica/Number(demanda))}); //to*
+    }
+    
+    //CALCULAR y*
+    calcularInventarioOptimoEcuacionSimple(){
+        let {demanda, longitudCiclo} = this.state;
+        this.setState({cantidadEconomica: (demanda*longitudCiclo)});
     }
 
+    //CALCULAR D
+    calcularDemanda(){
+        let {cantidadEconomica, longitudCiclo} = this.state;
+        this.setState({demanda: (cantidadEconomica/longitudCiclo)});
+    }
+
+    //CALCULAR y* PERO CON LA OTRA FORMULA (la formula de la raiz con K,D, h)
+    calcularInventarioOptimo(){ 
+        let {demanda, costoDePreparacion, costoDeAlmacenamiento, unidadCostoDeAlmacenamiento} = this.state;
+        this.setState({cantidadEconomica:(Math.sqrt((2*Number(costoDePreparacion)*Number(demanda))/(Number(costoDeAlmacenamiento)*unidadCostoDeAlmacenamiento)))}); //y*
+    }
+
+    //CALCULAR h
+    
+
+    //CALCULAR D PERO CON LA OTRA FORMULA (la formula de la raiz con h, y*, k)
+
+    //CALCULAR K
+
+
+    //CALCULAR TCU(y)
     calcularCostoInventario()
     {
-        let {demanda, costoDePreparacion, costoDeAlmacenamiento,unidadCostoDeAlmacenamiento} = this.state;
-        let y = this.calcularInventarioOptimo();
-        let promedioInventario = (y / 2);
-        return ((costoDePreparacion/(y /demanda))+ (costoDeAlmacenamiento*unidadCostoDeAlmacenamiento*promedioInventario)); //TCL(y)
+        let {demanda, costoDePreparacion, costoDeAlmacenamiento,unidadCostoDeAlmacenamiento, cantidadEconomica} = this.state;
+        
+        let promedioInventario = (cantidadEconomica / 2);
+        return ((costoDePreparacion/(cantidadEconomica /demanda))+ (costoDeAlmacenamiento*unidadCostoDeAlmacenamiento*promedioInventario)); //TCL(y)
     }
 
-    calcularLongitud(){
-        let {demanda} = this.state;
-        let inventario = this.calcularInventarioOptimo();//y*
-        return (inventario/Number(demanda)); //to*
-    }
+    
 
     calcularPuntoDeReorden(){
-        let {demanda,politica,tiempoDeEntrega} = this.state;
-        let duracionCicloDePedido = this.calcularLongitud();//to*
-        if(tiempoDeEntrega > duracionCicloDePedido){ //SI L > to*, calculamos Le
+        let {demanda,politica,tiempoDeEntrega, longitudCiclo} = this.state;
+        
+        if(tiempoDeEntrega > longitudCiclo){ //SI L > to*, calculamos Le
         //para politica 1 
-            let n = Math.trunc(tiempoDeEntrega/duracionCicloDePedido);//n
-            let tiempoEfectivoDeEntrega= tiempoDeEntrega - (n * duracionCicloDePedido);//Le
+            let n = Math.trunc(tiempoDeEntrega/longitudCiclo);//n
+            let tiempoEfectivoDeEntrega= tiempoDeEntrega - (n * longitudCiclo);//Le
             return (tiempoEfectivoDeEntrega * demanda);//punto de reorden
         }else{
             //para politica 2
@@ -86,22 +113,33 @@ class modelStockSimple extends React.Component{
 
     controlarCaso0 = () =>{
         let {demanda, costoDePreparacion, costoDeAlmacenamiento, tiempoDeEntrega} = this.state;
-        console.log(this.state)
         let camposAControlar = [demanda, costoDePreparacion, costoDeAlmacenamiento, tiempoDeEntrega]
         let caso0 = camposAControlar.every(campo => campo)
-
-        console.log(camposAControlar)
 
         this.setState({caso0});  
     }
     
-    calcularResultados = () => {
+   /*{ calcularResultados = () => {
         let {caso0, caso1, caso2, caso3} = this.state;
         let casosAControlar = [caso0, caso1, caso2, caso3]
-        let mostrarResultados = casosAControlar.some(caso => caso);
-        let incompleto = !casosAControlar.some(caso => caso);
+        let mostrarResultados = casosAControlar.some(caso => caso); //Some will return true if any predicate is true
+        let incompleto = !casosAControlar.some(caso => caso); //Every will return true if all predicate is true. 
+                                                                //Como esta negado, si existe alguno que este en falso every va a devolver false, y entonces incompleto se pone en true y activa el mensaje
         this.setState({mostrarResultados, incompleto}) //Esto asigna mostrarResultados (la variable) a mostrarResultados el estado del objeto
 
+    }*/ 
+
+    calcularResultados = () => {
+        let {demanda, costoDePreparacion, costoDeAlmacenamiento, tiempoDeEntrega,} = this.state;
+        let controlar = [demanda, costoDePreparacion, costoDeAlmacenamiento, tiempoDeEntrega]
+        let mostrarResultados = controlar.every(caso => caso); //Si devuelve true es porque todos estan cargados entonces mostramos 
+        this.calcularInventarioOptimo();
+        this.calcularLongitud();
+        if(mostrarResultados){
+            this.setState({mostrarResultados})
+        } else{
+            this.setState({incompleto:true})
+        }
     }
 
 
@@ -115,17 +153,14 @@ class modelStockSimple extends React.Component{
     //sino
     //Pedir la cantidad {CalcularInventarioOptimo()} siempre que la cantidad de inventario baje de {CalcularPuntoDeReorden()} unidades
     render() { 
-        let {demanda, costoDePreparacion, costoDeAlmacenamiento, tiempoDeEntrega,unidadCostoDeAlmacenamiento, incompleto} = this.state;
-        let {caso0, caso1, caso2, caso3, mostrarResultados} = this.state;
+        let {demanda, costoDePreparacion, costoDeAlmacenamiento, tiempoDeEntrega,unidadesDemanda, unidadesAlmacenamiento, incompleto} = this.state;
+        let {caso0, caso1, caso2, caso3, mostrarResultados, cantidadEconomica, longitudCiclo, puntoDeReorden, TCU} = this.state;
         //let costo = this.calcularCosto();
-        let inventario = this.calcularInventarioOptimo();
-        let longitud = this.calcularLongitud();
-        let TCU = this.calcularCostoInventario();
-        let puntoDeReorden = this.calcularPuntoDeReorden();
+        console.log(longitudCiclo)
 
         //AGREGAMOS ESTA FUNCION PARA CONTROLAR QUE DEPENDIENDO DEL TIPO DE POLITICA IMPRIMA UNA COSA O LA OTRA
-        let controlarPolitica = a => (tiempoDeEntrega > longitud) ? 
-        <h4>Pedir {inventario.toFixed(2)} {this.state.unidadesDemanda} cuando el inventario baje de {puntoDeReorden.toFixed(2)} {this.state.unidadesDemanda}</h4> : <h4>Pedir {inventario.toFixed(2)} {this.state.unidadesDemanda} cada {longitud.toFixed(2)} {this.state.unidadesAlmacenamiento}</h4>; 
+        let controlarPolitica = (tiempoDeEntrega > longitudCiclo) ? 
+        <h4>Pedir {Number(cantidadEconomica).toFixed(2)} {unidadesDemanda} cuando el inventario baje de {Number(puntoDeReorden).toFixed(2)} {unidadesDemanda}</h4> : <h4>Pedir {Number(cantidadEconomica).toFixed(2)} {unidadesDemanda} cada {Number(longitudCiclo).toFixed(2)} {unidadesAlmacenamiento}</h4>; 
         
               
         
@@ -220,16 +255,6 @@ class modelStockSimple extends React.Component{
                             />
                         
                         
-                         {/*<InputGroupAddon addonType="prepend">
-                            <Input type="select" name={"unidadCostoDeAlmacenamiento"} 
-                            id="unidadCostoDeAlmacenamiento"
-                            onChange={this.handleInputChange}>
-                                <option value="1" >Dia</option>
-                                <option value="7">Semana</option>
-                                <option value="30">Mes</option>
-                                <option value="365">Año</option>
-                            </Input>
-                        </InputGroupAddon>*/} {/* ESTO DEJO COMENTADO PQ POR EL MOMENTO NO VAMOS OCUPAR */}
                         </InputGroup>
                     </Col>
                     <Col>
@@ -241,6 +266,7 @@ class modelStockSimple extends React.Component{
                             </InputGroupAddon>
                             <Input
                             name={"tiempoDeEntrega"}
+                            value={tiempoDeEntrega}
                             placeholder="Ingresar el tiempo de entrega."
                             aria-label="tiempoDeEntrega"
                             aria-describedby="tiempoDeEntrega"
@@ -255,6 +281,7 @@ class modelStockSimple extends React.Component{
                             </InputGroupAddon>
                             <Input
                             name={"longitudCiclo"}
+                            value={longitudCiclo}
                             placeholder="Ingresar la longitud del ciclo."
                             onChange={this.handleInputChange}
                             />                        
@@ -268,25 +295,20 @@ class modelStockSimple extends React.Component{
                             </InputGroupAddon>
                             <Input
                             name={"cantidadEconomica"}
-                            placeholder="Ingresar la longitud del ciclo."
+                            value={cantidadEconomica}
+                            placeholder="Ingresar la cantidad economica."
                             onChange={this.handleInputChange}
                             />                        
                         </InputGroup>
                     </Col>
                     
                     
-                    {mostrarResultados && caso0 && (     
+                    {mostrarResultados && caso0 && (    //Si mostrarResultados esta en true que quiere decir que apreto el boton
+                                                        //Y ademas los campos del caso0 estan completos mostramos esto  
                     <Col>
-                        <h4>TU CASO ES EL 0</h4>
-                        <h6>Tu demanda es: {demanda}</h6>
-                        <h6>Tu costo de preparacion es: ${costoDePreparacion}</h6>
-                        <h6>Tu costo de almacenamiento es: ${costoDeAlmacenamiento}</h6>
-                        <h6>El tiempo de entrega es: {this.state.tiempoDeEntrega}</h6>
-                        <h4>Cantidad economica de pedido y*= {inventario.toFixed(2)} {this.state.unidadesDemanda}</h4>
-                        <h4>Longitud del ciclo t0*= {longitud.toFixed(2)} {this.state.unidadesAlmacenamiento}</h4>
-                        <h4>El costo de inventario TCU(y) es: ${TCU.toFixed(2)}</h4>
-                        <h4>El punto de reorden es: {puntoDeReorden.toFixed(2)}</h4>
-                        {controlarPolitica()}
+                        <h4>El costo de inventario TCU(y) es: ${Number(TCU).toFixed(2)}</h4>
+                        <h4>El punto de reorden es: {Number(puntoDeReorden).toFixed(2)}</h4>
+                        {controlarPolitica}
                     </Col>)
                     }
                     {caso1 && <h4>TU CASO ES EL 1</h4>}
