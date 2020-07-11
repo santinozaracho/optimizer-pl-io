@@ -146,7 +146,7 @@ class modelStockSimple extends React.Component{
         let control7 = combinacion7.every(caso => caso);
 
 
-        if(control1 || control2 || control3 || control4 || control5 || control6 || control7 || tiempoDeEntrega){
+        if((control4 || control5 || control6 || control7) && tiempoDeEntrega){
             if(control1){ //CON ESTOS IF CONTROLAMOS LOS CALCULOS PARA LA PRIMER ECUACION
                 //Como aca tendriamos que calcular longitud, o sea t0, como siempre necesitamos calcularlo lo sacamos de aca y pusimos abajo afuera del if               
             } else if (control2){
