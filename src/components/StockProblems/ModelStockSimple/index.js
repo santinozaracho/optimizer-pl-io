@@ -191,8 +191,25 @@ class modelStockSimple extends React.Component{
         
 
         //AGREGAMOS ESTA FUNCION PARA CONTROLAR QUE DEPENDIENDO DEL TIPO DE POLITICA IMPRIMA UNA COSA O LA OTRA
-        let controlarPolitica = (tiempoDeEntrega > longitudCiclo) ? 
-        <h4>Pedir {Number(cantidadEconomica).toFixed(2)} {unidadesDemanda} cuando el inventario baje de {Number(puntoDeReorden).toFixed(2)} {unidadesDemanda}</h4> : <h4>Pedir {Number(cantidadEconomica).toFixed(2)} {unidadesDemanda} cada {Number(longitudCiclo).toFixed(2)} {unidadesAlmacenamiento}</h4>; 
+        let controlarPolitica = (tiempoDeEntrega > longitudCiclo) ? (
+        <Col>
+            <Card body inverse color="info" style={{marginTop:10, padding: '5px 0 0 0'}}>
+                <CardText>
+                <h5>Pedir {Number(cantidadEconomica).toFixed(2)} {unidadesDemanda} cuando el inventario baje de {Number(puntoDeReorden).toFixed(2)} {unidadesDemanda}</h5>
+                </CardText>
+            </Card>   
+        </Col>) : //Si no
+        (
+            <Col>
+                <Card body inverse color="info" style={{marginTop:10, padding: '5px 0 0 0'}}>
+                    <CardText>
+                        <h5>Pedir {Number(cantidadEconomica).toFixed(2)} {unidadesDemanda} cada {Number(longitudCiclo).toFixed(2)} {unidadesAlmacenamiento}</h5>
+                    </CardText>
+                </Card>   
+            </Col>
+        )
+        
+         
         
               
         
@@ -235,7 +252,7 @@ class modelStockSimple extends React.Component{
                             <Input
                             className="input-unidadesDemanda"
                             name={"unidadesDemanda"}
-                            placeholder="Ingresar las unidades"
+                            placeholder="Ingresar las unidades de demanda"
                             aria-label="UnidadDemanda"
                             aria-describedby="unidadDemanda"
                             onChange={this.handleInputChange}
@@ -343,16 +360,16 @@ class modelStockSimple extends React.Component{
                     <Col>
                         <Card body inverse style={{ backgroundColor: '#333', borderColor: '#333', marginTop:10}}>
                             <CardText>
-                                <h4>El costo de inventario TCU(y) es: ${Number(TCU).toFixed(2)}</h4>
-                                <h4>El punto de reorden es: {Number(puntoDeReorden).toFixed(2)}</h4>
+                                <h6 style={{display:'inline'}}>El costo de inventario TCU(y) es:</h6> <h5 style={{display:'inline'}}><b>${Number(TCU).toFixed(2)}</b></h5><br></br>
+                                <h6 style={{display:'inline'}}>El punto de reorden es:</h6> <h5 style={{display:'inline'}}><b>{Number(puntoDeReorden).toFixed(2)}</b></h5>
                                 {controlarPolitica}
                             </CardText>
                         </Card>   
                     </Col>)}
                            
                     {incompleto && (
-                    <Card className="card-incompleto" body inverse color="danger" style={{paddingTop:0, paddingBottom:0, paddingLeft:0, paddingRight:0, marginTop:10}}>
-                        <CardText>Complete más campos para poder realizar los cálculos y presione calcular.</CardText>
+                    <Card className="card-incompleto" body inverse color="danger" style={{padding: '0 0 0 0', marginTop:10}}>
+                        <CardText>Complete más campos para poder continuar y luego presione calcular.</CardText>
                     </Card>)}
                     
                     
