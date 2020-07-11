@@ -193,7 +193,7 @@ class modelStockSimple extends React.Component{
         //AGREGAMOS ESTA FUNCION PARA CONTROLAR QUE DEPENDIENDO DEL TIPO DE POLITICA IMPRIMA UNA COSA O LA OTRA
         let controlarPolitica = (tiempoDeEntrega > longitudCiclo) ? (
         <Col>
-            <Card body inverse color="info" style={{marginTop:10, padding: '5px 0 0 0'}}>
+            <Card body inverse color="primary" style={{marginTop:10, padding: '5px 0 0 0'}}>
                 <CardText>
                 <h5>Pedir {Number(cantidadEconomica).toFixed(2)} {unidadesDemanda} cuando el inventario baje de {Number(puntoDeReorden).toFixed(2)} {unidadesDemanda}</h5>
                 </CardText>
@@ -201,7 +201,7 @@ class modelStockSimple extends React.Component{
         </Col>) : //Si no
         (
             <Col>
-                <Card body inverse color="info" style={{marginTop:10, padding: '5px 0 0 0'}}>
+                <Card body inverse color="primary" style={{marginTop:10, padding: '5px 0 0 0'}}>
                     <CardText>
                         <h5>Pedir {Number(cantidadEconomica).toFixed(2)} {unidadesDemanda} cada {Number(longitudCiclo).toFixed(2)} {unidadesAlmacenamiento}</h5>
                     </CardText>
