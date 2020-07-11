@@ -1,9 +1,10 @@
 import React from "react";
 import { ButtonGroup, Button, Container, Row, Col, Card, CardBody, CardHeader, CardTitle, Jumbotron, Dropdown, DropdownItem, ButtonDropdown, DropdownMenu, DropdownToggle} from "reactstrap";
-import {InputGroupText,InputGroup, Input,InputGroupAddon,PopoverBody} from 'reactstrap';
+import {InputGroupText,InputGroup, Input,InputGroupAddon,PopoverBody, CardText} from 'reactstrap';
 import {Link} from 'react-router-dom';
 import '../index.css'
 import { Variable } from "javascript-lp-solver/src/expressions";
+
 
 
 class modelStockSimple extends React.Component{
@@ -21,10 +22,6 @@ class modelStockSimple extends React.Component{
             longitudCiclo:null, //t*
             cantidadEconomica:null, //y*
             mostrarResultados: false,
-            caso0: false,
-            caso1: false,
-            caso2: false,
-            caso3: false,
             inputUpdated: false,
             incompleto: false,
             puntoDeReorden: null,
@@ -36,6 +33,7 @@ class modelStockSimple extends React.Component{
         if(this.state.inputUpdated){
             this.setState({inputUpdated:false})
             this.controlarCasos();
+            this.calcularResultados()
         } 
     }
 
@@ -50,6 +48,7 @@ class modelStockSimple extends React.Component{
     calcularLongitud(){
         let {demanda, cantidadEconomica} = this.state;
         this.setState({longitudCiclo:(Number(cantidadEconomica)/Number(demanda))}); //to*
+        console.log(demanda, cantidadEconomica)
     }
     
     //CALCULAR y*
@@ -87,8 +86,7 @@ class modelStockSimple extends React.Component{
     calcularCostoPorPedido(){
         let {demanda, costoDeAlmacenamiento, cantidadEconomica} = this.state;
         this.setState({costoDePreparacion:( (Number(costoDeAlmacenamiento)*Math.pow(Number(cantidadEconomica),2))/ 2*Number(demanda) ) }); //D
-        console.log((Number(costoDeAlmacenamiento)*Math.pow(Number(cantidadEconomica),2))/ 2*Number(demanda) )
-
+        
     }
 
 
@@ -108,37 +106,30 @@ class modelStockSimple extends React.Component{
         //para politica 1 
             let n = Math.trunc(tiempoDeEntrega/longitudCiclo);//n
             let tiempoEfectivoDeEntrega= tiempoDeEntrega - (n * longitudCiclo);//Le
-            return (tiempoEfectivoDeEntrega * demanda);//punto de reorden
+            this.setState({puntoDeReorden: (tiempoEfectivoDeEntrega * demanda)});//punto de reorden
         }else{
             //para politica 2
-
-            return (tiempoDeEntrega * demanda); //punto de reorden en esta politica se calcula L*demanda
+            this.setState({puntoDeReorden: (tiempoDeEntrega * demanda)})
         }
     }
 
     
     controlarCasos = () => { //Con esta funcion vamos a controlar que datos nos ingresa el usuario para ver que calculamos
-        this.controlarCaso0();
         this.setState({mostrarResultados:false})
     }
 
-    controlarCaso0 = () =>{
-        let {demanda, costoDePreparacion, costoDeAlmacenamiento, tiempoDeEntrega} = this.state;
-        let camposAControlar = [demanda, costoDePreparacion, costoDeAlmacenamiento, tiempoDeEntrega]
-        let caso0 = camposAControlar.every(campo => campo)
-
-        this.setState({caso0});  
+    mostrarResultados = () => {
+        let {demanda,tiempoDeEntrega,longitudCiclo, costoDeAlmacenamiento, costoDePreparacion, cantidadEconomica} = this.state;
+        let controlCampos = [demanda,tiempoDeEntrega,longitudCiclo, costoDeAlmacenamiento, costoDePreparacion, cantidadEconomica]
+        let camposLlenos = !controlCampos.every(caso => caso); //Si todos esos campos no estan llenos faltan completar campos
+        
+        if(camposLlenos){
+            this.setState({incompleto:true})
+        }else{
+            this.setState({mostrarResultados: true})
+            this.setState({incompleto: false})
+        }
     }
-    
-   /*{ calcularResultados = () => {
-        let {caso0, caso1, caso2, caso3} = this.state;
-        let casosAControlar = [caso0, caso1, caso2, caso3]
-        let mostrarResultados = casosAControlar.some(caso => caso); //Some will return true if any predicate is true
-        let incompleto = !casosAControlar.some(caso => caso); //Every will return true if all predicate is true. 
-                                                                //Como esta negado, si existe alguno que este en falso every va a devolver false, y entonces incompleto se pone en true y activa el mensaje
-        this.setState({mostrarResultados, incompleto}) //Esto asigna mostrarResultados (la variable) a mostrarResultados el estado del objeto
-
-    }*/ 
 
     calcularResultados = () => {
         let {demanda, costoDePreparacion, costoDeAlmacenamiento, tiempoDeEntrega,longitudCiclo, cantidadEconomica, mostrarResultados} = this.state;
@@ -150,21 +141,15 @@ class modelStockSimple extends React.Component{
         let control2 = combinacion2.every(caso => caso);
         let control3 = combinacion3.every(caso => caso);
         
-        
-
         if(control1){ //CON ESTOS IF CONTROLAMOS LOS CALCULOS PARA LA PRIMER ECUACION
             this.calcularLongitud()
-            this.setState({mostrarResultados:true})
-            this.setState({incompleto:false})
+            
         } else if (control2){
             this.calcularInventarioOptimoEcuacionSimple()
-            this.setState({mostrarResultados:true})
-            this.setState({incompleto:false})
-            console.log(cantidadEconomica)
+            
         } else if(control3){
             this.calcularDemandaEcuacionSimple()
-            this.setState({mostrarResultados:true})
-            this.setState({incompleto:false})
+            
         }
 
         let combinacion4 = [demanda,costoDePreparacion,costoDeAlmacenamiento] //Calculamos cantidadEconomica y*
@@ -176,39 +161,32 @@ class modelStockSimple extends React.Component{
         let control6 = combinacion6.every(caso => caso);
         let control7 = combinacion7.every(caso => caso);
 
-        console.log(longitudCiclo)
 
         if(control4){
             this.calcularInventarioOptimo();
-            this.setState({mostrarResultados:true})
-            this.setState({incompleto:false})
+            this.calcularLongitud()
+            
         }else if (control5){
             this.calcularCostoAlmacenamiento()
-            this.setState({mostrarResultados:true})
-            this.setState({incompleto:false})
+            this.calcularLongitud()
+           
         }else if(control6){
             this.calcularDemanda()
-            this.setState({mostrarResultados:true})
-            this.setState({incompleto:false})
+            this.calcularLongitud()
+            
         }else if (control7){
             this.calcularCostoPorPedido()
-            this.setState({mostrarResultados:true})
-            this.setState({incompleto:false})
+            this.calcularLongitud()
+            
         }
-
-        let controlCampos = [demanda,tiempoDeEntrega,longitudCiclo, costoDeAlmacenamiento, costoDePreparacion, cantidadEconomica]
-        let camposLlenos = !controlCampos.every(caso => caso); //Si todos esos campos no estan llenos faltan completar campos
-        if(camposLlenos){this.setState({incompleto:true})}
 
         this.calcularCostoInventario();
         this.calcularPuntoDeReorden();
     }
 
-
-    
     render() { 
         let {demanda, costoDePreparacion, costoDeAlmacenamiento, tiempoDeEntrega,unidadesDemanda, unidadesAlmacenamiento, incompleto} = this.state;
-        let {caso0, caso1, caso2, caso3, mostrarResultados, cantidadEconomica, longitudCiclo, puntoDeReorden, TCU} = this.state;
+        let {mostrarResultados, cantidadEconomica, longitudCiclo, puntoDeReorden, TCU} = this.state;
         //let costo = this.calcularCosto();
         
 
@@ -361,20 +339,26 @@ class modelStockSimple extends React.Component{
                     
                     
                     {mostrarResultados && (    //Si mostrarResultados esta en true que quiere decir que apreto el boton
-                                                        //Y ademas los campos del caso0 estan completos mostramos esto  
+                                                          
                     <Col>
-                        <h4>El costo de inventario TCU(y) es: ${Number(TCU).toFixed(2)}</h4>
-                        <h4>El punto de reorden es: {Number(puntoDeReorden).toFixed(2)}</h4>
-                        {controlarPolitica}
-                    </Col>)
-                    }
+                        <Card body inverse style={{ backgroundColor: '#333', borderColor: '#333', marginTop:10}}>
+                            <CardText>
+                                <h4>El costo de inventario TCU(y) es: ${Number(TCU).toFixed(2)}</h4>
+                                <h4>El punto de reorden es: {Number(puntoDeReorden).toFixed(2)}</h4>
+                                {controlarPolitica}
+                            </CardText>
+                        </Card>   
+                    </Col>)}
                            
-                    {incompleto && <h1>INCOMPLETO</h1>}
+                    {incompleto && (
+                    <Card className="card-incompleto" body inverse color="danger" style={{paddingTop:0, paddingBottom:0, paddingLeft:0, paddingRight:0, marginTop:10}}>
+                        <CardText>Complete más campos para poder realizar los cálculos y presione calcular.</CardText>
+                    </Card>)}
                     
                     
                     <Row className="btn-volver justify-content-center">
                         <Link to='./'><Button>Volver</Button></Link>
-                        <Button className="btn-Calcular" color="success" onClick={this.calcularResultados}>Calcular</Button>
+                        <Button className="btn-Calcular" color="success" onClick={this.mostrarResultados}>Calcular</Button>
                     </Row>
                     <Row>
                         

@@ -35,3 +35,7 @@
     margin: 5px 5px;
     padding: 0; 
   }
+
+.card-incompleto{
+    padding: 0 0 0 0;
+}
