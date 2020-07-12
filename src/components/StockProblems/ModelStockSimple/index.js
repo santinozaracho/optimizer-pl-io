@@ -1,8 +1,10 @@
 import React from "react";
 import { ButtonGroup, Button, Container, Row, Col, Card, CardBody, CardHeader, CardTitle, Jumbotron, Dropdown, DropdownItem, ButtonDropdown, DropdownMenu, DropdownToggle} from "reactstrap";
-import {InputGroupText,InputGroup, Input,InputGroupAddon,PopoverBody} from 'reactstrap';
+import {InputGroupText,InputGroup, Input,InputGroupAddon,PopoverBody, CardText} from 'reactstrap';
 import {Link} from 'react-router-dom';
 import '../index.css'
+import { Variable } from "javascript-lp-solver/src/expressions";
+
 
 
 class modelStockSimple extends React.Component{
@@ -17,81 +19,207 @@ class modelStockSimple extends React.Component{
             unidadCostoDeAlmacenamiento:1, //ESTA NO ESTAMOS OCUPANDO POR EL MOMENTO
             unidadesAlmacenamiento: null,
             unidadesDemanda:null,
-            cantidadEconomica:null,
+            longitudCiclo:null, //t*
+            cantidadEconomica:null, //y*
             mostrarResultados: false,
+            inputUpdated: false,
+            incompleto: false,
+            puntoDeReorden: null,
+            TCU: null,
         }
-        this.calcularResultados = this.calcularResultados.bind(this);
     }
 
-     
+    componentDidUpdate(prevProps, prevState){ //Para comparar mi estado actual con el estado anterior. Verificamos si se actualizo algun campo de los input.
+        if(this.state.inputUpdated){
+            this.setState({inputUpdated:false})
+            this.controlarCasos();
+            
+        } 
+    }
 
     handleInputChange = (event) =>{
         this.setState({
-            [event.target.name]: event.target.value
+            [event.target.name]: event.target.value,
+            inputUpdated: true,
         })
     }
     
-    calcularInventarioOptimo(){
-        let {demanda, costoDePreparacion, costoDeAlmacenamiento, unidadCostoDeAlmacenamiento} = this.state;
-        return (Math.sqrt((2*Number(costoDePreparacion)*Number(demanda))/(Number(costoDeAlmacenamiento)*unidadCostoDeAlmacenamiento))); //y*
+    //CALCULAR t0*
+    calcularLongitud(cantidadEconomic){
+        let {demanda, cantidadEconomica} = this.state
+       
+        if (cantidadEconomic){
+            cantidadEconomica = cantidadEconomic 
+            console.log("Cantidad economica")
+        }
+        this.setState({longitudCiclo:(Number(cantidadEconomica)/Number(demanda))}); //to*
+        
+    }
+    
+    //CALCULAR y*
+    calcularInventarioOptimoEcuacionSimple(){
+        let {demanda, longitudCiclo} = this.state;
+        this.setState({cantidadEconomica: (demanda*longitudCiclo)});
     }
 
+    //CALCULAR D
+    calcularDemandaEcuacionSimple(){
+        let {cantidadEconomica, longitudCiclo} = this.state;
+        this.setState({demanda: (cantidadEconomica/longitudCiclo)});
+    }
+
+    //CALCULAR y* PERO CON LA OTRA FORMULA (la formula de la raiz con K,D, h)
+    calcularInventarioOptimo(){ 
+        let {demanda, costoDePreparacion, costoDeAlmacenamiento, unidadCostoDeAlmacenamiento} = this.state;
+        let cantidadEconomica = (Math.sqrt((2*Number(costoDePreparacion)*Number(demanda))/(Number(costoDeAlmacenamiento)*unidadCostoDeAlmacenamiento)))
+        this.setState({cantidadEconomica}); //y*
+        return cantidadEconomica;
+    }
+
+    //CALCULAR h
+    calcularCostoAlmacenamiento(){
+        let {demanda, costoDePreparacion, cantidadEconomica} = this.state;
+        this.setState({costoDeAlmacenamiento:((2*Number(costoDePreparacion)*Number(demanda)/Math.pow(Number(cantidadEconomica),2)))}); //h
+    }
+    
+    //CALCULAR D PERO CON LA OTRA FORMULA (la formula de la raiz con h, y*, k)
+    calcularDemanda(){
+        let {costoDePreparacion, costoDeAlmacenamiento, cantidadEconomica} = this.state;
+        this.setState({demanda:( (Number(costoDeAlmacenamiento)*Math.pow(Number(cantidadEconomica),2))/ 2*Number(costoDePreparacion) ) }); //D
+
+    }
+
+    //CALCULAR K
+    calcularCostoPorPedido(){
+        let {demanda, costoDeAlmacenamiento, cantidadEconomica} = this.state;
+        this.setState({costoDePreparacion:( (Number(costoDeAlmacenamiento)*Math.pow(Number(cantidadEconomica),2))/ 2*Number(demanda) ) }); //D
+        
+    }
+
+
+    //CALCULAR TCU(y)
     calcularCostoInventario()
     {
-        let {demanda, costoDePreparacion, costoDeAlmacenamiento,unidadCostoDeAlmacenamiento} = this.state;
-        let y = this.calcularInventarioOptimo();
-        let promedioInventario = (y / 2);
-        return ((costoDePreparacion/(y /demanda))+ (costoDeAlmacenamiento*unidadCostoDeAlmacenamiento*promedioInventario)); //TCL(y)
+        let {demanda, costoDePreparacion, costoDeAlmacenamiento,unidadCostoDeAlmacenamiento, cantidadEconomica} = this.state;
+        let promedioInventario = (cantidadEconomica / 2);
+        this.setState({TCU: ((Number(costoDePreparacion)/(Number(cantidadEconomica) /Number(demanda)))+ (Number(costoDeAlmacenamiento)*Number(unidadCostoDeAlmacenamiento)*promedioInventario))}); //TCL(y)
     }
 
-    calcularLongitud(){
-        let {demanda} = this.state;
-        let inventario = this.calcularInventarioOptimo();//y*
-        return (inventario/Number(demanda)); //to*
-    }
-
+    
     calcularPuntoDeReorden(){
-        let {demanda,politica,tiempoDeEntrega} = this.state;
-        let duracionCicloDePedido = this.calcularLongitud();//to*
-        if(tiempoDeEntrega > duracionCicloDePedido){ //SI L > to*, calculamos Le
+        let {demanda,politica,tiempoDeEntrega, longitudCiclo} = this.state;
+        
+        if(tiempoDeEntrega > longitudCiclo){ //SI L > to*, calculamos Le
         //para politica 1 
-            let n = Math.trunc(tiempoDeEntrega/duracionCicloDePedido);//n
-            let tiempoEfectivoDeEntrega= tiempoDeEntrega - (n * duracionCicloDePedido);//Le
-            return (tiempoEfectivoDeEntrega * demanda);//punto de reorden
+            let n = Math.trunc(tiempoDeEntrega/longitudCiclo);//n
+            let tiempoEfectivoDeEntrega= tiempoDeEntrega - (n * longitudCiclo);//Le
+            this.setState({puntoDeReorden: (tiempoEfectivoDeEntrega * demanda)});//punto de reorden
         }else{
             //para politica 2
-
-            return (tiempoDeEntrega * demanda); //punto de reorden en esta politica se calcula L*demanda
+            this.setState({puntoDeReorden: (tiempoDeEntrega * demanda)})
         }
     }
 
-    calcularResultados(){
-        this.setState({mostrarResultados: true});
+    
+    controlarCasos = () => { //Con esta funcion vamos a controlar que datos nos ingresa el usuario para ver que calculamos
+        this.setState({mostrarResultados:false})
     }
 
 
-    //El orden es el siguiente
-    //Calculas y*
-    //Despues el punto de reorden
-    //Despues pones la politica que te toco (pueden ser 2 proximo commit te subo si queres los metodos que te definan)
-    //y por ultimo el costo del inventario
-    //si la politica es true entonces la politica es :
-    //Pedir {CalcularInventarioOptimo()} unidades cada {CalcularLongitud()} unidades de tiempo
-    //sino
-    //Pedir la cantidad {CalcularInventarioOptimo()} siempre que la cantidad de inventario baje de {CalcularPuntoDeReorden()} unidades
+    mostrarResultados = () => {
+        let {demanda, costoDePreparacion, costoDeAlmacenamiento, tiempoDeEntrega,longitudCiclo, cantidadEconomica, mostrarResultados} = this.state;
+        let combinacion1 = [cantidadEconomica, demanda] //Calculamos longitudCiclo
+        let combinacion2 = [longitudCiclo, demanda] //Calculamos cantidadEconomica
+        let combinacion3 = [cantidadEconomica, longitudCiclo] //Calculamos demanda con ecuacion simple
+
+        let control1 = combinacion1.every(caso => caso); //Si devuelve true es porque todos los elementos del arreglo estan cargados 
+        let control2 = combinacion2.every(caso => caso);
+        let control3 = combinacion3.every(caso => caso);
+        
+        let combinacion4 = [demanda,costoDePreparacion,costoDeAlmacenamiento] //Calculamos cantidadEconomica y*
+        let combinacion5 = [demanda,costoDePreparacion,cantidadEconomica] //Calculamos costoDeAlmacenamiento h
+        let combinacion6 = [costoDeAlmacenamiento,costoDePreparacion,cantidadEconomica] //Calculamos demanda D
+        let combinacion7 = [demanda,costoDeAlmacenamiento,cantidadEconomica] //Calculamos costoDePreparacion k
+        let control4 = combinacion4.every(caso => caso); //Si devuelve true es porque todos los elementos del arreglo estan cargados 
+        let control5 = combinacion5.every(caso => caso);
+        let control6 = combinacion6.every(caso => caso);
+        let control7 = combinacion7.every(caso => caso);
+
+
+        if((control4 || control5 || control6 || control7) && tiempoDeEntrega){
+            if(control1){ //CON ESTOS IF CONTROLAMOS LOS CALCULOS PARA LA PRIMER ECUACION
+                //Como aca tendriamos que calcular longitud, o sea t0, como siempre necesitamos calcularlo lo sacamos de aca y pusimos abajo afuera del if               
+            } else if (control2){
+                this.calcularInventarioOptimoEcuacionSimple()
+                
+            } else if(control3){
+                this.calcularDemandaEcuacionSimple()    
+            }
+    
+            if(control4){
+                let cantidadEconomic = this.calcularInventarioOptimo();
+                this.calcularLongitud(cantidadEconomic)   
+            }else if (control5){
+                this.calcularCostoAlmacenamiento()
+               
+            }else if(control6){
+                this.calcularDemanda()
+                
+            }else if (control7){
+                this.calcularCostoPorPedido()
+                
+            }
+            
+            setTimeout(() => {
+                this.calcularLongitud()
+                this.calcularCostoInventario();
+                this.calcularPuntoDeReorden();
+            }, 1);
+            
+            this.setState({mostrarResultados: true})
+            this.setState({incompleto: false})
+
+        }else{
+            this.setState({incompleto:true})
+        } 
+
+
+        
+        
+        
+        
+        
+               
+    }
+
     render() { 
-        let {demanda, costoDePreparacion, costoDeAlmacenamiento, tiempoDeEntrega,unidadCostoDeAlmacenamiento} = this.state;
+        let {demanda, costoDePreparacion, costoDeAlmacenamiento, tiempoDeEntrega,unidadesDemanda, unidadesAlmacenamiento, incompleto} = this.state;
+        let {mostrarResultados, cantidadEconomica, longitudCiclo, puntoDeReorden, TCU} = this.state;
         //let costo = this.calcularCosto();
-        let inventario = this.calcularInventarioOptimo();
-        let longitud = this.calcularLongitud();
-        let TCU = this.calcularCostoInventario();
-        let puntoDeReorden = this.calcularPuntoDeReorden();
+        
 
         //AGREGAMOS ESTA FUNCION PARA CONTROLAR QUE DEPENDIENDO DEL TIPO DE POLITICA IMPRIMA UNA COSA O LA OTRA
-        let controlarPolitica = a => (tiempoDeEntrega > longitud) ? 
-        <h4>Pedir {inventario.toFixed(2)} {this.state.unidadesDemanda} cuando el inventario baje de {puntoDeReorden.toFixed(2)} {this.state.unidadesDemanda}</h4> : <h4>Pedir {inventario.toFixed(2)} {this.state.unidadesDemanda} cada {longitud.toFixed(2)} {this.state.unidadesAlmacenamiento}</h4>; 
+        let controlarPolitica = (tiempoDeEntrega > longitudCiclo) ? (
+        <Col>
+            <Card body inverse color="primary" style={{marginTop:10, padding: '5px 0 0 0'}}>
+                <CardText>
+                <h5>Pedir {Number(cantidadEconomica).toFixed(2)} {unidadesDemanda} cuando el inventario baje de {Number(puntoDeReorden).toFixed(2)} {unidadesDemanda}</h5>
+                </CardText>
+            </Card>   
+        </Col>) : //Si no
+        (
+            <Col>
+                <Card body inverse color="primary" style={{marginTop:10, padding: '5px 0 0 0'}}>
+                    <CardText>
+                        <h5>Pedir {Number(cantidadEconomica).toFixed(2)} {unidadesDemanda} cada {Number(longitudCiclo).toFixed(2)} {unidadesAlmacenamiento}</h5>
+                    </CardText>
+                </Card>   
+            </Col>
+        )
         
-      
+         
+        
+              
         
         return (
             <Container fluid className="App"> 
@@ -120,6 +248,7 @@ class modelStockSimple extends React.Component{
                             <Input
                             className="input-demanda"
                             name={"demanda"}
+                            value={demanda}
                             placeholder="Ingresar la demanda"
                             aria-label="Demanda"
                             aria-describedby="demanda"
@@ -131,7 +260,7 @@ class modelStockSimple extends React.Component{
                             <Input
                             className="input-unidadesDemanda"
                             name={"unidadesDemanda"}
-                            placeholder="Ingresar las unidades"
+                            placeholder="Ingresar las unidades de demanda"
                             aria-label="UnidadDemanda"
                             aria-describedby="unidadDemanda"
                             onChange={this.handleInputChange}
@@ -148,6 +277,7 @@ class modelStockSimple extends React.Component{
                             </InputGroupAddon>
                             <Input
                             name={"costoDePreparacion"}
+                            value={costoDePreparacion}
                             placeholder="Ingresar el costo por pedido"
                             aria-label="costoDePreparacion"
                             aria-describedby="costoDePreparacion"
@@ -166,6 +296,7 @@ class modelStockSimple extends React.Component{
                             </InputGroupAddon>
                             <Input
                             name={"costoDeAlmacenamiento"}
+                            value={costoDeAlmacenamiento}
                             placeholder="Ingresar el costo de almacenamiento"
                             aria-label="costoDePreparacion"
                             aria-describedby="costoDePreparacion"
@@ -184,16 +315,6 @@ class modelStockSimple extends React.Component{
                             />
                         
                         
-                         {/*<InputGroupAddon addonType="prepend">
-                            <Input type="select" name={"unidadCostoDeAlmacenamiento"} 
-                            id="unidadCostoDeAlmacenamiento"
-                            onChange={this.handleInputChange}>
-                                <option value="1" >Dia</option>
-                                <option value="7">Semana</option>
-                                <option value="30">Mes</option>
-                                <option value="365">Año</option>
-                            </Input>
-                        </InputGroupAddon>*/} {/* ESTO DEJO COMENTADO PQ POR EL MOMENTO NO VAMOS OCUPAR */}
                         </InputGroup>
                     </Col>
                     <Col>
@@ -205,6 +326,7 @@ class modelStockSimple extends React.Component{
                             </InputGroupAddon>
                             <Input
                             name={"tiempoDeEntrega"}
+                            value={tiempoDeEntrega}
                             placeholder="Ingresar el tiempo de entrega."
                             aria-label="tiempoDeEntrega"
                             aria-describedby="tiempoDeEntrega"
@@ -219,6 +341,7 @@ class modelStockSimple extends React.Component{
                             </InputGroupAddon>
                             <Input
                             name={"longitudCiclo"}
+                            value={longitudCiclo}
                             placeholder="Ingresar la longitud del ciclo."
                             onChange={this.handleInputChange}
                             />                        
@@ -232,30 +355,35 @@ class modelStockSimple extends React.Component{
                             </InputGroupAddon>
                             <Input
                             name={"cantidadEconomica"}
-                            placeholder="Ingresar la longitud del ciclo."
+                            value={cantidadEconomica}
+                            placeholder="Ingresar la cantidad economica."
                             onChange={this.handleInputChange}
                             />                        
                         </InputGroup>
                     </Col>
-
-                    {this.state.mostrarResultados && //SI MOSTRAR RESULTADOS ES TRUE ENTONCES MOSTRAMOS ESTO.
-                                                    //MOSTRAR RESULTADOS SE PONE EN TRUE CUANDO APRETAMOS CALCULAR
-                        <Col>
-                            <h6>Tu demanda es: {demanda}</h6>
-                            <h6>Tu costo de preparacion es: ${costoDePreparacion}</h6>
-                            <h6>Tu costo de almacenamiento es: ${costoDeAlmacenamiento}</h6>
-                            <h6>El tiempo de entrega es: {this.state.tiempoDeEntrega}</h6>
-                            <h4>Cantidad economica de pedido y*= {inventario.toFixed(2)} {this.state.unidadesDemanda}</h4>
-                            <h4>Longitud del ciclo t0*= {longitud.toFixed(2)} {this.state.unidadesAlmacenamiento}</h4>
-                            <h4>El costo de inventario TCU(y) es: ${TCU.toFixed(2)}</h4>
-                            <h4>El punto de reorden es: {puntoDeReorden.toFixed(2)}</h4>
-                            {controlarPolitica()}
-                        </Col>
-                    }
-
+                    
+                    
+                    {mostrarResultados && (    //Si mostrarResultados esta en true que quiere decir que apreto el boton
+                                                          
+                    <Col>
+                        <Card body inverse style={{ backgroundColor: '#333', borderColor: '#333', marginTop:10}}>
+                            <CardText>
+                                <h6 style={{display:'inline'}}>El costo de inventario TCU(y) es:</h6> <h5 style={{display:'inline'}}><b>${Number(TCU).toFixed(2)}</b></h5><br></br>
+                                <h6 style={{display:'inline'}}>El punto de reorden es:</h6> <h5 style={{display:'inline'}}><b>{Number(puntoDeReorden).toFixed(2)}</b></h5>
+                                {controlarPolitica}
+                            </CardText>
+                        </Card>   
+                    </Col>)}
+                           
+                    {incompleto && (
+                    <Card className="card-incompleto" body inverse color="danger" style={{padding: '0 0 0 0', marginTop:10}}>
+                        <CardText>Complete más campos para poder continuar y luego presione calcular.</CardText>
+                    </Card>)}
+                    
+                    
                     <Row className="btn-volver justify-content-center">
                         <Link to='./'><Button>Volver</Button></Link>
-                        <Button className="btn-Calcular" color="success" onClick={this.calcularResultados}>Calcular</Button>
+                        <Button className="btn-Calcular" color="success" onClick={this.mostrarResultados}>Calcular</Button>
                     </Row>
                     <Row>
                         
