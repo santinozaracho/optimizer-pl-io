@@ -13,19 +13,18 @@ class modeloWilson extends React.Component{
         this.state={
             demanda: null, //D
             costoDePreparacion: null, //K
-            costoDeAlmacenamiento: null,//h
-            costoDePedido: null, //b
-            politica:null,// establece que politica usar
-            unidadCostoDeAlmacenamiento:1, //ESTA NO ESTAMOS OCUPANDO POR EL MOMENTO
+            costoDePreparacionTotal: null,
+            costoDeAlmacenamiento: null,//c1
+            costoDeAlmacenamientoTotal: null,
+            costoDeProducto: null, //b
+            costoDeProductoTotal: null,
             unidadesAlmacenamiento: null,
             unidadesDemanda:null,
-            longitudCiclo:null, //t*
-            cantidadEconomica:null, //y*
+            loteOptimo:null, //q
             mostrarResultados: false,
             inputUpdated: false,
             incompleto: false,
-            puntoDeReorden: null,
-            TCU: null,
+            CTE: null,
             
         }
     }
@@ -45,69 +44,37 @@ class modeloWilson extends React.Component{
         })
     }
     
-    //CALCULAR t0*
-    calcularLongitud(cantidadEconomic){
-        let {demanda, cantidadEconomica} = this.state
-       
-        if (cantidadEconomic){
-            cantidadEconomica = cantidadEconomic 
-            console.log("Cantidad economica")
-        }
-        this.setState({longitudCiclo:(Number(cantidadEconomica)/Number(demanda))}); //to*
-        
-    }
-    
-    //CALCULAR y*
-    calcularInventarioOptimoEcuacionSimple(){
-        let {demanda, longitudCiclo} = this.state;
-        this.setState({cantidadEconomica: (demanda*longitudCiclo)});
+    //CALCULAR q0
+    calcularLoteOptimo() {
+        let {costoDePreparacion, demanda, costoDeAlmacenamiento} = this.state;
+        this.setState({loteOptimo: (Math.sqrt((2*Number(costoDePreparacion)*Number(demanda))/(Number(costoDeAlmacenamiento))))})
     }
 
-    //CALCULAR D
-    calcularDemandaEcuacionSimple(){
-        let {cantidadEconomica, longitudCiclo} = this.state;
-        this.setState({demanda: (cantidadEconomica/longitudCiclo)});
+    //CALCULAR t0
+
+    //CALCULAR COSTO DE PREPARACION TOTAL
+    calcularCostoPreparacionTotal(){
+        let {demanda, loteOptimo, costoDePreparacion} = this.state;
+        this.setState({costoDePreparacionTotal: ((Number(demanda)/Number(loteOptimo))*Number(costoDePreparacion)) })
     }
 
-    //CALCULAR y* PERO CON LA OTRA FORMULA (la formula de la raiz con K,D, h)
-    calcularInventarioOptimo(){ 
-        let {demanda, costoDePreparacion, costoDeAlmacenamiento, unidadCostoDeAlmacenamiento} = this.state;
-        let cantidadEconomica = (Math.sqrt((2*Number(costoDePreparacion)*Number(demanda))/(Number(costoDeAlmacenamiento)*unidadCostoDeAlmacenamiento)))
-        this.setState({cantidadEconomica}); //y*
-        return cantidadEconomica;
+    //CALCULAR COSTO DEL PRODUCTO TOTAL
+    calcularCostoProductoTotal(){
+        let {costoDeProducto, demanda} = this.state;
+        this.setState({costoDeProductoTotal: (Number(costoDeProducto)*Number(demanda)) })
     }
 
-    //CALCULAR h
-    calcularCostoAlmacenamiento(){
-        let {demanda, costoDePreparacion, cantidadEconomica} = this.state;
-        this.setState({costoDeAlmacenamiento:((2*Number(costoDePreparacion)*Number(demanda)/Math.pow(Number(cantidadEconomica),2)))}); //h
-    }
-    
-    //CALCULAR D PERO CON LA OTRA FORMULA (la formula de la raiz con h, y*, k)
-    calcularDemanda(){
-        let {costoDePreparacion, costoDeAlmacenamiento, cantidadEconomica} = this.state;
-        this.setState({demanda:( (Number(costoDeAlmacenamiento)*Math.pow(Number(cantidadEconomica),2))/ 2*Number(costoDePreparacion) ) }); //D
-
+    //CALCULAR COSTO TOTAL DE ALMACENAMIENTO
+    calcularCostoAlmacenamientoTotal(){
+        let {loteOptimo, costoDeAlmacenamiento} = this.state;
+        this.setState({costoDeAlmacenamientoTotal: ((1/2)*Number(loteOptimo)*Number(costoDeAlmacenamiento)) })
     }
 
-    //CALCULAR K
-    calcularCostoPorPedido(){
-        let {demanda, costoDeAlmacenamiento, cantidadEconomica} = this.state;
-        this.setState({costoDePreparacion:( (Number(costoDeAlmacenamiento)*Math.pow(Number(cantidadEconomica),2))/ 2*Number(demanda) ) }); //D
-        
+    //CALCULAR CTE 
+    calcularCTE(){
+        let {costoDePreparacionTotal, costoDeProductoTotal, costoDeAlmacenamientoTotal} = this.state
+        this.setState({CTE: Number(costoDePreparacionTotal)+Number(costoDeProductoTotal+Number(costoDeAlmacenamientoTotal))})
     }
-
-
-    //CALCULAR TCU(y)
-    calcularCostoInventario()
-    {
-        let {demanda, costoDePreparacion, costoDeAlmacenamiento,unidadCostoDeAlmacenamiento, cantidadEconomica} = this.state;
-        let promedioInventario = (cantidadEconomica / 2);
-        this.setState({TCU: ((Number(costoDePreparacion)/(Number(cantidadEconomica) /Number(demanda)))+ (Number(costoDeAlmacenamiento)*Number(unidadCostoDeAlmacenamiento)*promedioInventario))}); //TCL(y)
-    }
-
-    
-    
 
     
     controlarCasos = () => { //Con esta funcion vamos a controlar que datos nos ingresa el usuario para ver que calculamos
@@ -116,74 +83,24 @@ class modeloWilson extends React.Component{
 
 
     mostrarResultados = () => {
-        let {demanda, costoDePreparacion, costoDeAlmacenamiento,longitudCiclo, cantidadEconomica, mostrarResultados} = this.state;
-        let combinacion1 = [cantidadEconomica, demanda] //Calculamos longitudCiclo
-        let combinacion2 = [longitudCiclo, demanda] //Calculamos cantidadEconomica
-        let combinacion3 = [cantidadEconomica, longitudCiclo] //Calculamos demanda con ecuacion simple
-
-        let control1 = combinacion1.every(caso => caso); //Si devuelve true es porque todos los elementos del arreglo estan cargados 
-        let control2 = combinacion2.every(caso => caso);
-        let control3 = combinacion3.every(caso => caso);
+        this.calcularLoteOptimo()
         
-        let combinacion4 = [demanda,costoDePreparacion,costoDeAlmacenamiento] //Calculamos cantidadEconomica y*
-        let combinacion5 = [demanda,costoDePreparacion,cantidadEconomica] //Calculamos costoDeAlmacenamiento h
-        let combinacion6 = [costoDeAlmacenamiento,costoDePreparacion,cantidadEconomica] //Calculamos demanda D
-        let combinacion7 = [demanda,costoDeAlmacenamiento,cantidadEconomica] //Calculamos costoDePreparacion k
-        let control4 = combinacion4.every(caso => caso); //Si devuelve true es porque todos los elementos del arreglo estan cargados 
-        let control5 = combinacion5.every(caso => caso);
-        let control6 = combinacion6.every(caso => caso);
-        let control7 = combinacion7.every(caso => caso);
-
-
-        if((control4 || control5 || control6 || control7)){
-            if(control1){ //CON ESTOS IF CONTROLAMOS LOS CALCULOS PARA LA PRIMER ECUACION
-                //Como aca tendriamos que calcular longitud, o sea t0, como siempre necesitamos calcularlo lo sacamos de aca y pusimos abajo afuera del if               
-            } else if (control2){
-                this.calcularInventarioOptimoEcuacionSimple()
-                
-            } else if(control3){
-                this.calcularDemandaEcuacionSimple()    
-            }
-    
-            if(control4){
-                let cantidadEconomic = this.calcularInventarioOptimo();
-                this.calcularLongitud(cantidadEconomic)   
-            }else if (control5){
-                this.calcularCostoAlmacenamiento()
-               
-            }else if(control6){
-                this.calcularDemanda()
-                
-            }else if (control7){
-                this.calcularCostoPorPedido()
-                
-            }
-            
-            setTimeout(() => {
-                this.calcularLongitud()
-                this.calcularCostoInventario();
-                this.calcularPuntoDeReorden();
-            }, 1);
-            
-            this.setState({mostrarResultados: true})
-            this.setState({incompleto: false})
-
-        }else{
-            this.setState({incompleto:true})
-        } 
-
-
+        setTimeout(() => {
+            this.calcularCostoPreparacionTotal()
+            this.calcularCostoProductoTotal()
+            this.calcularCostoAlmacenamientoTotal()
+            this.calcularCTE()
+        }, 1);
         
-        
-        
-        
-        
-               
+
+        this.setState({mostrarResultados: true})
+        this.setState({incompleto: false})
+                 
     }
 
     render() { 
-        let {demanda, costoDePreparacion, costoDeAlmacenamiento,unidadesDemanda, unidadesAlmacenamiento, incompleto} = this.state;
-        let {mostrarResultados, cantidadEconomica, longitudCiclo, puntoDeReorden, TCU, costoDePedido} = this.state;
+        let {demanda, costoDePreparacion, costoDeAlmacenamiento,unidadesDemanda, loteOptimo, unidadesAlmacenamiento, incompleto} = this.state;
+        let {costoDeProducto, costoDeProductoTotal, costoDePreparacionTotal, costoDeAlmacenamientoTotal, CTE, mostrarResultados} = this.state;
  
         
         return (
@@ -192,19 +109,9 @@ class modeloWilson extends React.Component{
               <Col xs={12} md={8} className="my-4 mx-auto">
                 <Jumbotron>
                     <Col>
-                        <h2>Modelo clasico con cantidad economica de pedido</h2><br></br>                   
+                        <h2>Modelo Wilson</h2><br></br>                   
                     </Col>
-                    {/*<Col>
-                    <div>
-                        <div className="justify-content-center">
-                            <div className="info-descarga">
-                            <i class="fas fa-info-circle"></i>
-                            <a>Las números decimales ingresar con . (Ejemplo: 0.02)</a>
-                            </div>
-                        </div>
-                    </div>
-                    </Col>*/}
-                   
+                    
                     <Col> 
                         <InputGroup className="mt-3" id={"demanda"} key={"demanda"}>
                             <InputGroupAddon addonType="prepend">
@@ -289,51 +196,25 @@ class modeloWilson extends React.Component{
                             <InputGroupText><b>{"b"}</b></InputGroupText>
                             </InputGroupAddon>
                             <Input
-                            name={"costoDePedido"}
-                            value={costoDePedido}
+                            name={"costoDeProducto"}
+                            value={costoDeProducto}
                             placeholder="Ingresar el costo del producto x unidad."
-                            aria-label="costoDePedido"
-                            aria-describedby="costoDePedido"
+                            aria-label="costoDeProducto"
+                            aria-describedby="costoDeProducto"
                             onChange={this.handleInputChange}
                             />                        
                         </InputGroup>
                     </Col>
-                    <Col>
-                        <InputGroup className="mt-3">
-                            <InputGroupAddon addonType="prepend">
-                            <InputGroupText><b>{"t0*"}</b></InputGroupText>
-                            </InputGroupAddon>
-                            <Input
-                            name={"longitudCiclo"}
-                            value={longitudCiclo}
-                            placeholder="Ingresar la longitud del ciclo."
-                            onChange={this.handleInputChange}
-                            />                        
-                        </InputGroup>
-                    </Col>
-
-                    <Col>
-                        <InputGroup className="mt-3">
-                            <InputGroupAddon addonType="prepend">
-                            <InputGroupText><b>{"y*"}</b></InputGroupText>
-                            </InputGroupAddon>
-                            <Input
-                            name={"cantidadEconomica"}
-                            value={cantidadEconomica}
-                            placeholder="Ingresar la cantidad economica."
-                            onChange={this.handleInputChange}
-                            />                        
-                        </InputGroup>
-                    </Col>
-                    
-                    
+                                        
                     {mostrarResultados && (    //Si mostrarResultados esta en true que quiere decir que apreto el boton
                                                           
                     <Col>
                         <Card body inverse style={{ backgroundColor: '#333', borderColor: '#333', marginTop:10}}>
                             <CardText>
-                                <h6 style={{display:'inline'}}>El costo de inventario TCU(y) es:</h6> <h5 style={{display:'inline'}}><b>${Number(TCU).toFixed(2)}</b></h5><br></br>
-                                <h6 style={{display:'inline'}}>El punto de reorden es:</h6> <h5 style={{display:'inline'}}><b>{Number(puntoDeReorden).toFixed(2)}</b></h5>
+                                <h6 style={{display:'inline'}}>El costo total de preparacion es:</h6> <h5 style={{display:'inline'}}><b>{Number(costoDePreparacionTotal).toFixed(2)}</b></h5><br></br>
+                                <h6 style={{display:'inline'}}>El costo total propio del producto es:</h6> <h5 style={{display:'inline'}}><b>{Number(costoDeProductoTotal).toFixed(2)}</b></h5><br></br>
+                                <h6 style={{display:'inline'}}>El costo total de almacenamiento es:</h6> <h5 style={{display:'inline'}}><b>{Number(costoDeAlmacenamientoTotal).toFixed(2)}</b></h5><br></br>
+                                <h6 style={{display:'inline'}}>El costo total esperado es:</h6> <h5 style={{display:'inline'}}><b>${Number(CTE).toFixed(2)}</b></h5><br></br>
                             </CardText>
                         </Card>   
                     </Col>)}
