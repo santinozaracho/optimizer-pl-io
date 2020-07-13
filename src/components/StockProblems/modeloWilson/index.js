@@ -7,7 +7,7 @@ import { Variable } from "javascript-lp-solver/src/expressions";
 
 
 
-class modelStockSimple extends React.Component{
+class modeloWilson extends React.Component{
     constructor (props){
         super(props)
         this.state={
@@ -399,4 +399,4 @@ class modelStockSimple extends React.Component{
 
 }
 
-export default modelStockSimple;
+export default modeloWilson;

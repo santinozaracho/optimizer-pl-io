@@ -17,37 +17,26 @@ const StockProblems = () => {
             </Row>
             <Row className="mt-3 mx-auto">
               <Col>
-                  <Link to={"/StockProblems/ModelStockSimple"}>
-                      <Button size='lg' outline color="success">Modelo stock Simple</Button>
+                  <Link to={"/StockProblems/cantidadEconomicaPedido"}>
+                      <Button size='lg' outline color="success">Cantidad Economica de Pedido - Taha</Button>
+                      <Button size='lg' outline color="primary" style={{marginLeft:10}}>+</Button>
                   </Link>
                       
               </Col>
             </Row>
             <Row className="mt-3 mx-auto">
               <Col>
+                  <Link to={"/StockProblems/modeloWilson"} >
+                      <Button size='lg' outline color="success">Modelo Wilson - Sturla</Button>
+                      <Button size='lg' outline color="primary" style={{marginLeft:10}}>+</Button>
+                  </Link>
+              </Col>
+            </Row>
+            <Row className="mt-3 mx-auto">
+              <Col>
                   <Link to={"/StockProblems/ModelStockDiscontinuidadDePrecio"} >
                       <Button size='lg' outline color="success">Modelo stock discontinuidad del precio</Button>
-                  </Link>
-              </Col>
-            </Row>
-            <Row className="mt-3 mx-auto">
-              <Col>
-                  <Link to={"/LinealProgramming/SinglePage"} >
-                      <Button size='lg' outline color="success">Modelo con agotamiento</Button>
-                  </Link>
-              </Col>
-            </Row>
-            <Row className="mt-3 mx-auto">
-              <Col>
-                  <Link to={"/LinealProgramming/SinglePage"} >
-                      <Button size='lg' outline color="success">Modelo con producción</Button>
-                  </Link>
-              </Col>
-            </Row>
-            <Row className="mt-3 mx-auto">
-              <Col>
-                  <Link to={"/LinealProgramming/SinglePage"} >
-                      <Button size='lg' outline color="success">Modelo por tamaño de lotes</Button>
+                      <Button size='lg' outline color="primary" style={{marginLeft:10}}>+</Button>
                   </Link>
               </Col>
             </Row>
