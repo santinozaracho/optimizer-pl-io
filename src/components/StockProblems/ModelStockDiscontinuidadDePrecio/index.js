@@ -17,7 +17,7 @@ class modelStockSimple extends React.Component{
             precioC2:null,// c2
             limite:null,// q
             punto:null,//Q
-            unidadCostoDeAlmacenamiento:null,
+            unidadCostoDeAlmacenamiento:1,
             unidadesDemanda:null
         }
     }
