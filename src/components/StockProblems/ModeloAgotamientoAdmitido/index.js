@@ -5,17 +5,18 @@ import {Link} from 'react-router-dom';
 import '../index.css'
 
 
-class ModeloStockSimpleSinAgotamientoYConStockDeProteccion extends React.Component{
+class ModeloAgotamientoAdmitido extends React.Component{
     constructor (props){
         super(props)
         this.state={
             demanda: null, //D
             CostoDeUnaOrden: null, //K
-            CostoUnitarioDeAlmacenamiento: null,//h
+            CostoUnitarioDeAlmacenamiento: null,//c1
             LeadTime:null,//L
             costoDeAdquisicion:null,// b
             StockDeProteccion:null,// c2
-            T:1
+            T:1,
+            CostoDeEscasez:null
         }
     }
 
@@ -33,8 +34,8 @@ class ModeloStockSimpleSinAgotamientoYConStockDeProteccion extends React.Compone
     }
     
     calcularTamañoDelLote(){
-        let {demanda, CostoDeUnaOrden,T, CostoUnitarioDeAlmacenamiento} = this.state;
-        return (Math.sqrt((2*Number(CostoDeUnaOrden)*Number(demanda))/(Number(CostoUnitarioDeAlmacenamiento)*Number(T)))); //y*
+        let {demanda, CostoDeUnaOrden,T, CostoUnitarioDeAlmacenamiento,CostoDeEscasez} = this.state;
+        return (Math.sqrt((2*Number(CostoDeUnaOrden)*Number(demanda))/(Number(CostoUnitarioDeAlmacenamiento)*Number(T))+Math.sqrt((CostoUnitarioDeAlmacenamiento+CostoDeEscasez)/CostoDeEscasez))); //y*
     }
     calcularTamañoDelLoteSinRaiz(){
         let {demanda, T, } = this.state;
@@ -54,21 +55,24 @@ class ModeloStockSimpleSinAgotamientoYConStockDeProteccion extends React.Compone
     }
 
     calcularCostoTotalEsperado(){
-        let {costoDeAdquisicion,demanda,CostoDeUnaOrden,CostoUnitarioDeAlmacenamiento,StockDeProteccion,T} = this.state;
-        return((costoDeAdquisicion*demanda)+(Math.sqrt(2*CostoDeUnaOrden*demanda*T*CostoUnitarioDeAlmacenamiento)+StockDeProteccion*CostoUnitarioDeAlmacenamiento*T))//CTEo
+        let {costoDeAdquisicion,demanda,CostoDeUnaOrden,CostoUnitarioDeAlmacenamiento,StockDeProteccion,T,CostoDeEscasez} = this.state;
+        return((costoDeAdquisicion*demanda)+(Math.sqrt(2*CostoDeUnaOrden*demanda*T*CostoUnitarioDeAlmacenamiento))+Math.sqrt(CostoDeEscasez/(CostoUnitarioDeAlmacenamiento+CostoDeEscasez)))//CTEo
     }
     
     calcularCostoTotalEsperadoConQ(){
-        let {costoDeAdquisicion,demanda,CostoDeUnaOrden,CostoUnitarioDeAlmacenamiento,StockDeProteccion,T} = this.state;
+        let {costoDeAdquisicion,demanda,CostoDeUnaOrden,CostoUnitarioDeAlmacenamiento,CostoDeEscasez,T} = this.state;
         let q = this.calcularTamañoDelLote();
-        return((costoDeAdquisicion*demanda)+(q*CostoUnitarioDeAlmacenamiento*T)/2+CostoDeUnaOrden/(demanda/q)*StockDeProteccion*CostoUnitarioDeAlmacenamiento*T)//CTEo
+        return((costoDeAdquisicion*demanda)+(q*CostoUnitarioDeAlmacenamiento*T)/2+Math.sqrt(CostoDeEscasez/(CostoUnitarioDeAlmacenamiento+CostoDeEscasez)))//CTEo
     }
  
     calcularStockDeReorden(){
         let {LeadTime,demanda,StockDeProteccion} = this.state;
-      return((LeadTime*demanda)+StockDeProteccion)//sp
+      return((LeadTime*demanda)-(this.calcularTamañoDelLote()- this.calcularStockRealAlmacenado()))//sp
     }
-    
+    calcularStockRealAlmacenado(){
+        let {LeadTime,demanda,CostoDeUnaOrden,CostoUnitarioDeAlmacenamiento,CostoDeEscasez,T} = this.state;
+      return(Math.sqrt((2 * CostoDeUnaOrden * demanda) / (T * CostoUnitarioDeAlmacenamiento)) + Math.sqrt((CostoDeEscasez) / (CostoDeEscasez+CostoUnitarioDeAlmacenamiento)))//sp
+    }//s
 
     render() { 
         let {demanda, costoDeAdquisicion, CostoUnitarioDeAlmacenamiento, CostoDeUnaOrden, T,LeadTime,StockDeProteccion} = this.state;
@@ -225,22 +229,22 @@ class ModeloStockSimpleSinAgotamientoYConStockDeProteccion extends React.Compone
                         </InputGroup>
                     </Col>
                     <Col>
-                        <InputGroup className="mt-1" id={"StockDeProteccion"} key={"StockDeProteccion"}>
+                        <InputGroup className="mt-1" id={"CostoDeEscasez"} key={"CostoDeEscasez"}>
                             <InputGroupAddon addonType="prepend">
-                            <InputGroupText name="StockDeProteccion" id="StockDeProteccion">
-                                {"sp"}
+                            <InputGroupText name="CostoDeEscasez" id="CostoDeEscasez">
+                                {"c2"}
                             </InputGroupText>
                             </InputGroupAddon>
                             <InputGroupAddon addonType="prepend">
-                            <InputGroupText name="StockDeProteccion" id="StockDeProteccion">
+                            <InputGroupText name="CostoDeEscasez" id="CostoDeEscasez">
                                 {"$"}
                             </InputGroupText>
                             </InputGroupAddon>
                             <Input
-                            name={"StockDeProteccion"}
+                            name={"CostoDeEscasez"}
                             placeholder="Ingresar stock de proteccion."
-                            aria-label="StockDeProteccion"
-                            aria-describedby="StockDeProteccion"
+                            aria-label="CostoDeEscasez"
+                            aria-describedby="CostoDeEscasez"
                             onChange={this.handleInputChange}
                             />
                         </InputGroup>
@@ -275,4 +279,4 @@ class ModeloStockSimpleSinAgotamientoYConStockDeProteccion extends React.Compone
 
 }
 
-export default ModeloStockSimpleSinAgotamientoYConStockDeProteccion;
+export default ModeloAgotamientoAdmitido;

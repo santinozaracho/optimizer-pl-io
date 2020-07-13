@@ -10,7 +10,7 @@ import cantidadEconomicaPedido from "./components/StockProblems/cantidadEconomic
 import modeloWilson from "./components/StockProblems/modeloWilson";
 import ModelStockDiscontinuidadDePrecio from "./components/StockProblems/ModelStockDiscontinuidadDePrecio";
 import ModeloStockSimpleSinAgotamientoYConStockDeProteccion from "./components/StockProblems/ModeloStockSimpleSinAgotamientoYConStockDeProteccion";
-
+import ModeloAgotamientoAdmitido from "./components/StockProblems/ModeloAgotamientoAdmitido";
 
 const NoLinealProgrammingPage = () => <NoLinealProgramming />;
 
@@ -29,6 +29,8 @@ const App = () =>
       <Route exact path="/StockProblems/modeloWilson" component={modeloWilson} />
       <Route exact path="/StockProblems/ModelStockDiscontinuidadDePrecio" component={ModelStockDiscontinuidadDePrecio} />
       <Route exact path="/StockProblems/ModeloStockSimpleSinAgotamientoYConStockDeProteccion" component={ModeloStockSimpleSinAgotamientoYConStockDeProteccion} />
+      <Route exact path="/StockProblems/ModeloAgotamientoAdmitido" component={ModeloAgotamientoAdmitido} />
+      
       <Redirect to="/home" />
     </Switch>;
 

@@ -48,6 +48,14 @@ const StockProblems = () => {
                   </Link>
               </Col>
             </Row>
+            <Row className="mt-3 mx-auto">
+              <Col>
+                  <Link to={"/StockProblems/ModeloAgotamientoAdmitido"} >
+                      <Button size='lg' outline color="success">Modelo Agotamiento Admitido</Button>
+                      <Button size='lg' outline color="primary" style={{marginLeft:10}}>+</Button>
+                  </Link>
+              </Col>
+            </Row>
             <Row className="btn-volver justify-content-center">
                 <Link to='/home'><Button>Volver</Button></Link>
             </Row>
