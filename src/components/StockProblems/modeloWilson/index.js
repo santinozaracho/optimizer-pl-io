@@ -21,6 +21,7 @@ class modeloWilson extends React.Component{
             unidadesAlmacenamiento: null,
             unidadesDemanda:null,
             loteOptimo:null, //q
+            tiempoEntrePedidos: null, //t0
             mostrarResultados: false,
             inputUpdated: false,
             incompleto: false,
@@ -51,18 +52,23 @@ class modeloWilson extends React.Component{
     }
 
     //CALCULAR t0
+    calcularTiempoEntrePedidos(){
+        let {costoDePreparacion, demanda, costoDeAlmacenamiento} = this.state
+        console.log(costoDePreparacion, demanda, costoDeAlmacenamiento)
+        this.setState({tiempoEntrePedidos: (Math.sqrt(2*Number(10)/ ((Number(500))*(Number(25))))) })
+        
+
+    }
 
     //CALCULAR COSTO DE PREPARACION TOTAL
     calcularCostoPreparacionTotal(){
         let {demanda, loteOptimo, costoDePreparacion} = this.state;
-        console.log(demanda, loteOptimo, costoDePreparacion)
         this.setState({costoDePreparacionTotal: ((Number(demanda)/Number(loteOptimo))*Number(costoDePreparacion)) })
     }
 
     //CALCULAR COSTO DEL PRODUCTO TOTAL
     calcularCostoProductoTotal(){
         let {costoDeProducto, demanda} = this.state;
-        console.log(costoDeProducto, demanda)
         this.setState({costoDeProductoTotal: (Number(costoDeProducto)*Number(demanda)) })
     }
 
@@ -86,6 +92,7 @@ class modeloWilson extends React.Component{
 
     mostrarResultados = () => {
         this.calcularLoteOptimo()
+        this.calcularTiempoEntrePedidos()
         
         setTimeout(() => {
             this.calcularCostoPreparacionTotal()
@@ -102,7 +109,7 @@ class modeloWilson extends React.Component{
 
     render() { 
         let {demanda, costoDePreparacion, costoDeAlmacenamiento,unidadesDemanda, loteOptimo, unidadesAlmacenamiento, incompleto} = this.state;
-        let {costoDeProducto, costoDeProductoTotal, costoDePreparacionTotal, costoDeAlmacenamientoTotal, CTE, mostrarResultados} = this.state;
+        let {costoDeProducto, costoDeProductoTotal, costoDePreparacionTotal, costoDeAlmacenamientoTotal, CTE, mostrarResultados, tiempoEntrePedidos} = this.state;
  
         
         return (
@@ -213,11 +220,19 @@ class modeloWilson extends React.Component{
                     <Col>
                         <Card body inverse style={{ backgroundColor: '#333', borderColor: '#333', marginTop:10}}>
                             <CardText>
-                            <h6 style={{display:'inline'}}>El lote optimo es:</h6> <h5 style={{display:'inline'}}><b>{Number(loteOptimo).toFixed(2)}</b></h5><br></br>
+                                <h6 style={{display:'inline'}}>El lote optimo es:</h6> <h5 style={{display:'inline'}}><b>{Number(loteOptimo).toFixed(2)}</b></h5><br></br>
+                                <h6 style={{display:'inline'}}>El tiempo entre pedidos es:</h6> <h5 style={{display:'inline'}}><b>{Number(tiempoEntrePedidos).toFixed(2)}</b></h5><br></br>
                                 <h6 style={{display:'inline'}}>El costo total de preparacion es:</h6> <h5 style={{display:'inline'}}><b>{Number(costoDePreparacionTotal).toFixed(2)}</b></h5><br></br>
                                 <h6 style={{display:'inline'}}>El costo total propio del producto es:</h6> <h5 style={{display:'inline'}}><b>{Number(costoDeProductoTotal).toFixed(2)}</b></h5><br></br>
                                 <h6 style={{display:'inline'}}>El costo total de almacenamiento es:</h6> <h5 style={{display:'inline'}}><b>{Number(costoDeAlmacenamientoTotal).toFixed(2)}</b></h5><br></br>
                                 <h6 style={{display:'inline'}}>El costo total esperado es:</h6> <h5 style={{display:'inline'}}><b>${Number(CTE).toFixed(2)}</b></h5><br></br>
+                                <Col>
+                                    <Card body inverse color="primary" style={{marginTop:10, padding: '5px 0 0 0'}}>
+                                        <CardText>
+                                        <h5>Pedir {Number(loteOptimo).toFixed(2)} {unidadesDemanda} cada {Number(tiempoEntrePedidos).toFixed(2)} {unidadesAlmacenamiento}</h5>
+                                        </CardText>
+                                    </Card>   
+                                </Col>
                             </CardText>
                         </Card>   
                     </Col>)}
