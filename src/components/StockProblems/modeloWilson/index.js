@@ -14,7 +14,7 @@ class modeloWilson extends React.Component{
             demanda: null, //D
             costoDePreparacion: null, //K
             costoDeAlmacenamiento: null,//h
-            tiempoDeEntrega:null,//L
+            costoDePedido: null, //b
             politica:null,// establece que politica usar
             unidadCostoDeAlmacenamiento:1, //ESTA NO ESTAMOS OCUPANDO POR EL MOMENTO
             unidadesAlmacenamiento: null,
@@ -26,6 +26,7 @@ class modeloWilson extends React.Component{
             incompleto: false,
             puntoDeReorden: null,
             TCU: null,
+            
         }
     }
 
@@ -106,19 +107,7 @@ class modeloWilson extends React.Component{
     }
 
     
-    calcularPuntoDeReorden(){
-        let {demanda,politica,tiempoDeEntrega, longitudCiclo} = this.state;
-        
-        if(tiempoDeEntrega > longitudCiclo){ //SI L > to*, calculamos Le
-        //para politica 1 
-            let n = Math.trunc(tiempoDeEntrega/longitudCiclo);//n
-            let tiempoEfectivoDeEntrega= tiempoDeEntrega - (n * longitudCiclo);//Le
-            this.setState({puntoDeReorden: (tiempoEfectivoDeEntrega * demanda)});//punto de reorden
-        }else{
-            //para politica 2
-            this.setState({puntoDeReorden: (tiempoDeEntrega * demanda)})
-        }
-    }
+    
 
     
     controlarCasos = () => { //Con esta funcion vamos a controlar que datos nos ingresa el usuario para ver que calculamos
@@ -127,7 +116,7 @@ class modeloWilson extends React.Component{
 
 
     mostrarResultados = () => {
-        let {demanda, costoDePreparacion, costoDeAlmacenamiento, tiempoDeEntrega,longitudCiclo, cantidadEconomica, mostrarResultados} = this.state;
+        let {demanda, costoDePreparacion, costoDeAlmacenamiento,longitudCiclo, cantidadEconomica, mostrarResultados} = this.state;
         let combinacion1 = [cantidadEconomica, demanda] //Calculamos longitudCiclo
         let combinacion2 = [longitudCiclo, demanda] //Calculamos cantidadEconomica
         let combinacion3 = [cantidadEconomica, longitudCiclo] //Calculamos demanda con ecuacion simple
@@ -146,7 +135,7 @@ class modeloWilson extends React.Component{
         let control7 = combinacion7.every(caso => caso);
 
 
-        if((control4 || control5 || control6 || control7) && tiempoDeEntrega){
+        if((control4 || control5 || control6 || control7)){
             if(control1){ //CON ESTOS IF CONTROLAMOS LOS CALCULOS PARA LA PRIMER ECUACION
                 //Como aca tendriamos que calcular longitud, o sea t0, como siempre necesitamos calcularlo lo sacamos de aca y pusimos abajo afuera del if               
             } else if (control2){
@@ -193,33 +182,9 @@ class modeloWilson extends React.Component{
     }
 
     render() { 
-        let {demanda, costoDePreparacion, costoDeAlmacenamiento, tiempoDeEntrega,unidadesDemanda, unidadesAlmacenamiento, incompleto} = this.state;
-        let {mostrarResultados, cantidadEconomica, longitudCiclo, puntoDeReorden, TCU} = this.state;
-        //let costo = this.calcularCosto();
-        
-
-        //AGREGAMOS ESTA FUNCION PARA CONTROLAR QUE DEPENDIENDO DEL TIPO DE POLITICA IMPRIMA UNA COSA O LA OTRA
-        let controlarPolitica = (tiempoDeEntrega > longitudCiclo) ? (
-        <Col>
-            <Card body inverse color="primary" style={{marginTop:10, padding: '5px 0 0 0'}}>
-                <CardText>
-                <h5>Pedir {Number(cantidadEconomica).toFixed(2)} {unidadesDemanda} cuando el inventario baje de {Number(puntoDeReorden).toFixed(2)} {unidadesDemanda}</h5>
-                </CardText>
-            </Card>   
-        </Col>) : //Si no
-        (
-            <Col>
-                <Card body inverse color="primary" style={{marginTop:10, padding: '5px 0 0 0'}}>
-                    <CardText>
-                        <h5>Pedir {Number(cantidadEconomica).toFixed(2)} {unidadesDemanda} cada {Number(longitudCiclo).toFixed(2)} {unidadesAlmacenamiento}</h5>
-                    </CardText>
-                </Card>   
-            </Col>
-        )
-        
-         
-        
-              
+        let {demanda, costoDePreparacion, costoDeAlmacenamiento,unidadesDemanda, unidadesAlmacenamiento, incompleto} = this.state;
+        let {mostrarResultados, cantidadEconomica, longitudCiclo, puntoDeReorden, TCU, costoDePedido} = this.state;
+ 
         
         return (
             <Container fluid className="App"> 
@@ -289,7 +254,7 @@ class modeloWilson extends React.Component{
                     <Col>
                         <InputGroup className="mt-3" id={"costoDeAlmacenamiento"} key={"costoDeAlmacenamiento"}>
                             <InputGroupAddon addonType="prepend">
-                                <InputGroupText><b>{"h"}</b></InputGroupText>
+                                <InputGroupText><b>{"c1"}</b></InputGroupText>
                             </InputGroupAddon>
                             <InputGroupAddon addonType="prepend">
                                 <InputGroupText >{"$"}</InputGroupText>
@@ -317,19 +282,18 @@ class modeloWilson extends React.Component{
                         
                         </InputGroup>
                     </Col>
+                    
                     <Col>
-                        <InputGroup className="mt-3" id={"tiempoDeEntrega"} key={"tiempoDeEntrega"}>
+                        <InputGroup className="mt-3">
                             <InputGroupAddon addonType="prepend">
-                            <InputGroupText name="tiempoDeEntrega" id="tiempoDeEntrega">
-                                <b>{"L"}</b>
-                            </InputGroupText>
+                            <InputGroupText><b>{"b"}</b></InputGroupText>
                             </InputGroupAddon>
                             <Input
-                            name={"tiempoDeEntrega"}
-                            value={tiempoDeEntrega}
-                            placeholder="Ingresar el tiempo de entrega."
-                            aria-label="tiempoDeEntrega"
-                            aria-describedby="tiempoDeEntrega"
+                            name={"costoDePedido"}
+                            value={costoDePedido}
+                            placeholder="Ingresar el costo del producto x unidad."
+                            aria-label="costoDePedido"
+                            aria-describedby="costoDePedido"
                             onChange={this.handleInputChange}
                             />                        
                         </InputGroup>
@@ -370,7 +334,6 @@ class modeloWilson extends React.Component{
                             <CardText>
                                 <h6 style={{display:'inline'}}>El costo de inventario TCU(y) es:</h6> <h5 style={{display:'inline'}}><b>${Number(TCU).toFixed(2)}</b></h5><br></br>
                                 <h6 style={{display:'inline'}}>El punto de reorden es:</h6> <h5 style={{display:'inline'}}><b>{Number(puntoDeReorden).toFixed(2)}</b></h5>
-                                {controlarPolitica}
                             </CardText>
                         </Card>   
                     </Col>)}
