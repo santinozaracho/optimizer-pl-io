@@ -55,12 +55,14 @@ class modeloWilson extends React.Component{
     //CALCULAR COSTO DE PREPARACION TOTAL
     calcularCostoPreparacionTotal(){
         let {demanda, loteOptimo, costoDePreparacion} = this.state;
+        console.log(demanda, loteOptimo, costoDePreparacion)
         this.setState({costoDePreparacionTotal: ((Number(demanda)/Number(loteOptimo))*Number(costoDePreparacion)) })
     }
 
     //CALCULAR COSTO DEL PRODUCTO TOTAL
     calcularCostoProductoTotal(){
         let {costoDeProducto, demanda} = this.state;
+        console.log(costoDeProducto, demanda)
         this.setState({costoDeProductoTotal: (Number(costoDeProducto)*Number(demanda)) })
     }
 
@@ -211,6 +213,7 @@ class modeloWilson extends React.Component{
                     <Col>
                         <Card body inverse style={{ backgroundColor: '#333', borderColor: '#333', marginTop:10}}>
                             <CardText>
+                            <h6 style={{display:'inline'}}>El lote optimo es:</h6> <h5 style={{display:'inline'}}><b>{Number(loteOptimo).toFixed(2)}</b></h5><br></br>
                                 <h6 style={{display:'inline'}}>El costo total de preparacion es:</h6> <h5 style={{display:'inline'}}><b>{Number(costoDePreparacionTotal).toFixed(2)}</b></h5><br></br>
                                 <h6 style={{display:'inline'}}>El costo total propio del producto es:</h6> <h5 style={{display:'inline'}}><b>{Number(costoDeProductoTotal).toFixed(2)}</b></h5><br></br>
                                 <h6 style={{display:'inline'}}>El costo total de almacenamiento es:</h6> <h5 style={{display:'inline'}}><b>{Number(costoDeAlmacenamientoTotal).toFixed(2)}</b></h5><br></br>
