@@ -46,7 +46,7 @@ const StockProblems = () => {
             <Row className="mt-3 mx-auto">
               <Col>
                   <Link to={"/StockProblems/ModeloStockSimpleSinAgotamientoYConStockDeProteccion"} >
-                      <Button size='lg' outline color="success">Modelo Stock Simple Sin Agotamiento Y Con Stock De Proteccion</Button>
+                      <Button size='lg' outline color="success">Modelo simple sin agotamiento y stock de proteccion</Button>
                       <Button size='lg' outline color="info" style={{marginLeft:10}}>+</Button>
                   </Link>
               </Col>
