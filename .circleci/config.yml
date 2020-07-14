@@ -1,5 +1,4 @@
-version: 2.0
-
+version: 2
 jobs:
   build:
     docker:
@@ -22,13 +21,3 @@ jobs:
       - run:
             name: 'Deploy to Firebase Hosting'
             command: './node_modules/.bin/firebase deploy --token "$FIREBASE_TOKEN"'
-workflows:
-  version: 2.0
-  jobs:
-    - build-and-test
-    - deploy:
-        requires:
-          - build-and-test
-        filters:
-          branches:
-            only: master
