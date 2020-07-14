@@ -3,6 +3,10 @@ import {Link} from 'react-router-dom';
 import { Button, Jumbotron, Container, Row, Col } from "reactstrap";
 import './index.css'
 
+import {BsFillInfoCircleFill} from "react-icons/bs"
+import {BsQuestionOctagonFill} from "react-icons/bs"
+
+
 const StockProblems = () => {
     return(
     <Container fluid className="App">
@@ -31,7 +35,7 @@ const StockProblems = () => {
                       <Button size='lg' outline color="success">Modelo Wilson - Sturla</Button>
                   </Link>
                   <Link to={"/StockProblems/ModeloWilson/info.js"} >
-                      <Button size='lg' outline color="info" style={{marginLeft:10}}>+</Button>
+                      <BsFillInfoCircleFill style={{marginLeft:10, fontSize:30}}/>
                   </Link>
               </Col>
             </Row>
@@ -41,7 +45,7 @@ const StockProblems = () => {
                       <Button size='lg' outline color="success">Modelo con stock de proteccion</Button>
                   </Link>
                   <Link to={"/StockProblems/ModeloStockProteccion/info.js"} >
-                      <Button size='lg' outline color="info" style={{marginLeft:10}}>+</Button>
+                      <BsQuestionOctagonFill style={{marginLeft:10, fontSize:30}}/>
                   </Link>
               </Col>
             </Row>
