@@ -18,29 +18,40 @@ const info = () => {
                     <h2>Modelo Wilson</h2><br></br>
                 </div>
             </Row>
-            <Row>
-                <h5><b>Hipotesis:</b></h5>
+            
+            <Row style={{marginBottom:10}}>
+                <Card body outline color="secondary" >
+                    <Row className="justify-content-center">
+                        <h5><b>Hipotesis</b></h5>
+                    </Row>
+                    <ul className='lista'>
+                        <li>Tasa constante de demanda con el surtido instantáneo del pedido y sin faltante</li>
+                        <li>Una vez pedido el stock se actualiza automaticamente.</li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                    </ul>
+                </Card>
             </Row>
-            <Row>
-                <ul className='lista'>
-                    <li>Tasa constante de demanda con el surtido instantáneo del pedido y sin faltante</li>
-                    <li>Una vez pedido el stock se actualiza automaticamente.</li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                </ul>
+            <Row style={{marginBottom:10}}>
+                <Card body outline color="secondary">
+                    <Row className="justify-content-center">
+                        <h5><b>Variables</b></h5>
+                    </Row>
+                    <ul className='lista'>
+                        <li><b>D: </b>Demanda</li>
+                        <li><b>K: </b>Costo de preparacion</li>
+                        <li><b>c1: </b>Costo de almacenamiento</li>
+                        <li><b>b: </b>Costo por compra por unidad</li>
+                        
+                    </ul>
+                </Card>
             </Row>
-            <Row>
-                <h5><b>Variables:</b></h5>
-            </Row>
-            <Row>
-                <ul className='lista'>
-                    <li><b>D: </b>Demanda</li>
-                    <li><b>K: </b>Costo de preparacion</li>
-                    <li><b>c1: </b>Costo de almacenamiento</li>
-                    <li><b>b: </b>Costo por compra por unidad</li>
-                    
-                </ul>
+            <Row className="justify-content-left">
+                <Card body outline color="secondary">
+                    <CardTitle><b>Bibliografia</b></CardTitle>
+                    <CardText>TAHA HAMDY A., “Investigación de Operaciones”, EDITORIAL Pearson Prentice Hall, 2004 </CardText>
+                </Card>
             </Row>
             
             
