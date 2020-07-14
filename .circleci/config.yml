@@ -17,7 +17,7 @@ jobs:
           key: 'v1-dependencies-{{ checksum "package.json" }}'
       - run:
             name: 'Build Project'
-            command: 'npm run build'
+            command: 'CI=false npm run build'
       - run:
             name: 'Deploy to Firebase Hosting'
             command: './node_modules/.bin/firebase deploy --token "$FIREBASE_TOKEN"'
