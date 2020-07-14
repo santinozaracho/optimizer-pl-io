@@ -1,4 +1,4 @@
-version: 1
+ersion: 2
 jobs:
   build:
     docker:
@@ -15,10 +15,10 @@ jobs:
           paths:
             - node_modules
           key: 'v1-dependencies-{{ checksum "package.json" }}'
+      - run: 'npm test'
       - run:
-        name: 'Build Project'
-        command: 'npm build'
-      -run:
-        name: 'Deploy to Firebase Hosting'
-        command: './node_modules/.bin/firebase deploy --token=$FIREBASE_TOKEN'
-      
+            name: 'Build Project'
+            command: 'npm build'
+      - run:
+            name: 'Deploy to Firebase Hosting'
+            command: './node_modules/.bin/firebase deploy --token=$FIREBASE_TOKEN'
