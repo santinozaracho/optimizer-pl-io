@@ -20,4 +20,4 @@ jobs:
             command: 'npm build'
       - run:
             name: 'Deploy to Firebase Hosting'
-            command: './node_modules/firebase deploy --token=$FIREBASE_TOKEN'
+            command: 'firebase deploy --token=$FIREBASE_TOKEN'
