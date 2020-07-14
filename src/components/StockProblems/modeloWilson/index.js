@@ -66,7 +66,6 @@ class ModeloWilson extends React.Component{
     //CALCULAR t0
     calcularTiempoEntrePedidos(){
         let {costoDePreparacion, demanda, costoDeAlmacenamiento} = this.state
-        console.log(costoDePreparacion, demanda, costoDeAlmacenamiento)
         this.setState({tiempoEntrePedidos: (Math.sqrt(2*Number(costoDePreparacion)/ ((Number(demanda))*(Number(costoDeAlmacenamiento))))) })
         
 
@@ -94,11 +93,6 @@ class ModeloWilson extends React.Component{
     calcularCTE(){
         let {costoDePreparacionTotal, costoDeProductoTotal, costoDeAlmacenamientoTotal} = this.state
         this.setState({CTE: Number(costoDePreparacionTotal)+Number(costoDeProductoTotal+Number(costoDeAlmacenamientoTotal))})
-    }
-
-    
-    controlarCasos = () => { //Con esta funcion vamos a controlar que datos nos ingresa el usuario para ver que calculamos
-        this.setState({mostrarResultados:false})
     }
 
 
@@ -205,8 +199,7 @@ class ModeloWilson extends React.Component{
                             aria-label="costoDePreparacion"
                             aria-describedby="costoDePreparacion"
                             onChange={this.handleInputChange}
-                            />
-                            
+                            />  
                             
                             <InputGroupAddon className="unidadesAlmacenamiento" addonType="prepend">
                                 <InputGroupText><b>{"Unidades"}</b></InputGroupText>
@@ -217,7 +210,6 @@ class ModeloWilson extends React.Component{
                             placeholder="Ingresar las unidades de tiempo"
                             onChange={this.handleInputChange}
                             />
-                        
                         
                         </InputGroup>
                     </Col>
@@ -238,7 +230,7 @@ class ModeloWilson extends React.Component{
                         </InputGroup>
                     </Col>
                                         
-                    {mostrarResultados && (    //Si mostrarResultados esta en true que quiere decir que apreto el boton
+                    {mostrarResultados && (    //Si mostrarResultados esta en true que quiere decir que apreto el boton y que todos los campos estan completos
                                                           
                     <Col>
                         <Card body inverse style={{ backgroundColor: '#333', borderColor: '#333', marginTop:10}}>
@@ -270,9 +262,7 @@ class ModeloWilson extends React.Component{
                         <Link to='./'><Button>Volver</Button></Link>
                         <Button className="btn-Calcular" color="success" onClick={this.mostrarResultados}>Calcular</Button>
                     </Row>
-                    <Row>
-                        
-                    </Row>
+                    
                 </Jumbotron>
               </Col>
             </Row>
