@@ -48,7 +48,14 @@ class modeloWilson extends React.Component{
     //CALCULAR q0
     calcularLoteOptimo() {
         let {costoDePreparacion, demanda, costoDeAlmacenamiento} = this.state;
-        this.setState({loteOptimo: (Math.sqrt((2*Number(costoDePreparacion)*Number(demanda))/(Number(costoDeAlmacenamiento))))})
+        let loteOptimo
+        loteOptimo = (Math.sqrt((2*Number(costoDePreparacion)*Number(demanda))/(Number(costoDeAlmacenamiento))));
+        
+        if (loteOptimo>demanda){ //Si el q0 calculado es mas grande que la demanda entonces como lote optimo va la demanda
+            this.setState({loteOptimo: demanda})
+        }else{
+            this.setState({loteOptimo})
+        }
     }
 
     //CALCULAR t0
