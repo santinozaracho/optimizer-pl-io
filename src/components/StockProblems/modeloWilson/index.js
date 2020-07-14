@@ -91,19 +91,30 @@ class modeloWilson extends React.Component{
 
 
     mostrarResultados = () => {
-        this.calcularLoteOptimo()
-        this.calcularTiempoEntrePedidos()
         
-        setTimeout(() => {
-            this.calcularCostoPreparacionTotal()
-            this.calcularCostoProductoTotal()
-            this.calcularCostoAlmacenamientoTotal()
-            this.calcularCTE()
-        }, 1);
+        let {demanda, costoDePreparacion, costoDeAlmacenamiento, costoDeProducto} = this.state;
+        let combinacion1 = [demanda, costoDePreparacion, costoDeAlmacenamiento, costoDeProducto] //Cargamos un arreglo
+        let control1 = combinacion1.every(caso => caso); //Si devuelve true es porque todos los elementos del arreglo estan cargados 
         
+        if (control1){ //SI TODOS LOS CAMPOS ESTAN CARGADOS ENTONCES CALCULO TODO Y MUESTRO
+            this.calcularLoteOptimo()
+            this.calcularTiempoEntrePedidos()
+        
+            setTimeout(() => {
+                this.calcularCostoPreparacionTotal()
+                this.calcularCostoProductoTotal()
+                this.calcularCostoAlmacenamientoTotal()
+                this.calcularCTE()
+            }, 1);
 
-        this.setState({mostrarResultados: true})
-        this.setState({incompleto: false})
+            this.setState({mostrarResultados: true})
+            this.setState({incompleto: false})
+
+        }else{
+            this.setState({incompleto:true}) //PONGO A INCOMPLETO EN TRUE Y MUESTRO LA ALERTA DE COMPLETAR CAMPOS
+        }
+        
+        
                  
     }
 
