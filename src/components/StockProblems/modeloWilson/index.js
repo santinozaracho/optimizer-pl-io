@@ -62,7 +62,7 @@ class modeloWilson extends React.Component{
     calcularTiempoEntrePedidos(){
         let {costoDePreparacion, demanda, costoDeAlmacenamiento} = this.state
         console.log(costoDePreparacion, demanda, costoDeAlmacenamiento)
-        this.setState({tiempoEntrePedidos: (Math.sqrt(2*Number(10)/ ((Number(500))*(Number(25))))) })
+        this.setState({tiempoEntrePedidos: (Math.sqrt(2*Number(costoDePreparacion)/ ((Number(demanda))*(Number(costoDeAlmacenamiento))))) })
         
 
     }
