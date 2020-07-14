@@ -17,9 +17,12 @@ import infoModeloWilson from "./components/StockProblems/ModeloWilson/info.js";
 import ModeloStockProteccion from "./components/StockProblems/ModeloStockProteccion";
 import infoModeloStockProteccion from "./components/StockProblems/ModeloStockProteccion/info.js";
 
+import ModeloAgotamientoAdmitido from "./components/StockProblems/ModeloAgotamientoAdmitido";
+import infoModeloAgotamientoAdmitido from "./components/StockProblems/ModeloAgotamientoAdmitido/info.js";
+
 import ModelStockDiscontinuidadDePrecio from "./components/StockProblems/ModelStockDiscontinuidadDePrecio";
 
-import ModeloAgotamientoAdmitido from "./components/StockProblems/ModeloAgotamientoAdmitido";
+
 
 const NoLinealProgrammingPage = () => <NoLinealProgramming />;
 
@@ -40,8 +43,10 @@ const App = () =>
       <Route exact path="/StockProblems/ModeloWilson/info.js" component={infoModeloWilson} />
       <Route exact path="/StockProblems/ModeloStockProteccion" component={ModeloStockProteccion} />
       <Route exact path="/StockProblems/ModeloStockProteccion/info.js" component={infoModeloStockProteccion} />
-      <Route exact path="/StockProblems/ModelStockDiscontinuidadDePrecio" component={ModelStockDiscontinuidadDePrecio} />
       <Route exact path="/StockProblems/ModeloAgotamientoAdmitido" component={ModeloAgotamientoAdmitido} />
+      <Route exact path="/StockProblems/ModeloAgotamientoAdmitido/info.js" component={infoModeloAgotamientoAdmitido} />
+      <Route exact path="/StockProblems/ModelStockDiscontinuidadDePrecio" component={ModelStockDiscontinuidadDePrecio} />
+      
       
       <Redirect to="/home" />
     </Switch>;

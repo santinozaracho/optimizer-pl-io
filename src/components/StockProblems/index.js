@@ -47,17 +47,19 @@ const StockProblems = () => {
             </Row>
             <Row className="mt-3 mx-auto">
               <Col>
-                  <Link to={"/StockProblems/ModelStockDiscontinuidadDePrecio"} >
-                      <Button size='lg' outline color="success">Modelo stock discontinuidad del precio</Button>
+                  <Link to={"/StockProblems/ModeloAgotamientoAdmitido"} >
+                      <Button size='lg' outline color="success">Modelo con Agotamiento</Button>
+                  </Link>
+                  <Link to={"/StockProblems/ModeloAgotamientoAdmitido/info.js"} >
                       <Button size='lg' outline color="info" style={{marginLeft:10}}>+</Button>
                   </Link>
               </Col>
             </Row>
             <Row className="mt-3 mx-auto">
               <Col>
-                  <Link to={"/StockProblems/ModeloAgotamientoAdmitido"} >
-                      <Button size='lg' outline color="success">Modelo Agotamiento Admitido</Button>
-                      <Button size='lg' outline color="primary" style={{marginLeft:10}}>+</Button>
+                  <Link to={"/StockProblems/ModelStockDiscontinuidadDePrecio"} >
+                      <Button size='lg' outline color="success">Modelo stock discontinuidad del precio</Button>
+                      <Button size='lg' outline color="info" style={{marginLeft:10}}>+</Button>
                   </Link>
               </Col>
             </Row>
