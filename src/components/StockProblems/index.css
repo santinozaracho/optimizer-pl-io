@@ -39,3 +39,9 @@
 .card-incompleto{
     padding: 0 0 0 0;
 }
+
+.lista{
+    display:inline-block;
+	text-align:left;
+}
+

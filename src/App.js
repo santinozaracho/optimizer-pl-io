@@ -8,6 +8,7 @@ import Inicio from "./components/Inicio";
 import SinglePage from "./components/LinealProgramming/SinglePage";
 import cantidadEconomicaPedido from "./components/StockProblems/cantidadEconomicaPedido";
 import modeloWilson from "./components/StockProblems/modeloWilson";
+import infoModeloWilson from "./components/StockProblems/modeloWilson/info.js";
 import ModelStockDiscontinuidadDePrecio from "./components/StockProblems/ModelStockDiscontinuidadDePrecio";
 import ModeloStockSimpleSinAgotamientoYConStockDeProteccion from "./components/StockProblems/ModeloStockSimpleSinAgotamientoYConStockDeProteccion";
 import ModeloAgotamientoAdmitido from "./components/StockProblems/ModeloAgotamientoAdmitido";
@@ -27,6 +28,7 @@ const App = () =>
       <Route exact path="/StockProblems" component={StockProblems} />
       <Route exact path="/StockProblems/cantidadEconomicaPedido" component={cantidadEconomicaPedido} />
       <Route exact path="/StockProblems/modeloWilson" component={modeloWilson} />
+      <Route exact path="/StockProblems/modeloWilson/info.js" component={infoModeloWilson} />
       <Route exact path="/StockProblems/ModelStockDiscontinuidadDePrecio" component={ModelStockDiscontinuidadDePrecio} />
       <Route exact path="/StockProblems/ModeloStockSimpleSinAgotamientoYConStockDeProteccion" component={ModeloStockSimpleSinAgotamientoYConStockDeProteccion} />
       <Route exact path="/StockProblems/ModeloAgotamientoAdmitido" component={ModeloAgotamientoAdmitido} />

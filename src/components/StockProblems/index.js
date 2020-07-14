@@ -19,7 +19,7 @@ const StockProblems = () => {
               <Col>
                   <Link to={"/StockProblems/cantidadEconomicaPedido"}>
                       <Button size='lg' outline color="success">Cantidad Economica de Pedido - Taha</Button>
-                      <Button size='lg' outline color="primary" style={{marginLeft:10}}>+</Button>
+                      <Button size='lg' outline color="info" style={{marginLeft:10}}>+</Button>
                   </Link>
                       
               </Col>
@@ -28,7 +28,9 @@ const StockProblems = () => {
               <Col>
                   <Link to={"/StockProblems/modeloWilson"} >
                       <Button size='lg' outline color="success">Modelo Wilson - Sturla</Button>
-                      <Button size='lg' outline color="primary" style={{marginLeft:10}}>+</Button>
+                  </Link>
+                  <Link to={"/StockProblems/modeloWilson/info.js"} >
+                      <Button size='lg' outline color="info" style={{marginLeft:10}}>+</Button>
                   </Link>
               </Col>
             </Row>
@@ -36,7 +38,7 @@ const StockProblems = () => {
               <Col>
                   <Link to={"/StockProblems/ModelStockDiscontinuidadDePrecio"} >
                       <Button size='lg' outline color="success">Modelo stock discontinuidad del precio</Button>
-                      <Button size='lg' outline color="primary" style={{marginLeft:10}}>+</Button>
+                      <Button size='lg' outline color="info" style={{marginLeft:10}}>+</Button>
                   </Link>
               </Col>
             </Row>
@@ -44,7 +46,7 @@ const StockProblems = () => {
               <Col>
                   <Link to={"/StockProblems/ModeloStockSimpleSinAgotamientoYConStockDeProteccion"} >
                       <Button size='lg' outline color="success">Modelo Stock Simple Sin Agotamiento Y Con Stock De Proteccion</Button>
-                      <Button size='lg' outline color="primary" style={{marginLeft:10}}>+</Button>
+                      <Button size='lg' outline color="info" style={{marginLeft:10}}>+</Button>
                   </Link>
               </Col>
             </Row>
