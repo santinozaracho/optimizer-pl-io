@@ -54,7 +54,6 @@ class ModeloStockProteccion extends React.Component{
     calcularTamañoDelLote(){
         let {demanda, CostoDeUnaOrden,T, CostoUnitarioDeAlmacenamiento, loteOptimo} = this.state;
         loteOptimo = (Math.sqrt((2*Number(CostoDeUnaOrden)*Number(demanda))/(Number(CostoUnitarioDeAlmacenamiento)*Number(T))));
-        console.log('lote optimo:' + loteOptimo)
         
         if (loteOptimo>demanda){ //Si el q0 calculado es mas grande que la demanda entonces como lote optimo va la demanda
             this.setState({loteOptimo: demanda})
@@ -68,7 +67,6 @@ class ModeloStockProteccion extends React.Component{
     {
         let {demanda, CostoDeUnaOrden, CostoUnitarioDeAlmacenamiento,T} = this.state;
         this.setState({tiempoEntrePedidos: (Math.sqrt((2*Number(CostoDeUnaOrden)*Number(T))/(Number(demanda)*Number(CostoUnitarioDeAlmacenamiento)))) })
-        console.log(demanda, CostoDeUnaOrden, CostoUnitarioDeAlmacenamiento,T)
     }
 
     //CALCULAR CTE

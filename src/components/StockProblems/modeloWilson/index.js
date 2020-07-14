@@ -91,8 +91,11 @@ class ModeloWilson extends React.Component{
 
     //CALCULAR CTE 
     calcularCTE(){
-        let {costoDePreparacionTotal, costoDeProductoTotal, costoDeAlmacenamientoTotal} = this.state
-        this.setState({CTE: Number(costoDePreparacionTotal)+Number(costoDeProductoTotal+Number(costoDeAlmacenamientoTotal))})
+        let {costoDeProducto, costoDeAlmacenamiento, demanda} = this.state
+        let bD, raiz2TDKC1
+        bD = (Number(costoDeProducto)*Number(demanda))
+        raiz2TDKC1 = ( Math.sqrt(2*Number(demanda)*Number(costoDeProducto)*Number(costoDeAlmacenamiento)) )
+        this.setState({CTE: (bD + raiz2TDKC1)})
     }
 
 
