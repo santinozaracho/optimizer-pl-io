@@ -13,3 +13,10 @@ Integrantes del Equipo de Desarrollo:
 -Vaernet, Ian.
 -Vazquez Diaz, Julian
 -Zaracho Simonetto, Carlos Santino.
+
+Integrantes del Equipo de Modificacion:
+-Cuzziol Boccioni, Facundo Ramiro.
+-Diez, Danilo Antonio.
+-Nadal, Alejandro Fabian.
+-Schuster, Exequiel Andres.
+-Troncoso, Mariano Adrian. 
