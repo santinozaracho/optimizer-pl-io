@@ -27,10 +27,11 @@ jobs:
             name: 'Deploy to Firebase Hosting'
             command: './node_modules/.bin/firebase deploy --token "$FIREBASE_TOKEN"'
 workflows:
-  - build-and-test
-  - deploy:
-      requires:
-        - build-and-test
-      filters:
-        branches:
-          only: master
+  jobs:
+    - build-and-test
+    - deploy:
+        requires:
+          - build-and-test
+        filters:
+          branches:
+            only: master
