@@ -19,9 +19,10 @@ const StockProblems = () => {
               <Col>
                   <Link to={"/StockProblems/cantidadEconomicaPedido"}>
                       <Button size='lg' outline color="success">Cantidad Economica de Pedido - Taha</Button>
-                      <Button size='lg' outline color="info" style={{marginLeft:10}}>+</Button>
                   </Link>
-                      
+                  <Link to={"/StockProblems/cantidadEconomicaPedido/info.js"} >
+                      <Button size='lg' outline color="info" style={{marginLeft:10}}>+</Button>
+                  </Link>  
               </Col>
             </Row>
             <Row className="mt-3 mx-auto">
