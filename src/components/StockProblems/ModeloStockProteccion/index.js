@@ -5,7 +5,7 @@ import {Link} from 'react-router-dom';
 import '../index.css'
 
 
-class ModeloStockSimpleSinAgotamientoYConStockDeProteccion extends React.Component{
+class ModeloStockProteccion extends React.Component{
     constructor (props){
         super(props)
         this.state={
@@ -15,21 +15,33 @@ class ModeloStockSimpleSinAgotamientoYConStockDeProteccion extends React.Compone
             LeadTime:null,//L
             costoDeAdquisicion:null,// b
             StockDeProteccion:null,// c2
-            T:1
+            T:1,
+            mostrarResultados: false,
+            inputUpdated: false,
+            incompleto: false,
         }
     }
 
-     unidadDeTiempo = [
-        { label: "Dia", value: 1 },
-        { label: "Semana", value: 7 },
-        { label: "Mes", value: 31 },
-        { label: "Año", value: 365 }
-      ];
+     
+
+    componentDidUpdate(prevProps, prevState){ //Para comparar mi estado actual con el estado anterior. Verificamos si se actualizo algun campo de los input.
+        if(this.state.inputUpdated){
+            this.setState({inputUpdated:false})
+            this.controlarCambio();
+            
+        } 
+    }
 
     handleInputChange = (event) =>{
         this.setState({
-            [event.target.name]: event.target.value
+            [event.target.name]: event.target.value,
+            inputUpdated: true,
         })
+    }
+
+    //SI HUBO CAMBIOS QUE DESAPAREZCA LA VENTANA QUE MUESTRA LOS RESULTADOS
+    controlarCambio = () => { 
+        this.setState({mostrarResultados:false})
     }
     
     calcularTamañoDelLote(){
@@ -275,4 +287,4 @@ class ModeloStockSimpleSinAgotamientoYConStockDeProteccion extends React.Compone
 
 }
 
-export default ModeloStockSimpleSinAgotamientoYConStockDeProteccion;
+export default ModeloStockProteccion;

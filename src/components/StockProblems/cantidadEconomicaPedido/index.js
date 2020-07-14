@@ -7,7 +7,7 @@ import { Variable } from "javascript-lp-solver/src/expressions";
 
 
 
-class cantidadEconomicaPedido extends React.Component{
+class CantidadEconomicaPedido extends React.Component{
     constructor (props){
         super(props)
         this.state={
@@ -32,7 +32,7 @@ class cantidadEconomicaPedido extends React.Component{
     componentDidUpdate(prevProps, prevState){ //Para comparar mi estado actual con el estado anterior. Verificamos si se actualizo algun campo de los input.
         if(this.state.inputUpdated){
             this.setState({inputUpdated:false})
-            this.controlarCasos();
+            this.controlarCambio();
             
         } 
     }
@@ -42,6 +42,11 @@ class cantidadEconomicaPedido extends React.Component{
             [event.target.name]: event.target.value,
             inputUpdated: true,
         })
+    }
+    
+    //SI HUBO CAMBIOS QUE DESAPAREZCA LA VENTANA QUE MUESTRA LOS RESULTADOS
+    controlarCambio = () => { 
+        this.setState({mostrarResultados:false})
     }
     
     //CALCULAR t0*
@@ -118,11 +123,6 @@ class cantidadEconomicaPedido extends React.Component{
             //para politica 2
             this.setState({puntoDeReorden: (tiempoDeEntrega * demanda)})
         }
-    }
-
-    
-    controlarCasos = () => { //Con esta funcion vamos a controlar que datos nos ingresa el usuario para ver que calculamos
-        this.setState({mostrarResultados:false})
     }
 
 
@@ -399,4 +399,4 @@ class cantidadEconomicaPedido extends React.Component{
 
 }
 
-export default cantidadEconomicaPedido;
+export default CantidadEconomicaPedido;

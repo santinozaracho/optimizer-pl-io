@@ -7,7 +7,7 @@ import { Variable } from "javascript-lp-solver/src/expressions";
 
 
 
-class modeloWilson extends React.Component{
+class ModeloWilson extends React.Component{
     constructor (props){
         super(props)
         this.state={
@@ -33,7 +33,7 @@ class modeloWilson extends React.Component{
     componentDidUpdate(prevProps, prevState){ //Para comparar mi estado actual con el estado anterior. Verificamos si se actualizo algun campo de los input.
         if(this.state.inputUpdated){
             this.setState({inputUpdated:false})
-            this.controlarCasos();
+            this.controlarCambio();
             
         } 
     }
@@ -43,6 +43,11 @@ class modeloWilson extends React.Component{
             [event.target.name]: event.target.value,
             inputUpdated: true,
         })
+    }
+
+    //SI HUBO CAMBIOS QUE DESAPAREZCA LA VENTANA QUE MUESTRA LOS RESULTADOS
+    controlarCambio = () => { 
+        this.setState({mostrarResultados:false})
     }
     
     //CALCULAR q0
@@ -279,4 +284,4 @@ class modeloWilson extends React.Component{
 
 }
 
-export default modeloWilson;
+export default ModeloWilson;
