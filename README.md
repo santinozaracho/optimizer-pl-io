@@ -1,5 +1,7 @@
 # Solucionador de Programacion Lineal propuesto para la Catedra de Investigacion Operativa de la UTN Facultad Regional Resistencia
 
+![CircleCI](https://circleci.com/gh/AlejandroFNadal/optimizer-pl-io/tree/master.svg?style=svg)](https://circleci.com/gh/AlejandroFNadal/optimizer-pl-io/tree/master)
+
 Clickeado [Aqui](https://optimizer-pl-io.web.app/home), usted puede acceder para observar el avance del proyecto.
 
 El proyecto esta basado en React.js y a modo de solucionar los modelos se utiliza "javascript-lp-solver" instalable desde el npm.

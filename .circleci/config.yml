@@ -18,6 +18,20 @@ jobs:
       - run:
             name: 'Build Project'
             command: 'CI=false npm run build'
+  deploy:
+    docker:
+      -image: 'circleci/node:12'
+    steps:
       - run:
             name: 'Deploy to Firebase Hosting'
             command: './node_modules/.bin/firebase deploy --token "$FIREBASE_TOKEN"'
+workflows:
+  ci-cd-workflow:
+    jobs:
+      -build-and-test
+      -deploy:
+        requires:
+          -build-and-test
+        filters:
+          branches:
+            only: master
