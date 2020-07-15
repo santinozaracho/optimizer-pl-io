@@ -44,8 +44,8 @@ const Inicio = () =>{
                             <Button id='btnce' outline tag="a" href="https://github.com/nicmalegre">
                                 AN
                             </Button>
-                            <UncontrolledTooltip target='btnce'>Lopez, Soto Carlos</UncontrolledTooltip>
-                            <Button id='btnce' outline tag="a" href="https://github.com/Carloslopezsoto">
+                            <UncontrolledTooltip target='btnce1'>Lopez, Soto Carlos</UncontrolledTooltip>
+                            <Button id='btnce1' outline tag="a" href="https://github.com/Carloslopezsoto">
                                 CLS
                             </Button>
                             <UncontrolledTooltip target='btnzs'>Zaracho Simonetto, Carlos Santino</UncontrolledTooltip>
