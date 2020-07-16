@@ -64,12 +64,7 @@ class modeloTriangular extends React.Component{
         }
     }
 
-    //CALCULAR t0
-    calcularIntervaloDeUnCiclo()
-    {
-        let {demanda, CostoDeUnaOrden, CostoUnitarioDeAlmacenamiento,T} = this.state;
-        this.setState({tiempoEntrePedidos: (Math.sqrt((2*Number(CostoDeUnaOrden)*Number(T))/(Number(demanda)*Number(CostoUnitarioDeAlmacenamiento)))) })
-    }
+    
 
     //CALCULAR CTE
     calcularCostoTotalEsperado(){
@@ -82,30 +77,7 @@ class modeloTriangular extends React.Component{
         this.setState({CTE: (bD + costoTotalDeAlmacenamiento+costoTotalDePreparacion) }) //CTEo
     }
     
-    calcularStockDeReorden(){
-        let {LeadTime,demanda,StockDeProteccion} = this.state;
-      return((LeadTime*demanda)+StockDeProteccion)//sp
-    }
-
-    /* //FUNCIONES QUE NO ESTAMOS OCUPANDO
-    calcularCostoTotalEsperadoConQ(){
-        let {costoDeAdquisicion,demanda,CostoDeUnaOrden,CostoUnitarioDeAlmacenamiento,StockDeProteccion,T} = this.state;
-        let q = this.calcularTamañoDelLote();
-        return((costoDeAdquisicion*demanda)+(q*CostoUnitarioDeAlmacenamiento*T)/2+CostoDeUnaOrden/(demanda/q)*StockDeProteccion*CostoUnitarioDeAlmacenamiento*T)//CTEo
-    }
-
-    calcularIntervaloDeUnCicloSinRaiz()
-    {
-        let {demanda, T} = this.state;
-        return ((this.calcularTamañoDelLote()*T)/(demanda)); //to
-    }
-
-    calcularTamañoDelLoteSinRaiz(){
-        let {demanda, T, } = this.state;
-        let to = this.calcularIntervaloDeUnCiclo()
-        return ((demanda*to)/T); //q
-    }
-    */
+    
 
     mostrarResultados = () => {
         let {demanda, costoDeAdquisicion, CostoUnitarioDeAlmacenamiento, CostoDeUnaOrden,VelocidadDeProduccion} = this.state;
@@ -113,9 +85,7 @@ class modeloTriangular extends React.Component{
         let control1 = combinacion1.every(caso => caso); //Si devuelve true es porque todos los elementos del arreglo estan cargados 
         
         if (control1){ //SI TODOS LOS CAMPOS ESTAN CARGADOS ENTONCES CALCULO TODO Y MUESTRO
-
             this.calcularTamañoDelLote(); //Calculo q0
-            this.calcularIntervaloDeUnCiclo(); //Calculo t0
             
             setTimeout(() => { //Luego de calcular lo anterior, le doy un tiempo para que calcule el CTE
                 this.calcularCostoTotalEsperado();
@@ -258,7 +228,6 @@ class modeloTriangular extends React.Component{
                         <Card body inverse style={{ backgroundColor: '#333', borderColor: '#333', marginTop:10}}>
                             <CardText>
                                 <h6 style={{display:'inline'}}>El lote optimo es:</h6> <h5 style={{display:'inline'}}><b>{Number(loteOptimo).toFixed(2)}</b></h5><br></br>
-                                <h6 style={{display:'inline'}}>El tiempo entre pedidos es:</h6> <h5 style={{display:'inline'}}><b>{Number(tiempoEntrePedidos).toFixed(2)}</b></h5><br></br>
                                 <h6 style={{display:'inline'}}>El costo total esperado es:</h6> <h5 style={{display:'inline'}}><b>${Number(CTE).toFixed(2)}</b></h5><br></br>
                                 <Col>
                                     <Card body inverse color="primary" style={{marginTop:10, padding: '5px 0 0 0'}}>
