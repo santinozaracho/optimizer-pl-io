@@ -7,12 +7,12 @@ import LinealProgramming from './components/LinealProgramming'
 import Inicio from "./components/Inicio";
 import SinglePage from "./components/LinealProgramming/SinglePage";
 
-import CantidadEconomicaPedido from "./components/StockProblems/cantidadEconomicaPedido";
-import infoCantidadEconomicaPedido from "./components/StockProblems/cantidadEconomicaPedido/info.js";
+import CantidadEconomicaPedido from "./components/StockProblems/CantidadEconomicaPedido";
+import infoCantidadEconomicaPedido from "./components/StockProblems/CantidadEconomicaPedido/info.js";
 
 
-import ModeloWilson from "./components/StockProblems/modeloWilson";
-import infoModeloWilson from "./components/StockProblems/modeloWilson/info.js";
+import ModeloWilson from "./components/StockProblems/ModeloWilson";
+import infoModeloWilson from "./components/StockProblems/ModeloWilson/info.js";
 
 import ModeloStockProteccion from "./components/StockProblems/ModeloStockProteccion";
 import infoModeloStockProteccion from "./components/StockProblems/ModeloStockProteccion/info.js";
@@ -43,8 +43,8 @@ const App = () =>
       <Route exact path="/LinealProgramming/SinglePage" component={SinglePage} />
       <Route exact path="/NoLinealProgramming" component={NoLinealProgrammingPage} />
       <Route exact path="/StockProblems" component={StockProblems} />
-      <Route exact path="/StockProblems/cantidadEconomicaPedido" component={CantidadEconomicaPedido} />
-      <Route exact path="/StockProblems/cantidadEconomicaPedido/info.js" component={infoCantidadEconomicaPedido} />
+      <Route exact path="/StockProblems/CantidadEconomicaPedido" component={CantidadEconomicaPedido} />
+      <Route exact path="/StockProblems/CantidadEconomicaPedido/info.js" component={infoCantidadEconomicaPedido} />
       <Route exact path="/StockProblems/modeloWilson" component={ModeloWilson} />
       <Route exact path="/StockProblems/modeloWilson/info.js" component={infoModeloWilson} />
       <Route exact path="/StockProblems/ModeloStockProteccion" component={ModeloStockProteccion} />
