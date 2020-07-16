@@ -142,7 +142,7 @@ class modeloTriangular extends React.Component{
               <Col xs={12} md={8} className="my-4 mx-auto">
                 <Jumbotron>
                     <Col>
-                        <h2>Modelo con stock de proteccion</h2><br></br>                   
+                        <h2>Modelo Triangular</h2><br></br>                   
                     </Col>
                     
                     <Col> 
@@ -229,7 +229,7 @@ class modeloTriangular extends React.Component{
                             <Input
                             name={"costoDeAdquisicion"}
                             value={costoDeAdquisicion}
-                            placeholder="Ingresar el costo del producto x unidad."
+                            placeholder="Ingresar el costo del producto x unidad"
                             aria-label="costoDeAdquisicion"
                             aria-describedby="costoDeAdquisicion"
                             onChange={this.handleInputChange}
@@ -243,7 +243,7 @@ class modeloTriangular extends React.Component{
                             </InputGroupAddon>
                             <Input
                             name={"VelocidadDeProduccion"}
-                            placeholder="Ingresar Velocidad De Produccion."
+                            placeholder="Ingresar Velocidad De Produccion"
                             aria-label="VelocidadDeProduccion"
                             aria-describedby="VelocidadDeProduccion"
                             onChange={this.handleInputChange}

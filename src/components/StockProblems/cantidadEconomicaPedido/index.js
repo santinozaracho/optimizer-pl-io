@@ -327,7 +327,7 @@ class CantidadEconomicaPedido extends React.Component{
                             <Input
                             name={"tiempoDeEntrega"}
                             value={tiempoDeEntrega}
-                            placeholder="Ingresar el tiempo de entrega."
+                            placeholder="Ingresar el tiempo de entrega"
                             aria-label="tiempoDeEntrega"
                             aria-describedby="tiempoDeEntrega"
                             onChange={this.handleInputChange}
@@ -342,7 +342,7 @@ class CantidadEconomicaPedido extends React.Component{
                             <Input
                             name={"longitudCiclo"}
                             value={longitudCiclo}
-                            placeholder="Ingresar la longitud del ciclo."
+                            placeholder="Ingresar la longitud del ciclo"
                             onChange={this.handleInputChange}
                             />                        
                         </InputGroup>
@@ -356,7 +356,7 @@ class CantidadEconomicaPedido extends React.Component{
                             <Input
                             name={"cantidadEconomica"}
                             value={cantidadEconomica}
-                            placeholder="Ingresar la cantidad economica."
+                            placeholder="Ingresar la cantidad economica"
                             onChange={this.handleInputChange}
                             />                        
                         </InputGroup>

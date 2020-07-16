@@ -225,7 +225,7 @@ class ModeloWilson extends React.Component{
                             <Input
                             name={"costoDeProducto"}
                             value={costoDeProducto}
-                            placeholder="Ingresar el costo del producto x unidad."
+                            placeholder="Ingresar el costo del producto x unidad"
                             aria-label="costoDeProducto"
                             aria-describedby="costoDeProducto"
                             onChange={this.handleInputChange}

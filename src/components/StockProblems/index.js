@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 import { Button, Jumbotron, Container, Row, Col, Tooltip, tolltipOpen} from "reactstrap";
 import './index.css'
 
-import {BsFillInfoCircleFill, BsFillQuestionSquareFill} from "react-icons/bs"
+import {BsFillInfoSquareFill} from "react-icons/bs"
 
 
 
@@ -25,7 +25,7 @@ const StockProblems = () => {
                     <Button size='lg' outline color="success">Cantidad Economica de Pedido - Taha</Button>
                 </Link>
                 <Link to={"/StockProblems/CantidadEconomicaPedido/info.js"} >
-                    <BsFillQuestionSquareFill id='info-ModeloAgotamientoAdmitido' color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillQuestionSquareFill>
+                  <BsFillInfoSquareFill color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillInfoSquareFill>
                 </Link>
               </Col>
             </Row>
@@ -35,7 +35,7 @@ const StockProblems = () => {
                     <Button size='lg' outline color="success">Modelo Wilson - Sturla</Button>
                 </Link>
                 <Link to={"/StockProblems/ModeloWilson/info.js"} >
-                    <BsFillQuestionSquareFill id='info-ModeloAgotamientoAdmitido' color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillQuestionSquareFill>
+                  <BsFillInfoSquareFill color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillInfoSquareFill>
                 </Link>
               </Col>
             </Row>
@@ -45,7 +45,7 @@ const StockProblems = () => {
                       <Button size='lg' outline color="success">Modelo con stock de proteccion</Button>
                 </Link>
                 <Link to={"/StockProblems/ModeloStockProteccion/info.js"} >
-                    <BsFillQuestionSquareFill id='info-ModeloStockProteccion' color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillQuestionSquareFill>
+                  <BsFillInfoSquareFill color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillInfoSquareFill>
                 </Link>
               </Col>
             </Row>
@@ -55,7 +55,7 @@ const StockProblems = () => {
                     <Button size='lg' outline color="success">Modelo con Agotamiento</Button>
                 </Link>
                 <Link to={"/StockProblems/ModeloAgotamientoAdmitido/info.js"} >
-                    <BsFillQuestionSquareFill id='info-ModeloAgotamientoAdmitido' color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillQuestionSquareFill>
+                  <BsFillInfoSquareFill color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillInfoSquareFill>
                 </Link>
               </Col>
             </Row>
@@ -65,7 +65,7 @@ const StockProblems = () => {
                     <Button size='lg' outline color="success">Modelo Triangular</Button>
                 </Link>
                 <Link to={"/StockProblems/modeloTriangular/info.js"} >
-                    <BsFillQuestionSquareFill id='info-ModeloAgotamientoAdmitido' color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillQuestionSquareFill>
+                  <BsFillInfoSquareFill color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillInfoSquareFill>
                 </Link>
               </Col>
             </Row>
@@ -75,7 +75,7 @@ const StockProblems = () => {
                     <Button size='lg' outline color="success">Modelo stock discontinuidad del precio</Button>
                 </Link>
                 <Link>
-                    <BsFillQuestionSquareFill id='info-ModeloAgotamientoAdmitido' color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillQuestionSquareFill>
+                  <BsFillInfoSquareFill color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillInfoSquareFill>
                 </Link>
               </Col>
             </Row>
@@ -85,7 +85,7 @@ const StockProblems = () => {
                     <Button size='lg' outline color="success">Modelo simple sin Agotamiento [WIP]</Button>
                 </Link>
                 <Link to={"StockProblems/modeloSimpleSinAgotamiento/info.js"} >
-                    <BsFillQuestionSquareFill id='info-ModeloAgotamientoAdmitido' color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillQuestionSquareFill>
+                    <BsFillInfoSquareFill color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillInfoSquareFill>
                 </Link>
               </Col>
             </Row>

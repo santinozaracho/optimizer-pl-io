@@ -245,7 +245,7 @@ class ModeloAgotamientoAdmitido extends React.Component{
                             <Input
                             name={"costoDeAdquisicion"}
                             value={costoDeAdquisicion}
-                            placeholder="Ingresar el costo del producto x unidad."
+                            placeholder="Ingresar el costo del producto x unidad"
                             aria-label="costoDeAdquisicion"
                             aria-describedby="costoDeAdquisicion"
                             onChange={this.handleInputChange}
@@ -263,7 +263,7 @@ class ModeloAgotamientoAdmitido extends React.Component{
                             <Input
                             name={"CostoDeEscasez"}
                             value={CostoDeEscasez}
-                            placeholder="Ingresar stock de proteccion."
+                            placeholder="Ingresar el costo de escasez"
                             aria-label="CostoDeEscasez"
                             aria-describedby="CostoDeEscasez"
                             onChange={this.handleInputChange}

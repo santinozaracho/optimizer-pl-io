@@ -227,7 +227,7 @@ class ModeloStockProteccion extends React.Component{
                             <Input
                             name={"costoDeAdquisicion"}
                             value={costoDeAdquisicion}
-                            placeholder="Ingresar el costo del producto x unidad."
+                            placeholder="Ingresar el costo del producto x unidad"
                             aria-label="costoDeAdquisicion"
                             aria-describedby="costoDeAdquisicion"
                             onChange={this.handleInputChange}
@@ -241,7 +241,7 @@ class ModeloStockProteccion extends React.Component{
                             </InputGroupAddon>
                             <Input
                             name={"StockDeProteccion"}
-                            placeholder="Ingresar stock de proteccion."
+                            placeholder="Ingresar stock de proteccion"
                             aria-label="StockDeProteccion"
                             aria-describedby="StockDeProteccion"
                             onChange={this.handleInputChange}
