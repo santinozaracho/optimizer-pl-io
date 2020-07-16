@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {Link} from 'react-router-dom';
-import { Button, Jumbotron, Container, Row, Col } from "reactstrap";
+import { Button, Jumbotron, Container, Row, Col, Tooltip, tolltipOpen} from "reactstrap";
 import './index.css'
 
-import {BsFillInfoCircleFill} from "react-icons/bs"
-import {BsQuestionOctagonFill} from "react-icons/bs"
+import {BsFillInfoCircleFill, BsFillQuestionSquareFill} from "react-icons/bs"
 
 
-const StockProblems = () => {
-    return(
+
+const StockProblems = () => {   
+  return(
     <Container fluid className="App">
       <Row>
         <Col xs={12} md={6} className="mx-auto my-5">
@@ -21,70 +21,72 @@ const StockProblems = () => {
             </Row>
             <Row className="mt-3 mx-auto">
               <Col>
-                  <Link to={"/StockProblems/CantidadEconomicaPedido"}>
-                      <Button size='lg' outline color="success">Cantidad Economica de Pedido - Taha</Button>
-                  </Link>
-                  <Link to={"/StockProblems/CantidadEconomicaPedido/info.js"} >
-                      <Button size='lg' outline color="info" style={{marginLeft:10}}>+</Button>
-                  </Link>  
+                <Link to={"/StockProblems/CantidadEconomicaPedido"}>
+                    <Button size='lg' outline color="success">Cantidad Economica de Pedido - Taha</Button>
+                </Link>
+                <Link to={"/StockProblems/CantidadEconomicaPedido/info.js"} >
+                    <BsFillQuestionSquareFill id='info-ModeloAgotamientoAdmitido' color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillQuestionSquareFill>
+                </Link>
               </Col>
             </Row>
             <Row className="mt-3 mx-auto">
               <Col>
-                  <Link to={"/StockProblems/ModeloWilson"} >
-                      <Button size='lg' outline color="success">Modelo Wilson - Sturla</Button>
-                  </Link>
-                  <Link to={"/StockProblems/ModeloWilson/info.js"} >
-                      <BsFillInfoCircleFill style={{marginLeft:10, fontSize:30}}/>
-                  </Link>
+                 <Link to={"/StockProblems/ModeloWilson"} >
+                    <Button size='lg' outline color="success">Modelo Wilson - Sturla</Button>
+                </Link>
+                <Link to={"/StockProblems/ModeloWilson/info.js"} >
+                    <BsFillQuestionSquareFill id='info-ModeloAgotamientoAdmitido' color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillQuestionSquareFill>
+                </Link>
               </Col>
             </Row>
             <Row className="mt-3 mx-auto">
               <Col>
-                  <Link to={"/StockProblems/ModeloStockProteccion"} >
+                <Link to={"/StockProblems/ModeloStockProteccion"} >
                       <Button size='lg' outline color="success">Modelo con stock de proteccion</Button>
-                  </Link>
-                  <Link to={"/StockProblems/ModeloStockProteccion/info.js"} >
-                      <BsQuestionOctagonFill style={{marginLeft:10, fontSize:30}}/>
-                  </Link>
+                </Link>
+                <Link to={"/StockProblems/ModeloStockProteccion/info.js"} >
+                    <BsFillQuestionSquareFill id='info-ModeloStockProteccion' color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillQuestionSquareFill>
+                </Link>
               </Col>
             </Row>
             <Row className="mt-3 mx-auto">
               <Col>
-                  <Link to={"/StockProblems/ModeloAgotamientoAdmitido"} >
-                      <Button size='lg' outline color="success">Modelo con Agotamiento</Button>
-                  </Link>
-                  <Link to={"/StockProblems/ModeloAgotamientoAdmitido/info.js"} >
-                      <Button size='lg' outline color="info" style={{marginLeft:10}}>+</Button>
-                  </Link>
+                <Link to={"/StockProblems/ModeloAgotamientoAdmitido"} >
+                    <Button size='lg' outline color="success">Modelo con Agotamiento</Button>
+                </Link>
+                <Link to={"/StockProblems/ModeloAgotamientoAdmitido/info.js"} >
+                    <BsFillQuestionSquareFill id='info-ModeloAgotamientoAdmitido' color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillQuestionSquareFill>
+                </Link>
               </Col>
             </Row>
             <Row className="mt-3 mx-auto">
               <Col>
-                  <Link to={"/StockProblems/modeloTriangular"} >
-                      <Button size='lg' outline color="success">Modelo Triangular</Button>
-                  </Link>
-                  <Link to={"/StockProblems/modeloTriangular/info.js"} >
-                      <Button size='lg' outline color="info" style={{marginLeft:10}}>+</Button>
-                  </Link>
+                <Link to={"/StockProblems/modeloTriangular"} >
+                    <Button size='lg' outline color="success">Modelo Triangular</Button>
+                </Link>
+                <Link to={"/StockProblems/modeloTriangular/info.js"} >
+                    <BsFillQuestionSquareFill id='info-ModeloAgotamientoAdmitido' color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillQuestionSquareFill>
+                </Link>
               </Col>
             </Row>
             <Row className="mt-3 mx-auto">
               <Col>
-                  <Link to={"/StockProblems/ModelStockDiscontinuidadDePrecio"} >
-                      <Button size='lg' outline color="success">Modelo stock discontinuidad del precio</Button>
-                      <Button size='lg' outline color="info" style={{marginLeft:10}}>+</Button>
-                  </Link>
+                <Link to={"/StockProblems/ModelStockDiscontinuidadDePrecio"} >
+                    <Button size='lg' outline color="success">Modelo stock discontinuidad del precio</Button>
+                </Link>
+                <Link>
+                    <BsFillQuestionSquareFill id='info-ModeloAgotamientoAdmitido' color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillQuestionSquareFill>
+                </Link>
               </Col>
             </Row>
             <Row className="mt-3 mx-auto">
               <Col>
-                  <Link to={"StockProblems/modeloSimpleSinAgotamiento"} >
-                      <Button size='lg' outline color="success">Modelo simple sin Agotamiento [WIP]</Button>
-                  </Link>
-                  <Link to={"StockProblems/modeloSimpleSinAgotamiento/info.js"} >
-                      <Button size='lg' outline color="info" style={{marginLeft:10}}>+[WIP]</Button>
-                  </Link>
+                <Link to={"StockProblems/modeloSimpleSinAgotamiento"} >
+                    <Button size='lg' outline color="success">Modelo simple sin Agotamiento [WIP]</Button>
+                </Link>
+                <Link to={"StockProblems/modeloSimpleSinAgotamiento/info.js"} >
+                    <BsFillQuestionSquareFill id='info-ModeloAgotamientoAdmitido' color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillQuestionSquareFill>
+                </Link>
               </Col>
             </Row>
             <Row className="btn-volver justify-content-center">
