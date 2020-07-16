@@ -108,8 +108,8 @@ class modeloTriangular extends React.Component{
     */
 
     mostrarResultados = () => {
-        let {demanda, costoDeAdquisicion, CostoUnitarioDeAlmacenamiento, CostoDeUnaOrden, T,LeadTime,StockDeProteccion} = this.state;
-        let combinacion1 = [demanda,CostoDeUnaOrden,CostoUnitarioDeAlmacenamiento,costoDeAdquisicion,StockDeProteccion] //Cargamos un arreglo
+        let {demanda, costoDeAdquisicion, CostoUnitarioDeAlmacenamiento, CostoDeUnaOrden,VelocidadDeProduccion} = this.state;
+        let combinacion1 = [demanda,CostoDeUnaOrden,CostoUnitarioDeAlmacenamiento,costoDeAdquisicion,VelocidadDeProduccion] //Cargamos un arreglo
         let control1 = combinacion1.every(caso => caso); //Si devuelve true es porque todos los elementos del arreglo estan cargados 
         
         if (control1){ //SI TODOS LOS CAMPOS ESTAN CARGADOS ENTONCES CALCULO TODO Y MUESTRO
@@ -131,7 +131,7 @@ class modeloTriangular extends React.Component{
     }
 
     render() { 
-        let {demanda,CTE,loteOptimo,tiempoEntrePedidos,CostoDeUnaOrden,costoDeAdquisicion, StockDeProteccion} = this.state;
+        let {demanda,CTE,loteOptimo,tiempoEntrePedidos,CostoDeUnaOrden,costoDeAdquisicion, VelocidadDeProduccion} = this.state;
         let {incompleto,mostrarResultados,CostoUnitarioDeAlmacenamiento,unidadesDemanda,unidadesAlmacenamiento} = this.state;
         
  
@@ -243,6 +243,7 @@ class modeloTriangular extends React.Component{
                             </InputGroupAddon>
                             <Input
                             name={"VelocidadDeProduccion"}
+                            value={VelocidadDeProduccion}
                             placeholder="Ingresar Velocidad De Produccion"
                             aria-label="VelocidadDeProduccion"
                             aria-describedby="VelocidadDeProduccion"
