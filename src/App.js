@@ -20,13 +20,17 @@ import infoModeloStockProteccion from "./components/StockProblems/ModeloStockPro
 import ModeloAgotamientoAdmitido from "./components/StockProblems/ModeloAgotamientoAdmitido";
 import infoModeloAgotamientoAdmitido from "./components/StockProblems/ModeloAgotamientoAdmitido/info.js";
 
+import ModeloTriangular from "./components/StockProblems/ModeloTriangular";
+import infoModeloTriangular from "./components/StockProblems/ModeloTriangular/info.js";
+
+
+
 import ModelStockDiscontinuidadDePrecio from "./components/StockProblems/ModelStockDiscontinuidadDePrecio";
 
 import ModeloSimpleSinAgotamiento from "./components/StockProblems/modeloSimpleSinAgotamiento/index.js";
 import infoModeloSimpleSinAgotamiento from "./components/StockProblems/modeloSimpleSinAgotamiento/info.js";
 
-import modeloTriangular from "./components/StockProblems/modeloTriangular/index.js";
-import infomodeloTriangular from "./components/StockProblems/modeloTriangular/info.js";
+
 
 
 
@@ -51,8 +55,10 @@ const App = () =>
       <Route exact path="/StockProblems/ModeloStockProteccion/info.js" component={infoModeloStockProteccion} />
       <Route exact path="/StockProblems/ModeloAgotamientoAdmitido" component={ModeloAgotamientoAdmitido} />
       <Route exact path="/StockProblems/ModeloAgotamientoAdmitido/info.js" component={infoModeloAgotamientoAdmitido} />
-      <Route exact path="/StockProblems/modeloTriangular" component={modeloTriangular} />
-      <Route exact path="/StockProblems/StockProblems/modeloTriangular/info.js" component={infomodeloTriangular} />
+
+      <Route exact path="/StockProblems/ModeloTriangular" component={ModeloTriangular} />
+      <Route exact path="/StockProblems/ModeloTriangular/info.js" component={infoModeloTriangular} />
+      
       <Route exact path="/StockProblems/ModelStockDiscontinuidadDePrecio" component={ModelStockDiscontinuidadDePrecio} />
       <Route exact path="/StockProblems/StockProblems/modeloSimpleSinAgotamiento/info.js" component={infoModeloSimpleSinAgotamiento} />
       <Route exact path="/StockProblems/modeloSimpleSinAgotamiento" component={ModeloSimpleSinAgotamiento} />

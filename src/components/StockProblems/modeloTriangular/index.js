@@ -7,7 +7,7 @@ import { Variable } from "javascript-lp-solver/src/expressions";
 
 
 
-class modeloTriangular extends React.Component{
+class ModeloTriangular extends React.Component{
     constructor (props){
         super(props)
         this.state={
@@ -262,4 +262,4 @@ class modeloTriangular extends React.Component{
 
 }
 
-export default modeloTriangular;
+export default ModeloTriangular;

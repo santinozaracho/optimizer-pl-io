@@ -61,10 +61,10 @@ const StockProblems = () => {
             </Row>
             <Row className="mt-3 mx-auto">
               <Col>
-                <Link to={"/StockProblems/modeloTriangular"} >
+                <Link to={"/StockProblems/ModeloTriangular"} >
                     <Button size='lg' outline color="success">Modelo Triangular</Button>
                 </Link>
-                <Link to={"/StockProblems/modeloTriangular/info.js"} >
+                <Link to={"/StockProblems/ModeloTriangular/info.js"} >
                   <BsFillInfoSquareFill color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillInfoSquareFill>
                 </Link>
               </Col>
