@@ -61,6 +61,16 @@ const StockProblems = () => {
             </Row>
             <Row className="mt-3 mx-auto">
               <Col>
+                  <Link to={"/StockProblems/modeloTriangular"} >
+                      <Button size='lg' outline color="success">Modelo Triangular</Button>
+                  </Link>
+                  <Link to={"/StockProblems/modeloTriangular/info.js"} >
+                      <Button size='lg' outline color="info" style={{marginLeft:10}}>+</Button>
+                  </Link>
+              </Col>
+            </Row>
+            <Row className="mt-3 mx-auto">
+              <Col>
                   <Link to={"/StockProblems/ModelStockDiscontinuidadDePrecio"} >
                       <Button size='lg' outline color="success">Modelo stock discontinuidad del precio</Button>
                       <Button size='lg' outline color="info" style={{marginLeft:10}}>+</Button>
