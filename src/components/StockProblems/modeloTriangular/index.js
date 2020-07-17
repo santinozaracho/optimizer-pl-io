@@ -25,7 +25,6 @@ class ModeloTriangular extends React.Component{
             CTE: null,
             T:1,
             VelocidadDeProduccion:null,
-            DemandaUnitaria:null//demanda/T
         }
     }
 
@@ -52,9 +51,12 @@ class ModeloTriangular extends React.Component{
 
     //q0
     calcularTamañoDelLote(){
-        let {demanda, CostoDeUnaOrden,T, CostoUnitarioDeAlmacenamiento, loteOptimo,VelocidadDeProduccion,DemandaUnitaria} = this.state;
-        DemandaUnitaria= demanda/T
-        loteOptimo = (Math.sqrt((2*Number(CostoDeUnaOrden)*Number(demanda))/(Number(CostoUnitarioDeAlmacenamiento)*(VelocidadDeProduccion-DemandaUnitaria))));
+        let {demanda, CostoDeUnaOrden,T, CostoUnitarioDeAlmacenamiento, loteOptimo,VelocidadDeProduccion} = this.state;
+        let numerador, denominador, demandaUnitaria
+        demandaUnitaria= (Number(demanda)/Number(T))
+        numerador = ( 2*Number(CostoDeUnaOrden)*Number(demandaUnitaria)*Number(VelocidadDeProduccion) )
+        denominador = ( Number(CostoUnitarioDeAlmacenamiento)*(Number(VelocidadDeProduccion)-Number(demandaUnitaria)) )
+        loteOptimo = (Math.sqrt(numerador/denominador));
         
         //NO SE SI VA ESTO 
         if (loteOptimo>demanda){ //Si el q0 calculado es mas grande que la demanda entonces como lote optimo va la demanda
@@ -68,13 +70,16 @@ class ModeloTriangular extends React.Component{
 
     //CALCULAR CTE
     calcularCostoTotalEsperado(){
-        let {costoDeAdquisicion,demanda,CostoDeUnaOrden,costoDeAlmacenamiento,StockDeProteccion,T,DemandaUnitaria,VelocidadDeProduccion} = this.state;
-        let bD, raiz2TDKC1, spTC1, spb
+        let {costoDeAdquisicion,demanda,CostoDeUnaOrden,costoDeAlmacenamiento,T,VelocidadDeProduccion, loteOptimo} = this.state;
+        let bD, costoTotalDePreparacion, costoTotalDeAlmacenamiento, demandaUnitaria
+
+        
+        costoTotalDePreparacion = (Number(demanda)/(loteOptimo*Number(CostoDeUnaOrden)))
         bD = (Number(costoDeAdquisicion)*Number(demanda))//Costo total del producto
-        DemandaUnitaria= demanda/T
-        let costoTotalDePreparacion = (demanda/this.calcularTamañoDelLote())*CostoDeUnaOrden
-        let costoTotalDeAlmacenamiento = (this.calcularTamañoDelLote()*T*costoDeAlmacenamiento*(1-(DemandaUnitaria/VelocidadDeProduccion)))/2
-        this.setState({CTE: (bD + costoTotalDeAlmacenamiento+costoTotalDePreparacion) }) //CTEo
+        demandaUnitaria = ( Number(demanda)/Number(T) )
+        costoTotalDeAlmacenamiento = ((loteOptimo*Number(T)*Number(costoDeAlmacenamiento)*(1-(demandaUnitaria/Number(VelocidadDeProduccion))))/2)
+        
+        this.setState({CTE: (costoTotalDePreparacion + bD + costoTotalDeAlmacenamiento) }) //CTEo
     }
     
     
@@ -227,15 +232,15 @@ class ModeloTriangular extends React.Component{
                     <Col>
                         <Card body inverse style={{ backgroundColor: '#333', borderColor: '#333', marginTop:10}}>
                             <CardText>
-                                <h6 style={{display:'inline'}}>El lote optimo es:</h6> <h5 style={{display:'inline'}}><b>{Number(loteOptimo).toFixed(2)}</b></h5><br></br>
+                                <h6 style={{display:'inline'}}>El lote optimo es:</h6> <h5 style={{display:'inline'}}><b>{Number(loteOptimo).toFixed(2)} {unidadesDemanda}</b></h5><br></br>
                                 <h6 style={{display:'inline'}}>El costo total esperado es:</h6> <h5 style={{display:'inline'}}><b>${Number(CTE).toFixed(2)}</b></h5><br></br>
-                                <Col>
+                                {/*<Col>
                                     <Card body inverse color="primary" style={{marginTop:10, padding: '5px 0 0 0'}}>
                                         <CardText>
                                         <h5>Pedir {Number(loteOptimo).toFixed(2)} {unidadesDemanda} cada {Number(tiempoEntrePedidos).toFixed(2)} {unidadesAlmacenamiento}</h5>
                                         </CardText>
                                     </Card>   
-                                </Col>
+                                </Col>*/}
                             </CardText>
                         </Card>   
                     </Col>)}
