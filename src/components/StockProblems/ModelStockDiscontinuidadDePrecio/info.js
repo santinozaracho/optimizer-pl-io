@@ -50,7 +50,7 @@ const info = () => {
             <Row className="justify-content-left">
                 <Card body outline color="secondary">
                     <CardTitle><b>Bibliografia</b></CardTitle>
-                    <CardText>Claudio L. R. Sturla</CardText>
+                    <CardText>TAHA HAMDY A., “Investigación de Operaciones”, EDITORIAL Pearson Prentice Hall, 2004</CardText>
                 </Card>
             </Row>
             
