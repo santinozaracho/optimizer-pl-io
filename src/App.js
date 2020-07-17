@@ -51,8 +51,8 @@ const App = () =>
       <Route exact path="/StockProblems/CantidadEconomicaPedido" component={CantidadEconomicaPedido} />
       <Route exact path="/StockProblems/CantidadEconomicaPedido/info.js" component={infoCantidadEconomicaPedido} />
 
-      <Route exact path="/StockProblems/modeloWilson" component={ModeloWilson} />
-      <Route exact path="/StockProblems/modeloWilson/info.js" component={infoModeloWilson} />
+      <Route exact path="/StockProblems/ModeloWilson" component={ModeloWilson} />
+      <Route exact path="/StockProblems/ModeloWilson/info.js" component={infoModeloWilson} />
 
       <Route exact path="/StockProblems/ModeloStockProteccion" component={ModeloStockProteccion} />
       <Route exact path="/StockProblems/ModeloStockProteccion/info.js" component={infoModeloStockProteccion} />
