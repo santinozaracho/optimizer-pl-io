@@ -74,7 +74,7 @@ const StockProblems = () => {
                 <Link to={"/StockProblems/ModelStockDiscontinuidadDePrecio"} >
                     <Button size='lg' outline color="success">Modelo stock discontinuidad del precio</Button>
                 </Link>
-                <Link>
+                <Link to={"/StockProblems/ModelStockDiscontinuidadDePrecio/info.js"}>
                   <BsFillInfoSquareFill color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillInfoSquareFill>
                 </Link>
               </Col>
