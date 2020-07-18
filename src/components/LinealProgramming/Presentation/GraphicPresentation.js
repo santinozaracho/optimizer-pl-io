@@ -80,11 +80,17 @@ class GraphicPresentation extends React.Component{
         
         let lines = restricciones.map( restri => {
       
-            console.log('Soy restri'+restri)
+            console.log('Restri derecha '+ restri.derecha);
             let xNum = !Number.isInteger(Number(restri.coeficientes[0])) ? getFrac(Number(restri.coeficientes[0])):Number(restri.coeficientes[0]);
 
             let yNum = !Number.isInteger(Number(restri.coeficientes[1])) ? getFrac(Number(restri.coeficientes[1])):Number(restri.coeficientes[1]);
- 
+            if(isFloat(restri.derecha)){
+                    
+                console.log("ES UN FLOAT BRODEEEER");
+                var f  = new Fractional(restri.derecha);
+                console.log(f.numerator+"/"+f.denominator);
+                restri.derecha = new Fraction(f.numerator,f.denominator);
+            }
             //Si posee ambos coeficientes entoces es una recta con pendiente.
             if ( xNum !== 0  &&  yNum!== 0) {
                 let x = new Expression('x').multiply(xNum);
@@ -95,13 +101,7 @@ class GraphicPresentation extends React.Component{
                 //No se puede pasar con decimal a la ecuacion (lado derecho de la restriccion)
                 //Se lo pasa a fraccion en ese caso
                 
-                if(isFloat(restri.derecha)){
-                    
-                    console.log("ES UN FLOAT BRODEEEER");
-                    var f  = new Fractional(restri.derecha);
-                    console.log(f.numerator+"/"+f.denominator);
-                    restri.derecha = new Fraction(f.numerator,f.denominator);
-                }
+                
                 let restriEquation = new Equation(expressRestri,restri.derecha)
                 expresiones.push({restriEquation,tipo:2})
                 let yEqu = (new Equation(restriEquation.solveFor('x'),0)).solveFor('y');
