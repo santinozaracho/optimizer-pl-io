@@ -3,7 +3,9 @@ import {CardBody, Card, CardHeader,CardFooter,Table,Row,Col,CardTitle,Button} fr
 import {XYPlot, XAxis, YAxis, HorizontalGridLines,LineSeries, AreaSeries, VerticalGridLines,MarkSeries,DiscreteColorLegend,Hint} from 'react-vis';
 import {Expression, Equation,Fraction} from 'algebra.js';
 import ReferencesList from '../ReferencesList';
+var Fractional = require('fractional').Fraction;
 var randomColor = require('randomcolor');
+const {isFloat} = require('./FloatValidator');
 
 
 
@@ -62,6 +64,9 @@ class GraphicPresentation extends React.Component{
         coef.y = variables[1].coeficiente;
         return coef
     }
+    // funcion para controlar si el numero es float 
+    
+
 
 
     getLinesAndExpressions = restricciones => {
@@ -75,7 +80,7 @@ class GraphicPresentation extends React.Component{
         
         let lines = restricciones.map( restri => {
       
-
+            console.log('Soy restri'+restri)
             let xNum = !Number.isInteger(Number(restri.coeficientes[0])) ? getFrac(Number(restri.coeficientes[0])):Number(restri.coeficientes[0]);
 
             let yNum = !Number.isInteger(Number(restri.coeficientes[1])) ? getFrac(Number(restri.coeficientes[1])):Number(restri.coeficientes[1]);
@@ -85,6 +90,18 @@ class GraphicPresentation extends React.Component{
                 let x = new Expression('x').multiply(xNum);
                 let y = new Expression('y').multiply(yNum);
                 let expressRestri = new Expression().add(x).add(y);  
+                //console.log(restri.derecha);
+                //console.log(typeof restri.derecha);
+                //No se puede pasar con decimal a la ecuacion (lado derecho de la restriccion)
+                //Se lo pasa a fraccion en ese caso
+                
+                if(isFloat(restri.derecha)){
+                    
+                    console.log("ES UN FLOAT BRODEEEER");
+                    var f  = new Fractional(restri.derecha);
+                    console.log(f.numerator+"/"+f.denominator);
+                    restri.derecha = new Fraction(f.numerator,f.denominator);
+                }
                 let restriEquation = new Equation(expressRestri,restri.derecha)
                 expresiones.push({restriEquation,tipo:2})
                 let yEqu = (new Equation(restriEquation.solveFor('x'),0)).solveFor('y');
