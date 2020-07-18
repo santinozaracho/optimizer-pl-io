@@ -39,7 +39,7 @@ class Processing extends React.Component {
     let { value, name } = event.target;
     if (value) {
       let { variables } = this.props.status;
-      variables[name].coeficiente = parseInt(value);
+      variables[name].coeficiente = Number(value);
       this.props.handleVariables(variables);
       console.log(this.props.status.variables);
     }
