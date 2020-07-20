@@ -90,8 +90,10 @@ class GraphicPresentation extends React.Component{
                 let x = new Expression('x').multiply(xNum);
                 let y = new Expression('y').multiply(yNum);
                 let expressRestri = new Expression().add(x).add(y);  
-                //console.log(restri.derecha);
-                //console.log(typeof restri.derecha);
+
+                console.log(restri.derecha);
+                console.log(typeof restri.derecha);
+
                 //No se puede pasar con decimal a la ecuacion (lado derecho de la restriccion)
                 //Se lo pasa a fraccion en ese caso
                 
@@ -102,6 +104,7 @@ class GraphicPresentation extends React.Component{
                     console.log(f.numerator+"/"+f.denominator);
                     restri.derecha = new Fraction(f.numerator,f.denominator);
                 }
+
                 let restriEquation = new Equation(expressRestri,restri.derecha)
                 expresiones.push({restriEquation,tipo:2})
                 let yEqu = (new Equation(restriEquation.solveFor('x'),0)).solveFor('y');
