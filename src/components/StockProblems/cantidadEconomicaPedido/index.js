@@ -363,7 +363,7 @@ class CantidadEconomicaPedido extends React.Component{
                             <Card body inverse style={{ backgroundColor: '#333', borderColor: '#333', marginTop:10}}>
                                 <CardText>
                                     <h6 style={{display:'inline'}}>El costo de inventario TCU(y) es:</h6> <h5 style={{display:'inline'}}><b>${Number(TCU).toFixed(2)}</b></h5><br></br>
-                                    <h6 style={{display:'inline'}}>El punto de reorden es:</h6> <h5 style={{display:'inline'}}><b>{Number(puntoDeReorden).toFixed(2)}</b></h5>
+                                    <h6 style={{display:'inline'}}>El punto de reorden es:</h6> <h5 style={{display:'inline'}}><b>{Number(puntoDeReorden).toFixed(2)} {unidadesDemanda}</b></h5>
                                     {controlarPolitica}
                                 </CardText>
                             </Card> 

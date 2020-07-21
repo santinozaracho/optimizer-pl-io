@@ -6,7 +6,7 @@ const Graph = ({ y, yProm, t0, title, sr }) => {
   if (!sr){
     sr = 0
   }
-  let line = [{x:0,y:sr},{x:0,y},{x:1,y:sr},{x:1,y},{x:2,y:sr},{x:2,y},{x:3,y:sr},{x:3,y}]
+  let line = [{x:0,y:sr},{x:0,y},{x:1,y:sr},{x:1,y},{x:2,y:sr},{x:2,y},{x:3,y:sr},{x:3,y},{x:4,y:sr},{x:4,y},{x:5,y:sr},{x:5,y}]
   let linePromedio = [{x:0,y:yProm},{x:5,y:yProm}]
   return (
   <div>
@@ -17,7 +17,7 @@ const Graph = ({ y, yProm, t0, title, sr }) => {
         
         <XAxis title='Tiempo' />
         <YAxis title='Inventario'/>
-        <LineSeries data={line}/>
+        <LineSeries color='black' data={line}/>
         <LineSeries strokeStyle="dashed" data={linePromedio}/>
     </XYPlot>
   </div>
