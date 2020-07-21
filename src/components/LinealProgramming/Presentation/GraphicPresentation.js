@@ -2,10 +2,12 @@ import React from 'react';
 import {CardBody, Card, CardHeader,CardFooter,Table,Row,Col,CardTitle,Button} from 'reactstrap';
 import {XYPlot, XAxis, YAxis, HorizontalGridLines,LineSeries, AreaSeries, VerticalGridLines,MarkSeries,DiscreteColorLegend,Hint} from 'react-vis';
 import {Expression, Equation,Fraction} from 'algebra.js';
+import { Fraction as otroFraction } from 'fraction.js'
 import ReferencesList from '../ReferencesList';
+import fromExponential from 'from-exponential';
 var Fractional = require('fractional').Fraction;
 var randomColor = require('randomcolor');
-const {isFloat} = require('./FloatValidator');
+const { esFlotante } = require('./FloatValidator');
 
 
 
@@ -84,12 +86,33 @@ class GraphicPresentation extends React.Component{
             let xNum = !Number.isInteger(Number(restri.coeficientes[0])) ? getFrac(Number(restri.coeficientes[0])):Number(restri.coeficientes[0]);
 
             let yNum = !Number.isInteger(Number(restri.coeficientes[1])) ? getFrac(Number(restri.coeficientes[1])):Number(restri.coeficientes[1]);
-            if(isFloat(restri.derecha)){
-                    
-                // console.log("ES UN FLOAT BRODEEEER");
-                var f  = new Fractional(restri.derecha);
-                console.log(f.numerator+"/"+f.denominator);
-                restri.derecha = new Fraction(f.numerator,f.denominator);
+            
+            if(esFlotante(restri.derecha)){
+                // el lado derecho de la restrccion es float, tiene tratamiento distinto
+
+                var nuevaFraction = new otroFraction(restri.derecha)
+
+                if(restri.derecha.toString().includes('e')){
+                    // el numero esta expresado en formato con "e", ej: 10e-9
+                    // tambien tiene tratamiento distinto
+
+                    console.log('numero CON e: ' + restri.derecha)
+                    var convertido = Number(fromExponential(restri.derecha))
+                    console.log('numero SIN e: ' + convertido)
+
+                    var f  = new Fractional(convertido);
+                    // console.log(f.numerator+"/"+f.denominator);
+                    restri.derecha = new Fraction(f.numerator,f.denominator);
+
+                } else {
+                    // el numero es float, pero no esta expresado en e-notation
+                    // var f  = new Fractional(restri.derecha);
+                    // console.log(f.numerator+"/"+f.denominator);
+                    console.log('sin pasar a fraccion: ' + restri.derecha)
+                    restri.derecha = new Fraction(nuevaFraction.numerator,nuevaFraction.denominator);
+                    console.log('pasando a fraccion: ' + restri.derecha)
+                }
+
             }
             //Si posee ambos coeficientes entoces es una recta con pendiente.
             if ( xNum !== 0  &&  yNum!== 0) {
@@ -103,9 +126,9 @@ class GraphicPresentation extends React.Component{
                 //No se puede pasar con decimal a la ecuacion (lado derecho de la restriccion)
                 //Se lo pasa a fraccion en ese caso
                 
-                if(isFloat(restri.derecha)){
+                if(esFlotante(restri.derecha)){
                     
-                    console.log("ES UN FLOAT BRODEEEER");
+                    // console.log("ES UN FLOAT BRODEEEER");
                     var f  = new Fractional(restri.derecha);
                     console.log(f.numerator+"/"+f.denominator);
                     restri.derecha = new Fraction(f.numerator,f.denominator);
@@ -200,6 +223,7 @@ class GraphicPresentation extends React.Component{
     getObjectiveFunctionLine = (variables,optimPoint,xMax,yMax) => {
         console.log('Getting OF Line');
         //Funcion que devuelve una Fraccion de Algebra.js a partir de un numero real.
+        // TENEMOS HACER QUE LA FUNCION getFrac CONTEMPLE RECIBIR NUMEROS EN e-notation
         const getFrac = real => new Fraction(Math.round(Math.pow(10,(real - real.toFixed()).toString().length - 2)*real), Math.round(Math.pow(10,(real - real.toFixed()).toString().length - 2))) 
         //const getFrac = real => new Fraction(Math.pow(10,(real - real.toFixed()).toString().length - 2)*real, Math.pow(10,(real - real.toFixed()).toString().length - 2)) 
         if (optimPoint){
