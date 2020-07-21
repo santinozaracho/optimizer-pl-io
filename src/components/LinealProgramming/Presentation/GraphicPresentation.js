@@ -80,11 +80,17 @@ class GraphicPresentation extends React.Component{
         
         let lines = restricciones.map( restri => {
       
-            console.log('Soy restri'+restri)
+            console.log('Restri derecha '+ restri.derecha);
             let xNum = !Number.isInteger(Number(restri.coeficientes[0])) ? getFrac(Number(restri.coeficientes[0])):Number(restri.coeficientes[0]);
 
             let yNum = !Number.isInteger(Number(restri.coeficientes[1])) ? getFrac(Number(restri.coeficientes[1])):Number(restri.coeficientes[1]);
- 
+            if(isFloat(restri.derecha)){
+                    
+                // console.log("ES UN FLOAT BRODEEEER");
+                var f  = new Fractional(restri.derecha);
+                console.log(f.numerator+"/"+f.denominator);
+                restri.derecha = new Fraction(f.numerator,f.denominator);
+            }
             //Si posee ambos coeficientes entoces es una recta con pendiente.
             if ( xNum !== 0  &&  yNum!== 0) {
                 let x = new Expression('x').multiply(xNum);
@@ -286,7 +292,7 @@ class GraphicPresentation extends React.Component{
                     let xPoint = !Number.isInteger(Number(optimPoint.x)) ? getFrac(Number(optimPoint.x)):Number(optimPoint.x);
                     let xExp = new Expression('x').subtract(xPoint).multiply(variables[0].coeficiente);   
                     let xEqu = (new Equation(xExp,0)).solveFor('x');
-                   
+
                     if (xEqu >= 0 ){
                         return([{x:xEqu,y:0},{x:xEqu,y:yMax}])
                     }     
