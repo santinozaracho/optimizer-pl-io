@@ -65,7 +65,7 @@ class GraphicPresentation extends React.Component{
 
 
     getLinesAndExpressions = restricciones => {
-        const getFrac = real => new Fraction(Math.pow(10,(real - real.toFixed()).toString().length - 2)*real, Math.pow(10,(real - real.toFixed()).toString().length - 2)) 
+        const getFrac = real => new Fraction(Math.round(Math.pow(10,(real - real.toFixed()).toString().length - 2)*real), Math.round(Math.pow(10,(real - real.toFixed()).toString().length - 2))) 
         //Tipos de Expresiones: 0: Constante en X; 1: Constante en Y; 2: Recta con pendiente.
         let expresiones = [];
         let arrayDeRestriccionesConLosDosCoef =  restricciones.filter(el=> ( el.coeficientes[0] > 0 && el.coeficientes[1] > 0) )
@@ -174,7 +174,8 @@ class GraphicPresentation extends React.Component{
     getObjectiveFunctionLine = (variables,optimPoint,xMax,yMax) => {
         console.log('Getting OF Line');
         //Funcion que devuelve una Fraccion de Algebra.js a partir de un numero real.
-        const getFrac = real => new Fraction(Math.pow(10,(real - real.toFixed()).toString().length - 2)*real, Math.pow(10,(real - real.toFixed()).toString().length - 2)) 
+        const getFrac = real => new Fraction(Math.round(Math.pow(10,(real - real.toFixed()).toString().length - 2)*real), Math.round(Math.pow(10,(real - real.toFixed()).toString().length - 2))) 
+        //const getFrac = real => new Fraction(Math.pow(10,(real - real.toFixed()).toString().length - 2)*real, Math.pow(10,(real - real.toFixed()).toString().length - 2)) 
         if (optimPoint){
             try {
                 if (variables[0].coeficiente !== 0  && variables[1].coeficiente !== 0) {
