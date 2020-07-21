@@ -11,6 +11,7 @@ import CantidadEconomicaPedido from "./components/StockProblems/CantidadEconomic
 import infoCantidadEconomicaPedido from "./components/StockProblems/CantidadEconomicaPedido/info.js";
 
 
+
 import ModeloWilson from "./components/StockProblems/ModeloWilson";
 import infoModeloWilson from "./components/StockProblems/ModeloWilson/info.js";
 
@@ -50,6 +51,7 @@ const App = () =>
       <Route exact path="/StockProblems" component={StockProblems} />
       <Route exact path="/StockProblems/CantidadEconomicaPedido" component={CantidadEconomicaPedido} />
       <Route exact path="/StockProblems/CantidadEconomicaPedido/info.js" component={infoCantidadEconomicaPedido} />
+      
 
       <Route exact path="/StockProblems/ModeloWilson" component={ModeloWilson} />
       <Route exact path="/StockProblems/ModeloWilson/info.js" component={infoModeloWilson} />

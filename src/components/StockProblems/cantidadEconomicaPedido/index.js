@@ -2,8 +2,10 @@ import React from "react";
 import { ButtonGroup, Button, Container, Row, Col, Card, CardBody, CardHeader, CardTitle, Jumbotron, Dropdown, DropdownItem, ButtonDropdown, DropdownMenu, DropdownToggle} from "reactstrap";
 import {InputGroupText,InputGroup, Input,InputGroupAddon,PopoverBody, CardText} from 'reactstrap';
 import {Link} from 'react-router-dom';
-import '../index.css'
-import { Variable } from "javascript-lp-solver/src/expressions";
+import '../index.css';
+import Graph from "../Graph";
+
+
 
 
 
@@ -25,7 +27,7 @@ class CantidadEconomicaPedido extends React.Component{
             inputUpdated: false,
             incompleto: false,
             puntoDeReorden: null,
-            TCU: null,
+            TCU: null,      
         }
     }
 
@@ -182,13 +184,6 @@ class CantidadEconomicaPedido extends React.Component{
         }else{
             this.setState({incompleto:true})
         } 
-
-
-        
-        
-        
-        
-        
                
     }
 
@@ -217,9 +212,7 @@ class CantidadEconomicaPedido extends React.Component{
             </Col>
         )
         
-         
-        
-              
+
         
         return (
             <Container fluid className="App"> 
@@ -366,13 +359,20 @@ class CantidadEconomicaPedido extends React.Component{
                     {mostrarResultados && (    //Si mostrarResultados esta en true que quiere decir que apreto el boton
                                                           
                     <Col>
-                        <Card body inverse style={{ backgroundColor: '#333', borderColor: '#333', marginTop:10}}>
-                            <CardText>
-                                <h6 style={{display:'inline'}}>El costo de inventario TCU(y) es:</h6> <h5 style={{display:'inline'}}><b>${Number(TCU).toFixed(2)}</b></h5><br></br>
-                                <h6 style={{display:'inline'}}>El punto de reorden es:</h6> <h5 style={{display:'inline'}}><b>{Number(puntoDeReorden).toFixed(2)}</b></h5>
-                                {controlarPolitica}
-                            </CardText>
-                        </Card>   
+                        <Row>
+                            <Card body inverse style={{ backgroundColor: '#333', borderColor: '#333', marginTop:10}}>
+                                <CardText>
+                                    <h6 style={{display:'inline'}}>El costo de inventario TCU(y) es:</h6> <h5 style={{display:'inline'}}><b>${Number(TCU).toFixed(2)}</b></h5><br></br>
+                                    <h6 style={{display:'inline'}}>El punto de reorden es:</h6> <h5 style={{display:'inline'}}><b>{Number(puntoDeReorden).toFixed(2)}</b></h5>
+                                    {controlarPolitica}
+                                </CardText>
+                            </Card> 
+                        </Row>
+                        <Row>
+                            <Card body>
+                                <Graph y={cantidadEconomica} t={longitudCiclo} yProm={Number(cantidadEconomica)/2} title={'Grafico CEP'}/>
+                            </Card>
+                        </Row>  
                     </Col>)}
                            
                     {incompleto && (
@@ -385,9 +385,6 @@ class CantidadEconomicaPedido extends React.Component{
                         <Link to='./'><Button>Volver</Button></Link>
                         <Button className="btn-Calcular" color="success" onClick={this.mostrarResultados}>Calcular</Button>
                     </Row>
-                    <Row>
-                        
-                    </Row>
                 </Jumbotron>
               </Col>
             </Row>
@@ -398,5 +395,6 @@ class CantidadEconomicaPedido extends React.Component{
 
 
 }
+
 
 export default CantidadEconomicaPedido;
