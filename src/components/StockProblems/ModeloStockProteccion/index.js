@@ -3,7 +3,7 @@ import { ButtonGroup, Button, Container, Row, Col, Card, CardBody, CardHeader, C
 import {InputGroupText,InputGroup, Input,InputGroupAddon,PopoverBody, CardText} from 'reactstrap';
 import {Link} from 'react-router-dom';
 import '../index.css'
-import { Variable } from "javascript-lp-solver/src/expressions";
+import Graph from "../Graph";
 
 
 
@@ -252,20 +252,27 @@ class ModeloStockProteccion extends React.Component{
                     {mostrarResultados && (    //Si mostrarResultados esta en true que quiere decir que apreto el boton y que todos los campos estan completos
                                                           
                     <Col>
-                        <Card body inverse style={{ backgroundColor: '#333', borderColor: '#333', marginTop:10}}>
-                            <CardText>
-                                <h6 style={{display:'inline'}}>El lote optimo es:</h6> <h5 style={{display:'inline'}}><b>{Number(loteOptimo).toFixed(2)}</b></h5><br></br>
-                                <h6 style={{display:'inline'}}>El tiempo entre pedidos es:</h6> <h5 style={{display:'inline'}}><b>{Number(tiempoEntrePedidos).toFixed(2)}</b></h5><br></br>
-                                <h6 style={{display:'inline'}}>El costo total esperado es:</h6> <h5 style={{display:'inline'}}><b>${Number(CTE).toFixed(2)}</b></h5><br></br>
-                                <Col>
-                                    <Card body inverse color="primary" style={{marginTop:10, padding: '5px 0 0 0'}}>
-                                        <CardText>
-                                        <h5>Pedir {Number(loteOptimo).toFixed(2)} {unidadesDemanda} cada {Number(tiempoEntrePedidos).toFixed(2)} {unidadesAlmacenamiento}</h5>
-                                        </CardText>
-                                    </Card>   
-                                </Col>
-                            </CardText>
-                        </Card>   
+                        <Row>
+                            <Card body inverse style={{ backgroundColor: '#333', borderColor: '#333', marginTop:10}}>
+                                <CardText>
+                                    <h6 style={{display:'inline'}}>El lote optimo es:</h6> <h5 style={{display:'inline'}}><b>{Number(loteOptimo).toFixed(2)}</b></h5><br></br>
+                                    <h6 style={{display:'inline'}}>El tiempo entre pedidos es:</h6> <h5 style={{display:'inline'}}><b>{Number(tiempoEntrePedidos).toFixed(2)}</b></h5><br></br>
+                                    <h6 style={{display:'inline'}}>El costo total esperado es:</h6> <h5 style={{display:'inline'}}><b>${Number(CTE).toFixed(2)}</b></h5><br></br>
+                                    <Col>
+                                        <Card body inverse color="primary" style={{marginTop:10, padding: '5px 0 0 0'}}>
+                                            <CardText>
+                                            <h5>Pedir {Number(loteOptimo).toFixed(2)} {unidadesDemanda} cada {Number(tiempoEntrePedidos).toFixed(2)} {unidadesAlmacenamiento}</h5>
+                                            </CardText>
+                                        </Card>   
+                                    </Col>
+                                </CardText>
+                            </Card> 
+                        </Row>
+                        <Row>
+                            <Card body>
+                                <Graph sr={StockDeProteccion} y={loteOptimo} t={tiempoEntrePedidos} yProm={Number(loteOptimo)/2} title={'Grafico Stock de Proteccion'}/>
+                            </Card>
+                        </Row>  
                     </Col>)}
                            
                     {incompleto && (
