@@ -2,16 +2,14 @@ import React from 'react';
 import {CardBody, Card, CardHeader,CardFooter,Table,Row,Col,CardTitle,Button} from 'reactstrap';
 import {XYPlot, XAxis, YAxis, HorizontalGridLines,LineSeries, AreaSeries, VerticalGridLines,MarkSeries,DiscreteColorLegend,Hint} from 'react-vis';
 import {Expression, Equation,Fraction} from 'algebra.js';
-import { Fraction as otroFraction } from 'fraction.js'
+// import { Fraction as otroFraction } from 'fraction.js'
+
 import ReferencesList from '../ReferencesList';
-import fromExponential from 'from-exponential';
-var Fractional = require('fractional').Fraction;
+// import fromExponential from 'from-exponential';
+
+
 var randomColor = require('randomcolor');
-const { esFlotante } = require('./FloatValidator');
-
-
-
-
+const { esFlotante, pasarAFraccion } = require('./FloatValidator');
 
 
 class GraphicPresentation extends React.Component{
@@ -72,7 +70,34 @@ class GraphicPresentation extends React.Component{
 
 
     getLinesAndExpressions = restricciones => {
-        const getFrac = real => new Fraction(Math.round(Math.pow(10,(real - real.toFixed()).toString().length - 2)*real), Math.round(Math.pow(10,(real - real.toFixed()).toString().length - 2))) 
+
+        // original (y asquerosa)
+        // const getFrac = real => new Fraction(Math.round(Math.pow(10,(real - real.toFixed()).toString().length - 2)*real), Math.round(Math.pow(10,(real - real.toFixed()).toString().length - 2))) 
+
+        // nueva
+        const getFrac = real => {
+            if(real !== 0){
+
+                if(real.toString().includes('e')){
+                    // el numero esta expresado con e-notation ej: 1e-9
+                    var f = pasarAFraccion(Number(real))
+                    return new Fraction(f[0], f[1])
+
+                } else {
+                    // el numero no esta expresado con e-notation (tiene menos de 7 decimales)
+                    var numerador = Math.round(Math.pow(10,(real - real.toFixed()).toString().length - 2)*real)
+                    var denominador = Math.round(Math.pow(10,(real - real.toFixed()).toString().length - 2))
+                    return new Fraction(numerador, denominador)
+                }
+
+
+            }else{
+                // lado derecho igual a 0 
+                return 0
+            }
+            
+        }
+
         //Tipos de Expresiones: 0: Constante en X; 1: Constante en Y; 2: Recta con pendiente.
         let expresiones = [];
         let arrayDeRestriccionesConLosDosCoef =  restricciones.filter(el=> ( el.coeficientes[0] > 0 && el.coeficientes[1] > 0) )
@@ -81,40 +106,42 @@ class GraphicPresentation extends React.Component{
         // console.log('Ymax: '+highestValueY+' Xmax:'+highestValueX);
         
         let lines = restricciones.map( restri => {
-      
-            console.log('Restri derecha '+ restri.derecha);
+
+            // console.log('Restri derecha '+ restri.derecha);
+
             let xNum = !Number.isInteger(Number(restri.coeficientes[0])) ? getFrac(Number(restri.coeficientes[0])):Number(restri.coeficientes[0]);
 
             let yNum = !Number.isInteger(Number(restri.coeficientes[1])) ? getFrac(Number(restri.coeficientes[1])):Number(restri.coeficientes[1]);
             
-            if(esFlotante(restri.derecha)){
-                // el lado derecho de la restrccion es float, tiene tratamiento distinto
+            // if(esFlotante(restri.derecha)){
+            //     // el lado derecho de la restrccion es float, tiene tratamiento distinto
 
-                var nuevaFraction = new otroFraction(restri.derecha)
+            //     var nuevaFraction = new otroFraction(restri.derecha)
 
-                if(restri.derecha.toString().includes('e')){
-                    // el numero esta expresado en formato con "e", ej: 10e-9
-                    // tambien tiene tratamiento distinto
+            //     if(restri.derecha.toString().includes('e')){
+            //         // el numero esta expresado en formato con "e", ej: 10e-9
+            //         // tambien tiene tratamiento distinto
 
-                    console.log('numero CON e: ' + restri.derecha)
-                    var convertido = Number(fromExponential(restri.derecha))
-                    console.log('numero SIN e: ' + convertido)
+            //         console.log('numero CON e: ' + restri.derecha)
+            //         var convertido = Number(fromExponential(restri.derecha))
+            //         console.log('numero SIN e: ' + convertido)
 
-                    var f  = new Fractional(convertido);
-                    // console.log(f.numerator+"/"+f.denominator);
-                    restri.derecha = new Fraction(f.numerator,f.denominator);
+            //         var f  = new Fractional(convertido);
+            //         // console.log(f.numerator+"/"+f.denominator);
+            //         restri.derecha = new Fraction(f.numerator,f.denominator);
 
-                } else {
-                    // el numero es float, pero no esta expresado en e-notation
-                    // var f  = new Fractional(restri.derecha);
-                    // console.log(f.numerator+"/"+f.denominator);
-                    console.log('sin pasar a fraccion: ' + restri.derecha)
-                    restri.derecha = new Fraction(nuevaFraction.numerator,nuevaFraction.denominator);
-                    console.log('pasando a fraccion: ' + restri.derecha)
-                }
+            //     } else {
+            //         // el numero es float, pero no esta expresado en e-notation
+            //         // var f  = new Fractional(restri.derecha);
+            //         // console.log(f.numerator+"/"+f.denominator);
+            //         console.log('sin pasar a fraccion: ' + restri.derecha)
+            //         restri.derecha = new Fraction(nuevaFraction.numerator,nuevaFraction.denominator);
+            //         console.log('pasando a fraccion: ' + restri.derecha)
+            //     }
 
-            }
-            //Si posee ambos coeficientes entoces es una recta con pendiente.
+            // }
+
+            // Si posee ambos coeficientes entoces es una recta con pendiente.
             if ( xNum !== 0  &&  yNum!== 0) {
                 let x = new Expression('x').multiply(xNum);
                 let y = new Expression('y').multiply(yNum);
@@ -126,15 +153,22 @@ class GraphicPresentation extends React.Component{
                 //No se puede pasar con decimal a la ecuacion (lado derecho de la restriccion)
                 //Se lo pasa a fraccion en ese caso
                 
-                if(esFlotante(restri.derecha)){
-                    
-                    // console.log("ES UN FLOAT BRODEEEER");
-                    var f  = new Fractional(restri.derecha);
-                    console.log(f.numerator+"/"+f.denominator);
-                    restri.derecha = new Fraction(f.numerator,f.denominator);
-                }
 
-                let restriEquation = new Equation(expressRestri,restri.derecha)
+                // if(esFlotante(restri.derecha)){
+                //     var f  = new Fractional(restri.derecha);
+                //     console.log(f.numerator+"/"+f.denominator);
+                //     restri.derecha = new Fraction(f.numerator,f.denominator);
+                // }
+
+                
+                // restri.derecha = new Fraction(f.numerator,f.denominator);
+
+                console.log('SIN CONVERTIR: ' + restri.derecha)
+                var ladoDerecho = getFrac(restri.derecha)
+                console.log('CONVERTIDO: ' + ladoDerecho)
+
+                // A restri.derecha la tenemos que hacer pasar por getFrac 
+                let restriEquation = new Equation(expressRestri,ladoDerecho)
                 expresiones.push({restriEquation,tipo:2})
                 let yEqu = (new Equation(restriEquation.solveFor('x'),0)).solveFor('y');
                 let xEqu = (new Equation(restriEquation.solveFor('y'),0)).solveFor('x');
@@ -223,8 +257,13 @@ class GraphicPresentation extends React.Component{
     getObjectiveFunctionLine = (variables,optimPoint,xMax,yMax) => {
         console.log('Getting OF Line');
         //Funcion que devuelve una Fraccion de Algebra.js a partir de un numero real.
+
         // TENEMOS HACER QUE LA FUNCION getFrac CONTEMPLE RECIBIR NUMEROS EN e-notation
-        const getFrac = real => new Fraction(Math.round(Math.pow(10,(real - real.toFixed()).toString().length - 2)*real), Math.round(Math.pow(10,(real - real.toFixed()).toString().length - 2))) 
+
+        // const getFrac = real => new Fraction(Math.round(Math.pow(10,(real - real.toFixed()).toString().length - 2)*real), Math.round(Math.pow(10,(real - real.toFixed()).toString().length - 2))) 
+
+        const getFrac = real => new Fraction(Math.round(Math.pow(10,(real - real.toFixed()).toString().length - 2)*real), Math.round(Math.pow(10,(real - real.toFixed()).toString().length - 2)))
+
         //const getFrac = real => new Fraction(Math.pow(10,(real - real.toFixed()).toString().length - 2)*real, Math.pow(10,(real - real.toFixed()).toString().length - 2)) 
         if (optimPoint){
             try {
