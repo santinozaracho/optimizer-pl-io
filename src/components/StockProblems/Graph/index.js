@@ -15,10 +15,10 @@ const Graph = ({ y, yProm, t0, title, sr }) => {
         <HorizontalGridLines/>
         <VerticalGridLines/>
         
-        <XAxis on0 title='Tiempo' />
-        <YAxis on0 title='Inventario'/>
+        <XAxis title='Tiempo' />
+        <YAxis title='Inventario'/>
         <LineSeries data={line}/>
-        <LineSeries data={linePromedio}/>
+        <LineSeries strokeStyle="dashed" data={linePromedio}/>
     </XYPlot>
   </div>
   )
