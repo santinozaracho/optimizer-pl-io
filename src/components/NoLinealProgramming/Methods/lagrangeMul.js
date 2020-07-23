@@ -7,17 +7,40 @@ const lagrangeMul =(f,g, objective) => {
 
 
     //first, we create the lagrangian 
-    lagrange = f
-    operator = objective === "max" ? '-' : '+'
-    i=1
+    
+    var lagrange = f
+    var operator = objective === "max" ? '-' : '+'
+    var i=1
+    var ladoDerRestriccion=[];
+    var ladoIzqRestriccion = [];
+    var lagrangeExpr;
+    var variables;
     g.forEach(element => {
+        ladoIzqRestriccion.push(element.split('=')[0])
+
+        ladoDerRestriccion.push(element.split('=')[1])
+
+
+        //console.log(ladoDerRestriccion);
+        //console.log(ladoIzqRestriccion);
+        lagrange = lagrange + operator+ 'lambda' + i+ '*' +Parser.parse(ladoIzqRestriccion[i-1])
+        lagrangeExpr = Parser.parse(lagrange)
+
+        variables = lagrangeExpr.variables()
         
-        lagrange = lagrange + operator+ 'L' + i+ '*' +Parser.parse(element)
-
+        
+        
     });
-    console.log(typeof lagrange)
+    
+    variables.forEach(vari =>{
+        console.log(vari);
+        //ACA DEBERIAMOS HACER LA LLAMADA PARA DERIVAR
 
-    return lagrange.toString()
+
+        
+    })
+    return lagrange
 }
 
-console.log(lagrangeMul("2*x^2",["3*x"],"max"))
+console.log(lagrangeMul("2*x^2",["3*x=12"],"max"))
+
