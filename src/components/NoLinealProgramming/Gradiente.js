@@ -1,13 +1,13 @@
 const algebra = require('algebra.js');
 const math = require('mathjs');
 const { Expression } = require('algebra.js');
-const { exp } = require('mathjs');
+const { exp, expression } = require('mathjs');
 const Equation = algebra.Equation;
 const Parser = require('expr-eval').Parser;
 var parser = new Parser()
 
 
-var z="-x^2-(y+1)^2";
+var z="(1-x)^2 + 5*(y-x^2)^2";
 var a=0;
 var b=0;
 var e=1;
@@ -21,6 +21,8 @@ var ZconR;
 var derivadaExpr = [];
 var Z0;
 var Z1;
+var ZdespejeR;
+var helper;
 
 console.log(expr.toString());
 
@@ -30,27 +32,41 @@ x0 = [a,b];
 // Reemplazo X0 en la funcion z
 Z0 = expr.evaluate({x: x0[0], y: x0[1]});
 Z1 = 0;
-     
-while (((Z0-Z1) <= e) || (valr == 0)){
-     // Calculo las derivadas de la funcion en x y en y
-     derivadaExpr = [ math.derivative(expr.toString(),'x') , math.derivative(expr.toString(),'y')];
+valorR = 1;
+
+// Calculo las derivadas de la funcion en x y en y
+derivadaExpr = [ math.derivative(expr.toString(),'x') , math.derivative(expr.toString(),'y')];
+
+while ((math.abs(Z0-Z1) <= e) && (valorR != 0)){
 
      // Reemplazo x0 en las derivas 
-     deltaf = [ derivadaExpr[0].evaluate({x: x0[0]}) , derivadaExpr[1].evaluate({y: x0[1]})];
-     
+     deltaf = [ derivadaExpr[0].evaluate({x: x0[0], y: x0[1]}) , derivadaExpr[1].evaluate({x: x0[1], y: x0[1]})];
+
      // Genero el punto X1 el cual contiene una variable r que despues tendremos que despejar
-     x1conR = [ (x0[0] + (deltaf[0]+"r")) , (x0[1] + (deltaf[1]+"r")) ];
+     x1conR = [ (x0[0] + "+" + (deltaf[0]+"* r")) , (x0[1] + "+" + (deltaf[1]+"* r")) ];
 
      // Reemplazo los valores de X1 en la funcion objetivo y luego despejo r
-     ZconR = expr.evaluate({x: x1conR[0], y: x1conR[1]});
-     valorR = ZconR.solveFor("r");
+     ZconR = expr.substitute("x", Parser.parse(x1conR[0]));
+     ZconR = ZconR.substitute("y", Parser.parse(x1conR[1]));
+     ZdespejeR = new algebra.parse(ZconR.toString() + "=0");
+     if ( (ZdespejeR.toString()).includes("r") ){
+          helper = new algebra.parse(ZdespejeR.toString()); /////Aca esta el error
+          ZdespejeR = helper.substitute("r", "* r");
+          valorR = ZdespejeR.solveFor('r');
+     } else {
+          valorR = 0;
+     }
+     console.log(ZdespejeR.toString());
 
      // Reemplazo r en X1
-     x1 = [ x1conR[0].evaluate({r: valorR}) , x1conR[1].evaluate({r: valorR}) ];
-
+     x1 = [ (Parser.parse(x1conR[0])).evaluate({r: eval(valorR.toString())}) , (Parser.parse(x1conR[1])).evaluate({r: eval(valorR.toString())}) ];
      // Calculamos Z1
      Z1 = expr.evaluate({x: x1[0], y: x1[1]});
-}
+     if ((math.abs(Z0-Z1) <= e) || (valorR == 0)){
+          x0 = [ x1[0] , x1[1] ];
+     }
+     console.log(valorR);
+} 
 
-console.log(x1)
+console.log(x1);
 
