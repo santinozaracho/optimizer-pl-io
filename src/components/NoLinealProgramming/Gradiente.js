@@ -22,7 +22,6 @@ var derivadaExpr = [];
 var Z0;
 var Z1;
 var ZdespejeR;
-var helper;
 
 console.log(expr.toString());
 
@@ -43,20 +42,25 @@ while ((math.abs(Z0-Z1) <= e) && (valorR != 0)){
      deltaf = [ derivadaExpr[0].evaluate({x: x0[0], y: x0[1]}) , derivadaExpr[1].evaluate({x: x0[1], y: x0[1]})];
 
      // Genero el punto X1 el cual contiene una variable r que despues tendremos que despejar
-     x1conR = [ (x0[0] + "+" + (deltaf[0]+"* r")) , (x0[1] + "+" + (deltaf[1]+"* r")) ];
+     x1conR = [ (x0[0] + "+" + "("+ (deltaf[0]+" * r)")) , (x0[1] + "+" + "(" + (deltaf[1]+" * r)")) ];
 
      // Reemplazo los valores de X1 en la funcion objetivo y luego despejo r
      ZconR = expr.substitute("x", Parser.parse(x1conR[0]));
      ZconR = ZconR.substitute("y", Parser.parse(x1conR[1]));
-     ZdespejeR = new algebra.parse(ZconR.toString() + "=0");
+     ZconR = ZconR.toString() + " = 0";
+     console.log(ZconR.toString());
+     ZdespejeR = new algebra.parse(ZconR.toString());
+     console.log(ZdespejeR);
      if ( (ZdespejeR.toString()).includes("r") ){
-          helper = new algebra.parse(ZdespejeR.toString()); /////Aca esta el error
-          ZdespejeR = helper.substitute("r", "* r");
-          valorR = ZdespejeR.solveFor('r');
+          //Aca se despejaria r pero nada anda
+          
+          //helper = new algebra.parse(ZdespejeR.toString()); /////Aca esta el error
+          //console.log(helper.toString());
+          //ZdespejeR = ZdespejeR.substitute("r", Parser.parse(helper.toString()));
+          //valorR = ZdespejeR.solveFor("r");
      } else {
           valorR = 0;
      }
-     console.log(ZdespejeR.toString());
 
      // Reemplazo r en X1
      x1 = [ (Parser.parse(x1conR[0])).evaluate({r: eval(valorR.toString())}) , (Parser.parse(x1conR[1])).evaluate({r: eval(valorR.toString())}) ];
