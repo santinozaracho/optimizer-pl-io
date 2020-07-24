@@ -10,7 +10,7 @@ var parser = new Parser()
 var z="(1-x)^2 + 5*(y-x^2)^2";
 var a=0;
 var b=0;
-var e=1;
+var e=0;
 const expr = parser.parse(z);
 var deltaf = [];
 var x0 = [];
@@ -36,7 +36,7 @@ valorR = 1;
 // Calculo las derivadas de la funcion en x y en y
 derivadaExpr = [ math.derivative(expr.toString(),'x') , math.derivative(expr.toString(),'y')];
 
-while ((math.abs(Z0-Z1) <= e) && (valorR != 0)){
+while ((math.abs(Z0-Z1) > 0.1) && (valorR > 0)){
 
      // Reemplazo x0 en las derivas 
      deltaf = [ derivadaExpr[0].evaluate({x: x0[0], y: x0[1]}) , derivadaExpr[1].evaluate({x: x0[1], y: x0[1]})];
@@ -50,10 +50,10 @@ while ((math.abs(Z0-Z1) <= e) && (valorR != 0)){
      ZconR = ZconR.toString() + " = 0";
      console.log(ZconR.toString());
      ZdespejeR = new algebra.parse(ZconR.toString());
-     console.log(ZdespejeR);
+     console.log(ZdespejeR.toString());
      if ( (ZdespejeR.toString()).includes("r") ){
           //Aca se despejaria r pero nada anda
-          
+          valorR=0.2285;
           //helper = new algebra.parse(ZdespejeR.toString()); /////Aca esta el error
           //console.log(helper.toString());
           //ZdespejeR = ZdespejeR.substitute("r", Parser.parse(helper.toString()));
