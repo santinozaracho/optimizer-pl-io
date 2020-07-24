@@ -1,27 +1,37 @@
-import math
-import scipy.optimize as opt
-import compiler
-from scitools.StringFunction import StringFunction
+import sympy
+from sympy import Symbol
+from sympy import nsolve
+from sympy import nonlinsolve
+def resolverSistemaNL(ecuations,variables):
+    #variablesEcuacion = []
+    #for variable in variables:
+    arregloExpresiones = []
+    arregloIncognitas = []
 
-
-
-def f(variables,functions=None):
-    # This is the function that we want to make 0
-    print(type(variables))
-    # We take the unknowns
-    (x,y,z) = variables
+    if (len(variables)>4):
+        print("Cantidad de incognitas invalida")
+        return 
     
-    
-    #first_eq = x * y - 2 * y - 2**x
-    #second_eq = math.log(x)-y-math.cos(x)
-    first_eq = StringFunction("1 - 2*x")
-    print(first_eq)
-    second_eq = StringFunction("z**2 - 2*y")
-    third_eq = StringFunction("2 + y - 2*z")
-    return [first_eq,second_eq,third_eq]
 
-if __name__=="__main__":
-    # We just call opt passing the function and an initial value
+    for i in range(0,len(variables)):
+        variables[i] = Symbol(variables[i])
+        print(variables[i])
+    print(variables)  
+    for ecuation in ecuations:
+        arregloExpresiones.append(sympy.sympify(ecuation))
     
-    solution = opt.fsolve(f,(0,0,0)) 
-    print("The solution is",solution)
+    result = nonlinsolve(arregloExpresiones,variables)
+    arregloSalida = [str(result.args[0][i]) for i in range(0,len(arregloExpresiones))]
+    #print(arregloSalida)
+    return arregloSalida
+#x = Symbol('x')
+#y = Symbol('y')
+#expr1=sympy.sympify(s1)
+#expr2=sympy.sympify(s2)
+
+#s1="x * y"
+#s2="x*2 + y*2 - 17"
+ecuations = ["1-2*x","z-2*y","2 +y -2*z"]
+variables = ["x","y","z"]
+result = resolverSistemaNL(ecuations,variables)
+print(result)
