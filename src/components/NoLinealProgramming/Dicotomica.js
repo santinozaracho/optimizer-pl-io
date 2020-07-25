@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { ButtonGroup, Button, Container, Row, Col, Card, CardBody, CardHeader, CardTitle, Jumbotron } from "reactstrap";
-import { Alert, UncontrolledPopover, PopoverBody, PopoverHeader } from "reactstrap";
+import { Alert, UncontrolledPopover, PopoverBody, PopoverHeader, Input } from "reactstrap";
 import logo from "../../components/LinealProgramming/logo.svg";
 import Variables from '../LinealProgramming/Configuration/Variables/index'
 class Dicotomica extends React.Component{
@@ -81,10 +81,19 @@ render(){
             <Card outline color="secondary" id="CardVariables" className="w-100 mt-3 mx-auto">
               <CardHeader>
                 <CardTitle className="text-left">
-                  <h4>Variables</h4>
+                  <h4>Datos</h4>
                 </CardTitle>
               </CardHeader>
-              <CardBody></CardBody>
+              <CardBody>
+              <Input
+          name="delta"
+          placeholder="Ingrese un delta"
+          aria-label="Descripcion"
+          aria-describedby="variable"
+
+          
+        />
+              </CardBody>
             </Card>
           </Row>
 
