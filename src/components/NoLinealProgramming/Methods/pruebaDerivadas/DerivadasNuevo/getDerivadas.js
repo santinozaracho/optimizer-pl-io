@@ -3,6 +3,12 @@ const math = require('mathjs');
 const {ptoFactible} = require('./getPtoFactible')
 const {getMatrizHessiana} = require('./getMatrizHessiana')
 
+// const dameElPuntoFactible = (derivadas, incognitas) => {
+//     // ptoFactible(resultado.derivadasPrim.toString(),incognitas)
+//     ptoFactible(derivadas, incognitas)
+//     .then( punto => punto)
+// }
+
 const getDerivadas = (z,incognitas) =>{
     cantidadDerivadasH = incognitas.lenght**2
     var derivadas = []
@@ -17,11 +23,12 @@ const getDerivadas = (z,incognitas) =>{
             filaDerivadas = []
             incognitas.forEach(incognita=>{
                 const derivada2i = math.derivative(derivadaPrimera,incognita);
-                filaDerivadas.push(derivada2i)
+                filaDerivadas.push(derivada2i.toString())
             })
             derivadas.push(filaDerivadas)
         })
-        
+    
+    // console.log(derivadas)
         
     salida = {
         "derivadasPrim": derivadasPrimeras,
@@ -30,11 +37,12 @@ const getDerivadas = (z,incognitas) =>{
     return salida
 }
 //const z="(x1-4)^2 -3*(x2-2)^2 +24"
-const z2 = "(x1-2)^2 +(x2-3)^2 +5"
+// const z2 = "(x1-2)^2 +(x2-3)^2 +5"
 const z3 = "x1 + 2*x3 + x2*x3 - x1^2 - x2^2 - x3^2"
 const incognitas = ['x1','x2','x3']
 const resultado = getDerivadas(z3,incognitas)
-console.log(resultado.derivadas[0][0].toString());
+
+
 arregloDerivadas = []
 for (let i = 0; i < incognitas.length; i++) {
     var filaDerivada =[]
@@ -44,12 +52,29 @@ for (let i = 0; i < incognitas.length; i++) {
     arregloDerivadas.push(filaDerivada);
     
 }
-console.log("MIRA ACA FORRO"+arregloDerivadas)
+// console.log("MIRA ACA FORRO"+arregloDerivadas)
 //console.log("DERIVADAS PRIM"+resultado.derivadasPrim.toString())
 //console.log(resultado.derivadas[0].toString())
 //console.log(resultado.derivadas[1].toString())
 //console.log(resultado.derivadas[2].toString())
 //console.log(resultado.derivadas.length)
-puntoFactible =ptoFactible(resultado.derivadasPrim.toString(),incognitas)
-getMatrizHessiana(resultado,puntoFactible,incognitas,z3)
-module.exports={getDerivadas}
+
+var puntoFactible = ptoFactible(resultado.derivadasPrim.toString(),incognitas)
+.then( (punto) => {
+    // puntoFactible = punto
+    // Promise.resolve(punto) 
+    return punto
+})
+.then( result => console.log(result))
+
+// console.log(puntoFactible)
+
+
+auxiliar = [['2*x1', '4'],['5', '3*x2']]
+
+getMatrizHessiana(auxiliar, puntoFactible ,incognitas,z3)
+// getMatrizHessiana(resultado.derivadas, puntoFactible,incognitas,z3)
+
+
+
+module.exports = { getDerivadas }

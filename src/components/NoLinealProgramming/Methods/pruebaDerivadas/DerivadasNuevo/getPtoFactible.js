@@ -28,29 +28,32 @@ const ptoFactible = async (derivadasPrim,variables)=>{
     var url_base= "https://nlsystemsolver.herokuapp.com/getmsg/?"
     //armo la url final
     url_base += urlEcuaciones + urlVariables
+    
     var rtaFetch =""
+    
     await fetch(url_base, { method: 'GET'})
     .then(res => res.json()) // expecting a json response
     .then(json => {
         
         //console.log(json.MESSAGE)
         rtaFetch = json.MESSAGE
-        }
-        ); //ESTO RETORNA TODO UN STRING, NO ARREGLO
+    }); //ESTO RETORNA TODO UN STRING, NO ARREGLO
+
+
     rtaFetch = rtaFetch.replace("[","");
     rtaFetch = rtaFetch.replace("]","");
     //paso a un arreglo
-    //console.log(typeof rtaFetch);
     rtaFetch = rtaFetch.replace(/'/g,"")
     rtaFetch = rtaFetch.replace(/ /g,"")
     rtaFetch = rtaFetch.split(",");
+    
     var rtaFetchNum = []
     for (let i = 0; i < rtaFetch.length; i++) {
         //console.log(rtaFetch[i])
         rtaFetchNum.push(eval(rtaFetch[i]))
         
     }
-    //console.log(rtaFetchNum);
+    
     return rtaFetchNum
 }
 

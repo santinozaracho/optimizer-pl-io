@@ -81,8 +81,8 @@ const calcularDerivadas = (z,incognitas) =>{
 } 
 
 
-
-//fhago una funcion para ver si hay puntos que cumplan con la condicion necesaria del gradiente
+// puntoFactible NO SE USA CON EL FETCH A HEROKU
+// hago una funcion para ver si hay puntos que cumplan con la condicion necesaria del gradiente
 const puntoFactible = (z,derivadas) =>{
     if (derivadas.length == 3){
         const dgdx = math.derivative(z,'x');
@@ -118,9 +118,6 @@ const puntoFactible = (z,derivadas) =>{
             const x = d33.solveFor('x')
         }
 
-
-        
-       
         try {
             
             const x = d11.solveFor('x');
