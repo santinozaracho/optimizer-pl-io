@@ -1,7 +1,10 @@
 import sympy
+from flask import Flask
 from sympy import Symbol
 from sympy import nsolve
 from sympy import nonlinsolve
+app = Flask(__name__)
+@app.route('/')
 def resolverSistemaNL(ecuations,variables):
     #variablesEcuacion = []
     #for variable in variables:
@@ -35,3 +38,4 @@ ecuations = ["1-2*x","z-2*y","2 +y -2*z"]
 variables = ["x","y","z"]
 result = resolverSistemaNL(ecuations,variables)
 print(result)
+
