@@ -1,7 +1,8 @@
 const algebra = require('algebra.js');
 const math = require('mathjs');
 const {ptoFactible} = require('./getPtoFactible')
-const {getMatrizHessiana} = require('./getMatrizHessiana')
+//const {getMatrizHessiana} = require('./getMatrizHessiana')
+const {getMatrizHessiana} = require('./pruebaAplicada')
 
 // const dameElPuntoFactible = (derivadas, incognitas) => {
 //     // ptoFactible(resultado.derivadasPrim.toString(),incognitas)
