@@ -59,20 +59,23 @@ for (let i = 0; i < incognitas.length; i++) {
 //console.log(resultado.derivadas[2].toString())
 //console.log(resultado.derivadas.length)
 
+// ESTO TIENE QUE RETORNA EL PUNTO FACTIBLE CON EL CUAL VAMOS A 
+// EVALUAR EN LAS DERIVADAS SEGUNDAS, PERO NOS RETURNA UN PROMISE Y NO SABEMOS QUE HACER
 var puntoFactible = ptoFactible(resultado.derivadasPrim.toString(),incognitas)
 .then( (punto) => {
     // puntoFactible = punto
     // Promise.resolve(punto) 
     return punto
 })
-.then( result => console.log(result))
 
 // console.log(puntoFactible)
 
 
-auxiliar = [['2*x1', '4'],['5', '3*x2']]
+auxiliarDerivadas = [['2*x1', '4'],['5', '3*x2']]
+auxiliarPuntoFactible = [ 1, 2, 3 ]
 
-getMatrizHessiana(auxiliar, puntoFactible ,incognitas,z3)
+getMatrizHessiana(auxiliarDerivadas, auxiliarPuntoFactible ,incognitas,z3)
+// getMatrizHessiana(auxiliar, puntoFactible ,incognitas,z3)
 // getMatrizHessiana(resultado.derivadas, puntoFactible,incognitas,z3)
 
 
