@@ -2,7 +2,8 @@ const Parser = require('expr-eval').Parser;
 const parser = new Parser();
 const math = require('mathjs');
 const { exp, expression } = require('mathjs');
-const fetch = require('node-fetch')
+const fetch = require('node-fetch');
+const { ContinuousColorLegend } = require('react-vis');
 
 
 //f is the function, g is an array of constraints
@@ -85,13 +86,21 @@ const lagrangeMul =(f,g, objective) => {
         console.log(n,m)
         n = n-g.length //substracting the lambdas
         var x0 = math.zeros(n,m); //Aca tenemos una matriz con cosas que ni idea que son
-        
-        for (var i; i < n;i++)
+        //generate P array, where [[Ng1(x), Ng1(x2)],[Ng2(x1),Ng2(x2)]]
+        var P = math.zeros(m,n)
+        /*
+        for(var i = 0; i < m; i+=1)
         {
-            for (var j; j < m;j++){
-                x0[i][j]= respuesta[i+j]
+            //each restriction
+            for(var j = 0; j < n; j+=1)
+            {
+                //each variable
+
+                P[i][j]
             }
         }
+        */
+        console.log(x0)
         var hessiano = math.zeros(m+n,m+n)
         console.log(hessiano.toString())
     }
