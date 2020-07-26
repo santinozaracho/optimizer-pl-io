@@ -6,6 +6,13 @@ var parser = new Parser();
 
 const busquedaBinaria = (funcionesIntervalos, delta, tipo) => { 
 
+    // sentido de la optimizacion
+    const tiposValidos = ['max', 'min']
+    if(tiposValidos.indexOf(tipo) == -1){
+        console.log('Error: el tipo de optimizacion debe ser exactamente max o min')
+        return false
+    }
+
     // armo el primer intervalo I_0
     var xl = 9999999999 
     var xr = -9999999999
@@ -31,18 +38,11 @@ const busquedaBinaria = (funcionesIntervalos, delta, tipo) => {
         // console.log(f.expresion.toString())
     });
 
-    // CONTROLES 
-    // sentido de la optimizacion
-    // const tiposValidos = ['max', 'min']
-    // if(tiposValidos.indexOf(tipo) == -1){
-    //     console.log('Error: el tipo de optimizacion debe ser exactamente max o min')
-    //     return false
-    // }
     // control de los limites del intervalo xl debe ser menor a xr si o si 
-    // if( xl >= xr) {
-    //     console.log('Error: xL debe ser menor a xR')
-    //     return false
-    // } 
+    if( xl >= xr) {
+        console.log('Error: xL debe ser menor a xR')
+        return false
+    } 
 
     // metodos para obtener x1 y x2 
     
