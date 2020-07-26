@@ -20,6 +20,7 @@ const lagrangeMul =(f,g, objective) => {
     var lagrangeExpr;
     var variables;
     var n= 0; //number of variables
+    var todosLagrange=[];
     g.forEach(element => {
         ladoIzqRestriccion.push(element.split('=')[0])
         
@@ -33,7 +34,7 @@ const lagrangeMul =(f,g, objective) => {
         variables = lagrangeExpr.variables()
         i+=1
     });
-    
+
     var url = 'https://nlsystemsolver.herokuapp.com/getmsg/' 
     var variablesURL='';
     var ecuacionesURL='';
@@ -81,36 +82,89 @@ const lagrangeMul =(f,g, objective) => {
         var cont = 0
         respuesta = respuesta.replace("[","");
         respuesta = respuesta.replace("]","");
-        //paso a un arreglo
+        // Paso a un arreglo
         respuesta = respuesta.replace(/'/g,"")
         respuesta = respuesta.replace(/ /g,"")
         respuesta = respuesta.split(",");
+        console.log('Respuesta')
         console.log(respuesta)
+        console.log('Tipo de respuesta: '+typeof respuesta)
         var x0=[]
         respuesta.forEach(element => {
-            x0.push(eval(element))
+            //do some refactoring here in some distant future
+            x0.push(eval((element.split('sqrt').join('Math.sqrt')).toString()))
         })
+        console.log('x0')
         console.log(x0)
-        var m = ladoIzqRestriccion.length; //Columns number of restrictions
-        console.log('values of m and n')
-        console.log(n,m)
-        n = n-g.length //substracting the lambdas
-        //var x0 = math.zeros(n,m); //Aca tenemos una matriz con cosas que ni idea que son
-        //generate P array, where [[Ng1(x), Ng1(x2)],[Ng2(x1),Ng2(x2)]]
-        var P = math.zeros(m,n)
-        /*
-        for(var i = 0; i < m; i+=1)
-        {
-            //each restriction
-            for(var j = 0; j < n; j+=1)
-            {
-                //each variable
 
-                P[i][j]
+        var m = ladoIzqRestriccion.length; //Columns number of restrictions
+        n = n-g.length //substracting the lambdas
+        
+        // Generate P array, where [[Ng1(x), Ng1(x2)],[Ng2(x1),Ng2(x2)]]
+        var P = math.zeros(m,n)
+        
+        var tempRestriccion;
+        var varP;
+        var scope = {}
+        for (let k = 0; k < variables.length; k++) {
+            scope[variables[k]]=x0[k]    
+        }
+        console.log('scope')
+        console.log(scope)
+        for(var i = 0; i < m; i+=1) //each restriction
+        {
+            for(var j = 0; j < n; j+=1) //each variable
+            {
+                tempRestriccion = ladoIzqRestriccion[i];   
+                varP = variables[j].toString();
+                tempRestriccion = math.derivative(tempRestriccion, varP); 
+                tempRestriccionParsed = Parser.parse(tempRestriccion.toString());
+                P.subset(math.index(i, j), tempRestriccionParsed.evaluate({ varP : x0[j] }));
+            }
+        }
+
+        // Load P in Hessiano
+        var hessiano = math.zeros(m+n,m+n)
+        for(var i = 0; i < m; i+=1) //each restriction
+        {
+            for(var j = n-1; j < m+n; j+=1) //each variable
+            {
+                hessiano.subset(math.index(i, j), P.subset(math.index(i,j-n+1)));
+            }
+        }
+
+        // Load P^T in Hessiano
+        for(var i = n-1; i < m+n; i+=1) //each restriction
+        {
+            for(var j = 0; j < m; j+=1) //each variable
+            {   
+                hessiano.subset(math.index(i, j), P.subset(math.index(j,i-n+1)));
+            }
+        }
+        
+        //Generate Q
+
+        var derivadasPrimeras=[]
+        var derivadasSegundas=[]
+        Q= math.zeros(n,n)
+        for(let k = 0; k < n; k++)
+        {
+            derivadasPrimeras.push(math.derivative(lagrange,variables[k]).toString())
+            for(let l = 0; l < n; l++)
+            {
+                derivadasSegundas.push(math.derivative(derivadasPrimeras[k],variables[l]).toString())
+            }
+        }
+        /*
+        for(var i = 0;i < n; i+=1){
+            for (let j = 0; j < n; j++) {
+                
             }
         }
         */
-        var hessiano = math.zeros(m+n,m+n)
+        console.log(derivadasPrimeras.toString())
+        console.log(derivadasSegundas.toString())
+
         console.log(hessiano.toString())
     }
 
@@ -119,5 +173,5 @@ const lagrangeMul =(f,g, objective) => {
 }
 // URL Should be like --> https://nlsystemsolver.herokuapp.com/getmsg/?ecuaciones=1-2*x;z-2*y;2%2By-2*z&variables=x,y,z
 //2*x**2-L1*3x  "2*x^2",["3*x=12"],"max"
-console.log(lagrangeMul("x^2+y^2+z^2",["x+y+3*z-2=0","5*x+2*y+z-5=0"],"max"));
+console.log(lagrangeMul("x^3+y^2+z^2",["x+y+3*z-2=0","5*x+2*y+z-5=0"],"max"));
 
