@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { ButtonGroup, Button, Container, Row, Col, Card, CardBody, CardHeader, CardTitle, Jumbotron } from "reactstrap";
-import { Alert, UncontrolledPopover, PopoverBody, PopoverHeader, Input } from "reactstrap";
+import { Alert, UncontrolledPopover, PopoverBody, PopoverHeader, Input,InputGroupText,InputGroup,InputGroupAddon, } from "reactstrap";
 import logo from "../../components/LinealProgramming/logo.svg";
 import Variables from '../LinealProgramming/Configuration/Variables/index'
 class Dicotomica extends React.Component{
@@ -14,7 +14,7 @@ constructor(props){
             extremoB:"",
             delta:"",
             obj:"max",
-            salida:""
+            salida:"No se encontro solucion"
         }
         
     }
@@ -25,6 +25,19 @@ handleObjective = objective => {
     this.setState({ model });
   };
 
+  handleInput = e =>{
+    let nombre = e.target.name;
+    let valor = e.target.value
+    if(nombre!=="funcion"){
+      valor = Number(valor)
+    }
+    
+    let { model } = this.state;
+    model[nombre] = valor;
+    this.setState({model})
+    
+
+  }
 render(){
     let buttonsOptType = (
         <ButtonGroup>
@@ -49,20 +62,20 @@ render(){
     return(
         <Container fluid className="App">
             <Row className="">
-          <Col xs={12} md={6} className="mx-auto">
-            <img src={logo} className="App-logo" alt="logo" height="200" />
-          </Col>
+              <Col xs={12} md={6} className="mx-auto">
+                <img src={logo} className="App-logo" alt="logo" height="200" />
+              </Col>
             </Row>
     
     <Row>
+    <Col xs={12} md={6} className="my-4 mx-auto ">
                 <Jumbotron className='w-100'>
                 <h2>Busqueda Dicotomica</h2>
                 <h4>Comenzamos configurando nuestro modelo</h4>
                 <Col>
               <UncontrolledPopover flip={false} trigger="hover" placement="top" target="CardOpt">
                 <PopoverBody>
-                  Y aquí el tipo de optimizacion que deseas realizar: si deseas maximizar o minimizar la
-                  función.
+                  Aqui debes seleccionar el tipo de optimizacion que deseas realizar: si deseas maximizar o minimizar la función.
                 </PopoverBody>
               </UncontrolledPopover>
               <Card outline color="secondary" id="CardOpt" className="mt-3 mx-auto">
@@ -72,12 +85,12 @@ render(){
             </Col>
             <Row>
             <UncontrolledPopover flip={false} trigger="hover" placement="top" target="CardVariables">
-              <PopoverHeader>Variables</PopoverHeader>
+              <PopoverHeader>Datos</PopoverHeader>
               <PopoverBody>
-                Aquí debes ingresar las variables que formarán parte del modelo, las mismas son de carga
-                dinámica.
+                Aquí debes ingresar los elementos necesarios para la resolucion del modelo a traves de la busqueda dicotomica
               </PopoverBody>
             </UncontrolledPopover>
+            <br/>
             <Card outline color="secondary" id="CardVariables" className="w-100 mt-3 mx-auto">
               <CardHeader>
                 <CardTitle className="text-left">
@@ -85,21 +98,113 @@ render(){
                 </CardTitle>
               </CardHeader>
               <CardBody>
-              <Input
-          name="delta"
-          placeholder="Ingrese un delta"
-          aria-label="Descripcion"
-          aria-describedby="variable"
+              <InputGroup className="mt-1" id="funcionObj">
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText >
+                      <b>Funcion</b>
+                    </InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    name="funcion"
+                    placeholder="Ingrese la funcion"
+                    
+                    onChange={this.handleInput}
+                    
+                  />
+                  <UncontrolledPopover flip={false} trigger="focus hover" placement="auto" target="funcionObj">
+                    <PopoverBody>Aquí debes ingresar la funcion objetivo a optimizar.</PopoverBody>
+                  </UncontrolledPopover>
+              </InputGroup>
+              <br/>
+              <InputGroup className="mt-1" id="delta">
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText >
+                      Delta
+                    </InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    name="delta"
+                    placeholder="Ingrese un delta"
+                    
+                    onChange={this.handleInput}
+                    type="number"
+                  />
+                  <UncontrolledPopover flip={false} trigger="focus hover" placement="auto" target="delta">
+                    <PopoverBody>Aquí debes ingresar el delta provisto por problema.</PopoverBody>
+                  </UncontrolledPopover>
+              </InputGroup>
 
-          
-        />
+              <br/>
+
+              <InputGroup className="mt-1" id="extremoA">
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText >
+                      Extremo a
+                    </InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    name="extremoA"
+                    placeholder="Ingrese el extremo a "
+                    
+                    onChange={this.handleInput}
+                    type="number"
+                  />
+                  <UncontrolledPopover flip={false} trigger="focus hover" placement="auto" target="extremoA">
+                    <PopoverBody>Aquí debes ingresar el extremo a del intervalo.</PopoverBody>
+                  </UncontrolledPopover>
+              </InputGroup>
+
+              <br/>
+
+              <InputGroup className="mt-1" id="extremoB">
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText >
+                      Extremo b
+                    </InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    name="extremoB"
+                    placeholder="Ingrese el extremo b "
+                    
+                    onChange={this.handleInput}
+                    type="number"
+                  />
+                  <UncontrolledPopover flip={false} trigger="focus hover" placement="auto" target="extremoB">
+                    <PopoverBody>Aquí debes ingresar el extremo b del intervalo.</PopoverBody>
+                  </UncontrolledPopover>
+              </InputGroup>
+
+
+
               </CardBody>
+
             </Card>
+            
+           
           </Row>
 
-                </Jumbotron>  
-            </Row>
-    </Container>
+
+
+          <Row>
+            
+            <br/>
+            <Card outline color="secondary" id="CardVariables" className="w-100 mt-3 mx-auto">
+              <CardHeader>
+                <CardTitle className="text-left">
+                  <h4>Resolucion del problema</h4>
+                </CardTitle>
+              </CardHeader>
+              <CardBody>
+              {this.state.model.salida}
+
+              </CardBody>
+            </Card>
+            
+          </Row>
+      </Jumbotron>  
+    </Col>
+    </Row>
+  </Container>
     
     
     )
