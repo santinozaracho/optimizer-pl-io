@@ -6,6 +6,7 @@ var parser = new Parser();
 
 const busquedaBinaria = (f, xl, xr, delta, tipo) => { 
 
+
     // sentido de la optimizacion
     const tiposValidos = ['max', 'min']
     if(tiposValidos.indexOf(tipo) == -1){
