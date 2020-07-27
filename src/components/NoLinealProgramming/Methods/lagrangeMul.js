@@ -146,15 +146,28 @@ const lagrangeMul =(f,g, objective) => {
 
         var derivadasPrimeras=[]
         var derivadasSegundas=[]
-        Q= math.zeros(n,n)
+        var derivSegEvaluadas =[]
+        var tempDerSeg;
+        console.log('n')
+        console.log(n)
+
+        var Q= math.zeros(n,n)
+        console.log("Q")
+        console.log(Q)
         for(let k = 0; k < n; k++)
         {
             derivadasPrimeras.push(math.derivative(lagrange,variables[k]).toString())
             for(let l = 0; l < n; l++)
             {
-                derivadasSegundas.push(math.derivative(derivadasPrimeras[k],variables[l]).toString())
+                tempDerSeg = math.derivative(derivadasPrimeras[k],variables[l]).toString()
+                derivadasSegundas.push(tempDerSeg)
+                tempDerSeg = math.evaluate(tempDerSeg,scope)
+                derivSegEvaluadas.push(tempDerSeg)
+                Q.subset(math.index(k,l),tempDerSeg)
             }
         }
+        console.log("Q")
+        console.log(Q)
         /*
         for(var i = 0;i < n; i+=1){
             for (let j = 0; j < n; j++) {
@@ -162,10 +175,12 @@ const lagrangeMul =(f,g, objective) => {
             }
         }
         */
+       /*
         console.log(derivadasPrimeras.toString())
         console.log(derivadasSegundas.toString())
 
         console.log(hessiano.toString())
+        */
     }
 
     traerValores(url,callbackFunction)
@@ -173,5 +188,5 @@ const lagrangeMul =(f,g, objective) => {
 }
 // URL Should be like --> https://nlsystemsolver.herokuapp.com/getmsg/?ecuaciones=1-2*x;z-2*y;2%2By-2*z&variables=x,y,z
 //2*x**2-L1*3x  "2*x^2",["3*x=12"],"max"
-console.log(lagrangeMul("x^3+y^2+z^2",["x+y+3*z-2=0","5*x+2*y+z-5=0"],"max"));
+console.log(lagrangeMul("x^2+y^2+z^2",["x+y+3*z-2=0","5*x+2*y+z-5=0"],"max"));
 
