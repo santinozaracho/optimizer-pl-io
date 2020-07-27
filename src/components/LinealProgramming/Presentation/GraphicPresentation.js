@@ -1,7 +1,7 @@
 import React from 'react';
 import {CardBody, Card, CardHeader,CardFooter,Table,Row,Col,CardTitle,Button} from 'reactstrap';
 import {XYPlot, XAxis, YAxis, HorizontalGridLines,LineSeries, AreaSeries, VerticalGridLines,MarkSeries,DiscreteColorLegend,Hint} from 'react-vis';
-import {Expression, Equation,Fraction} from 'algebra.js';
+import {Expression, Equation, Fraction} from 'algebra.js';
 // import { Fraction as otroFraction } from 'fraction.js'
 
 import ReferencesList from '../ReferencesList';
@@ -76,6 +76,8 @@ class GraphicPresentation extends React.Component{
 
         // nueva
         const getFrac = real => {
+            console.log('ESTOY EN getFrac')
+            console.log(real)
             if(real !== 0){
 
                 if(real.toString().includes('e')){
@@ -147,26 +149,19 @@ class GraphicPresentation extends React.Component{
                 let y = new Expression('y').multiply(yNum);
                 let expressRestri = new Expression().add(x).add(y);  
 
-                console.log(restri.derecha);
-                console.log(typeof restri.derecha);
-
                 //No se puede pasar con decimal a la ecuacion (lado derecho de la restriccion)
                 //Se lo pasa a fraccion en ese caso
                 
-
-                // if(esFlotante(restri.derecha)){
-                //     var f  = new Fractional(restri.derecha);
-                //     console.log(f.numerator+"/"+f.denominator);
-                //     restri.derecha = new Fraction(f.numerator,f.denominator);
-                // }
-
+                if(esFlotante(restri.derecha)){
+                    // si el lado derecho de la restriccion es float, tenemos que pasar
+                    // a Fraction
+                    var ladoDerecho = getFrac(restri.derecha)
+                } else{
+                    // si el lado derecho de la restriccion NO es float, lo dejamos
+                    // como esta (Expression)
+                    var ladoDerecho = restri.derecha
+                }
                 
-                // restri.derecha = new Fraction(f.numerator,f.denominator);
-
-                console.log('SIN CONVERTIR: ' + restri.derecha)
-                var ladoDerecho = getFrac(restri.derecha)
-                console.log('CONVERTIDO: ' + ladoDerecho)
-
                 // A restri.derecha la tenemos que hacer pasar por getFrac 
                 let restriEquation = new Equation(expressRestri,ladoDerecho)
                 expresiones.push({restriEquation,tipo:2})
