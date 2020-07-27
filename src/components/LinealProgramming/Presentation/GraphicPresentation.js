@@ -66,9 +66,6 @@ class GraphicPresentation extends React.Component{
     }
     // funcion para controlar si el numero es float 
     
-
-
-
     getLinesAndExpressions = restricciones => {
 
         // original (y asquerosa)
@@ -91,8 +88,6 @@ class GraphicPresentation extends React.Component{
                     var denominador = Math.round(Math.pow(10,(real - real.toFixed()).toString().length - 2))
                     return new Fraction(numerador, denominador)
                 }
-
-
             }else{
                 // lado derecho igual a 0 
                 return 0
@@ -115,34 +110,6 @@ class GraphicPresentation extends React.Component{
 
             let yNum = !Number.isInteger(Number(restri.coeficientes[1])) ? getFrac(Number(restri.coeficientes[1])):Number(restri.coeficientes[1]);
             
-            // if(esFlotante(restri.derecha)){
-            //     // el lado derecho de la restrccion es float, tiene tratamiento distinto
-
-            //     var nuevaFraction = new otroFraction(restri.derecha)
-
-            //     if(restri.derecha.toString().includes('e')){
-            //         // el numero esta expresado en formato con "e", ej: 10e-9
-            //         // tambien tiene tratamiento distinto
-
-            //         console.log('numero CON e: ' + restri.derecha)
-            //         var convertido = Number(fromExponential(restri.derecha))
-            //         console.log('numero SIN e: ' + convertido)
-
-            //         var f  = new Fractional(convertido);
-            //         // console.log(f.numerator+"/"+f.denominator);
-            //         restri.derecha = new Fraction(f.numerator,f.denominator);
-
-            //     } else {
-            //         // el numero es float, pero no esta expresado en e-notation
-            //         // var f  = new Fractional(restri.derecha);
-            //         // console.log(f.numerator+"/"+f.denominator);
-            //         console.log('sin pasar a fraccion: ' + restri.derecha)
-            //         restri.derecha = new Fraction(nuevaFraction.numerator,nuevaFraction.denominator);
-            //         console.log('pasando a fraccion: ' + restri.derecha)
-            //     }
-
-            // }
-
             // Si posee ambos coeficientes entoces es una recta con pendiente.
             if ( xNum !== 0  &&  yNum!== 0) {
                 let x = new Expression('x').multiply(xNum);
