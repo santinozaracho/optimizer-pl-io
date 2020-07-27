@@ -134,4 +134,3 @@ var params = [
 // var funcion = "x^(2)+3*x-5"
 // console.log(busquedaBinaria(funcion, -5, 2, 0.1, 'min'))
 
-console.log(busquedaBinaria(params, 0.1, 'max'))

@@ -39,7 +39,7 @@ const criterioParada = (x, gradiente) => {
 };
 
 module.exports = function funcionGradiente({ f, x0, e, minimize }) {
-  // Define vetor gradiente
+  // Define vector gradiente
   const gradiente = calculaGradiente(f, x0);
 
   return new Promise((resolve) => {

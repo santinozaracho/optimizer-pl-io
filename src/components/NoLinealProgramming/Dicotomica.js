@@ -3,7 +3,9 @@ import React from 'react';
 import { ButtonGroup, Button, Container, Row, Col, Card, CardBody, CardHeader, CardTitle, Jumbotron } from "reactstrap";
 import { Alert, UncontrolledPopover, PopoverBody, PopoverHeader, Input,InputGroupText,InputGroup,InputGroupAddon, } from "reactstrap";
 import logo from "../../components/LinealProgramming/logo.svg";
-import Variables from '../LinealProgramming/Configuration/Variables/index'
+import busquedaFuncion from "./Methods/dicotomica";
+import {busquedaBinaria as busquedaTramos} from "./Methods/dicoPorTramos"
+
 class Dicotomica extends React.Component{
 constructor(props){
     super(props)
@@ -38,6 +40,29 @@ handleObjective = objective => {
     
 
   }
+
+  componentDidUpdate(){
+    this.resolucionModelo()
+  }
+
+  //Resolver el problema si el modelo es completo
+  resolucionModelo(){
+    let {funcion, extremoA, extremoB, delta, obj } = this.state.model
+
+    
+    if(funcion!=="" & extremoA!=="" & extremoB!=="" & delta!==""){
+      console.log("ENTREEEE")
+      
+      let salida = busquedaFuncion(funcion, extremoA, extremoB, delta,obj)
+      console.log(salida)
+    }
+    
+      
+
+  
+  } 
+
+
 render(){
     let buttonsOptType = (
         <ButtonGroup>
