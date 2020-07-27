@@ -67,8 +67,8 @@ const getMatrizHessiana = (derivadas, ptoFactible, incognitas, z)=>{
             });
             */
             expressionEvaluada = math.evaluate(derivadas[i][j],scope)
-            console.log("RESULTADO PAPACHO")
-            console.log(expressionEvaluada)
+            //console.log("RESULTADO PAPACHO")
+            //console.log(expressionEvaluada)
             lineaHessiano.push(expressionEvaluada)
             
 
@@ -76,7 +76,8 @@ const getMatrizHessiana = (derivadas, ptoFactible, incognitas, z)=>{
         hessiano.push(lineaHessiano)
         
     }
-    console.log(hessiano)
+    //console.log(hessiano)
+    return hessiano
 }
 
 module.exports = {getMatrizHessiana}
