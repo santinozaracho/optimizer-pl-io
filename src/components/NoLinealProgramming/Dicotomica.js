@@ -16,8 +16,9 @@ constructor(props){
             extremoB:"",
             delta:"",
             obj:"max",
-            salida:"No se encontro solucion"
-        }
+            
+        },
+        salida:false
         
     }
 }
@@ -47,15 +48,26 @@ handleObjective = objective => {
 
   //Resolver el problema si el modelo es completo
   resolucionModelo(){
+    let respuesta = false
     let {funcion, extremoA, extremoB, delta, obj } = this.state.model
-
+    
     
     if(funcion!=="" & extremoA!=="" & extremoB!=="" & delta!==""){
-      console.log("ENTREEEE")
       
-      let salida = busquedaFuncion(funcion, extremoA, extremoB, delta,obj)
-      console.log(salida)
-    }
+      
+        respuesta = busquedaFuncion(funcion, extremoA, extremoB, delta,obj)
+      
+        if (respuesta!==false){
+          
+            this.state.salida = respuesta
+            console.log(this.state)
+            
+        }
+        
+    
+      }
+
+
     
       
 
@@ -64,6 +76,9 @@ handleObjective = objective => {
 
 
 render(){
+  let solucion = <>
+            No se encontro solucion
+            </>
     let buttonsOptType = (
         <ButtonGroup>
           <Button
@@ -84,6 +99,20 @@ render(){
           </Button>
         </ButtonGroup>)
 
+
+      
+        if(this.state.salida!==false){
+            solucion = (<div>
+              <b>Punto xl:</b> {this.state.salida[0].toFixed(3)}
+              <br/>
+              <b>Punto xr:</b> {this.state.salida[1]}
+              
+            </div>)
+            
+        }
+
+
+      
     return(
         <Container fluid className="App">
             <Row className="">
@@ -220,7 +249,7 @@ render(){
                 </CardTitle>
               </CardHeader>
               <CardBody>
-              {this.state.model.salida}
+              {solucion}
 
               </CardBody>
             </Card>
