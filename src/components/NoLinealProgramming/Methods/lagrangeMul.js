@@ -168,19 +168,38 @@ const lagrangeMul =(f,g, objective) => {
         }
         console.log("Q")
         console.log(Q)
-        /*
+
+        //copy Q into Hessian Matrix
+
         for(var i = 0;i < n; i+=1){
             for (let j = 0; j < n; j++) {
-                
+                hessiano.subset(math.index(m+i,m+j), Q.subset(math.index(i,j)))
             }
         }
-        */
-       /*
-        console.log(derivadasPrimeras.toString())
-        console.log(derivadasSegundas.toString())
+        
+        // -----------------------------------------
+        var matrizHessianaMath = math.clone(math.matrix(hessiano))
+        var subMatrices=[]
+        // [subMatrizn,subMatrizn-1,subMatrizn-2]
+        var SubDeterminantes = []
+        // [Detn,Detn-1,Detn-2]
+        for (let i = m+n; i > (m+n)-(n-m); i--) {
+            //meto al arreglo de subDeterminantes de atras para adelante,porque el reize me trimea los datos
+            subMatrices.push(math.clone(matrizHessianaMath.resize([i,i])))
+        }
+        //ahora que tengo las submatrices, calculo los subdeterminantes
+        subMatrices.forEach(subMat=>{
+            SubDeterminantes.push(math.det(subMat._data))
+        })
+        console.log("Determinantes")
+        console.log(SubDeterminantes)
 
+        //------------------------------------------
+        //console.log(derivadasPrimeras.toString())
+        //console.log(derivadasSegundas.toString())
+        
         console.log(hessiano.toString())
-        */
+        
     }
 
     traerValores(url,callbackFunction)
