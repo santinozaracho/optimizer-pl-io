@@ -1,9 +1,11 @@
 import React from 'react';
 
 import { ButtonGroup, Button, Container, Row, Col, Card, CardBody, CardHeader, CardTitle, Jumbotron } from "reactstrap";
-import { Alert, UncontrolledPopover, PopoverBody, PopoverHeader, Input,InputGroupText,InputGroup,InputGroupAddon, } from "reactstrap";
+import { UncontrolledPopover, PopoverBody, PopoverHeader, Input,InputGroupText,InputGroup,InputGroupAddon, } from "reactstrap";
 import logo from "../../components/LinealProgramming/logo.svg";
-import Variables from '../LinealProgramming/Configuration/Variables/index'
+
+
+import {funcionGradiente} from "./Methods/Gradiente"
 
 class Gradiente extends React.Component{
 constructor(props){
@@ -47,6 +49,35 @@ handleObjective = objective => {
     
 
   }
+
+
+  //Ver que en update verifique por la completitud del modelo para la resolucion
+
+  componentDidUpdate(){
+    this.resolucionModelo()
+  }
+
+  //Resolver el problema si el modelo es completo
+  resolucionModelo(){
+    let {funcion, puntoInicialA,
+    puntoInicialB,
+    epsilon } = this.state.model
+    let puntoX0 = `(${puntoInicialA},${puntoInicialB})`
+    //Metodo every para ver que todos los elementos tengan algo concreto
+    //a partir del estado
+    if(Array.from(this.state.model).every( elem=> elem!=="" )){
+      
+      console.log("Completitud")
+      //funcionGradiente(funcion, puntoX0, epsilon)
+    
+    
+    }
+      
+
+  
+  } 
+
+
 render(){
     let buttonsOptType = (
         <ButtonGroup>

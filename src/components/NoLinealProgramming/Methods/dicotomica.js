@@ -4,12 +4,12 @@
 var Parser = require('expr-eval').Parser;
 var parser = new Parser();
 
-const busquedaBinaria = (f, xl, xr, delta, tipo) => { 
+const busquedaFuncion = (f, xl, xr, delta, tipo) => { 
 
 
     // sentido de la optimizacion
     const tiposValidos = ['max', 'min']
-    if(tiposValidos.indexOf(tipo) == -1){
+    if(tiposValidos.indexOf(tipo) === -1){
         console.log('Error: el tipo de optimizacion debe ser exactamente max o min')
         return false
     }
@@ -25,7 +25,14 @@ const busquedaBinaria = (f, xl, xr, delta, tipo) => {
     var obtenerx2 = (xr, xl, delta) =>  0.5*(xr + xl + delta)
 
     // pasamos f a expr para poder evaluar (evaluate) la funcion de forma sencilla mas adelante
-    var expr = parser.parse(f);
+    //var expr = parser.parse(f)
+    
+    try {
+        var expr = parser.parse(f)
+        
+    } catch (error) {
+        return false;       
+    }
 
     var tamIntervalo = xr - xl 
 
@@ -69,7 +76,7 @@ const busquedaBinaria = (f, xl, xr, delta, tipo) => {
         tamIntervalo = xr - xl 
 
         // solucion a un error de no fin
-        if(tamAnterior == tamIntervalo){
+        if(tamAnterior === tamIntervalo){
             mismoValor = true
         }
     }
@@ -78,5 +85,7 @@ const busquedaBinaria = (f, xl, xr, delta, tipo) => {
     return [xl, xr]
 }
 
-var funcion = "x^(2)+3*x-5"
-console.log(busquedaBinaria(funcion, -5, 2, 0.1, 'min'))
+//var funcion = "x^(2)+3*x-5"
+//console.log(busquedaFuncion(funcion, -5, 2, 0.1, 'min'))
+
+module.exports = busquedaFuncion 

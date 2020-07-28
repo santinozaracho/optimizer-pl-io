@@ -4,11 +4,19 @@
 var Parser = require('expr-eval').Parser;
 var parser = new Parser();
 
-const busquedaBinaria = (funcionesIntervalos, delta, tipo) => { 
-
+const busquedaTramos = (funciones, delta, tipo) => { 
+    //Javascript pasa arreglos y objetos por referencia en funciones,
+    //eliminamos la referencia para que no afecte al funcionamiento en react con lo siguiente:
+    var funcionesIntervalos=[];
+    for (var i = 0, len = funciones.length; i < len; i++) {
+        funcionesIntervalos[i] = {}; // empty object to hold properties added below
+        for (var prop in funciones[i]) {
+            funcionesIntervalos[i][prop] = funciones[i][prop]; // copy properties from arObj to ar2
+        }
+    }
     // sentido de la optimizacion
     const tiposValidos = ['max', 'min']
-    if(tiposValidos.indexOf(tipo) == -1){
+    if(tiposValidos.indexOf(tipo) === -1){
         console.log('Error: el tipo de optimizacion debe ser exactamente max o min')
         return false
     }
@@ -17,23 +25,25 @@ const busquedaBinaria = (funcionesIntervalos, delta, tipo) => {
     var xl = 9999999999 
     var xr = -9999999999
 
-    // para el front: al cargar un ls, que automaticamente se genere un nuevo intervalo
-    // con el li igual al ls anterior
+
 
     funcionesIntervalos.forEach( f => {
 
         // cargo los nuevos xl y xr 
         if( f.li <= xl){
             xl = f.li
-            console.log('nuevo xl: ', xl)
+            //console.log('nuevo xl: ', xl)
         }
         if( f.ls >= xr){
             xr = f.ls
-            console.log('nuevo xr: ', xr)
+            //console.log('nuevo xr: ', xr)
         }
-
+        
+        console.log(f.expresion)
         // paso las funciones del objeto a expresiones 
+        
         f.expresion = parser.parse(f.expresion);
+        
         // console.log('nueva expresion: ')
         // console.log(f.expresion.toString())
     });
@@ -70,16 +80,16 @@ const busquedaBinaria = (funcionesIntervalos, delta, tipo) => {
         var fx1, fx2
         funcionesIntervalos.forEach( f  => {
             if( x1 >= f.li && x1 <= f.ls ){
-                console.log('el valor ' + x1 + ' valuar en funcion: ' + f.expresion.toString())
+                //console.log('el valor ' + x1 + ' valuar en funcion: ' + f.expresion.toString())
                 fx1 = f.expresion.evaluate({x: x1})
             }
             if( x2 >= f.li && x2 <= f.ls ){
-                console.log('el valor ' + x2 + ' valuar en funcion: ' + f.expresion.toString())
+                //console.log('el valor ' + x2 + ' valuar en funcion: ' + f.expresion.toString())
                 fx2 = f.expresion.evaluate({x: x2})
             }
         });
 
-        // viejo
+        
         // es la misma f para ambas
         // var fx1 = expr.evaluate({x: x1})
         // var fx2 = expr.evaluate({x: x2})
@@ -109,7 +119,7 @@ const busquedaBinaria = (funcionesIntervalos, delta, tipo) => {
         tamIntervalo = xr - xl 
 
         // solucion a un error de no fin
-        if(tamAnterior == tamIntervalo){
+        if(tamAnterior === tamIntervalo){
             mismoValor = true
         }
     }
@@ -117,7 +127,7 @@ const busquedaBinaria = (funcionesIntervalos, delta, tipo) => {
     // intervalo con el grado de exactitud delta
     return [xl, xr]
 }
-
+/*
 var params = [
     {
         expresion: '3*x',
@@ -130,8 +140,7 @@ var params = [
         ls: 3
     }
 ]
+*/
 
-// var funcion = "x^(2)+3*x-5"
-// console.log(busquedaBinaria(funcion, -5, 2, 0.1, 'min'))
 
-console.log(busquedaBinaria(params, 0.1, 'max'))
+module.exports = busquedaTramos
