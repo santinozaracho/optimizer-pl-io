@@ -4,7 +4,7 @@ import { ButtonGroup, Button, Container, Row, Col, Card, CardBody, CardHeader, C
 import { FormGroup,Label, UncontrolledPopover, PopoverBody, PopoverHeader, Input,InputGroupText,InputGroup,InputGroupAddon, } from "reactstrap";
 import logo from "../../components/LinealProgramming/logo.svg";
 import busquedaFuncion from "./Methods/dicotomica";
-import {busquedaBinaria as busquedaTramos} from "./Methods/dicoPorTramos"
+import busquedaTramos from "./Methods/dicoPorTramos"
 
 class Dicotomica extends React.Component{
 constructor(props){
@@ -55,11 +55,15 @@ handleObjective = objective => {
       }
     }
     this.state.funciones[0]=objetoFuncion;
-    console.log(this.state)
+    
   }
 
   componentDidUpdate(){
     this.resolucionModelo()
+    if(this.state.tramos===false){
+      ReactDOM.render(<div></div>,document.getElementById("funcionExtra1"))
+    ReactDOM.render(<div></div>,document.getElementById("funcionExtra2"))
+    }
   }
 
   //Tratar funciones por tramos
@@ -84,7 +88,7 @@ handleObjective = objective => {
           </Label>
           </FormGroup>
     </Col>)
-  //this.setState()
+  
     if (tipo===false){
       ReactDOM.render(<div></div>,document.getElementById("tramos"))
     }else{
@@ -96,7 +100,9 @@ handleObjective = objective => {
 
   //Renderizamos campos extra para la carga de cada funcion
   renderizarTramos(cant){
-    ReactDOM.render(<div></div>,document.getElementById("funcionExtra1"))
+    ReactDOM.render(<div></div>,document.getElementById("funcionExtra2"))
+    
+    for(let i=1;i<=cant;i++){
     let funcion=(<div>
       <InputGroup className="mt-1">
                   <InputGroupAddon addonType="prepend">
@@ -108,7 +114,7 @@ handleObjective = objective => {
                     name="funcion"
                     placeholder="Ingrese la funcion"
                     
-                    onChange={this.cargaTramos(cant)}
+                    onChange={(e)=>this.cargaTramos(e,i)}
                     
                   />
                   
@@ -126,7 +132,7 @@ handleObjective = objective => {
                     name="extremoA"
                     placeholder="Ingrese el extremo a "
                     
-                    onChange={this.cargaTramos}
+                    onChange={(e)=>this.cargaTramos(e,i)}
                     type="number"
                   />
                   
@@ -144,7 +150,7 @@ handleObjective = objective => {
                     name="extremoB"
                     placeholder="Ingrese el extremo b "
                     
-                    onChange={this.cargaTramos}
+                    onChange={(e)=>this.cargaTramos(e,i)}
                     type="number"
                   />
                   
@@ -153,29 +159,68 @@ handleObjective = objective => {
               
     </div>)
 
-  if(cant===1){
-    ReactDOM.render(funcion,document.getElementById("funcionExtra"))
-  }
-  else{
-    ReactDOM.render(funcion,document.getElementById("funcionExtra"))
-    ReactDOM.render(funcion,document.getElementById("funcionExtra1"))
-  }
+  
+  
+    ReactDOM.render(funcion,document.getElementById("funcionExtra"+i))
   }
 
-  cargaTramos(){
-
   }
+
+  cargaTramos(e,indice){
+    let nombre = e.target.name;
+    let valor = e.target.value
+    if(nombre!=="funcion"){
+      valor = Number(valor)
+    }
+    
+    
+    //cargamos la primer funcion del primer tramo
+    if(this.state.funciones[indice]===undefined){
+      var objetoFuncion = {}
+    }else{
+      var objetoFuncion=this.state.funciones[indice];
+    }
+      if (nombre==="funcion"){
+        objetoFuncion["expresion"]=valor
+      }else if(nombre==="extremoA"){
+        objetoFuncion["li"]=valor
+      }
+      else if(nombre==="extremoB"){
+        objetoFuncion["ls"]=valor
+      }
+    
+    this.state.funciones[indice]=objetoFuncion;
+    
+    this.resolucionModelo()
+  }
+
+  
+  //Resolucion por tramos
+
+
 
   //Resolver el problema si el modelo es completo
   resolucionModelo(){
     let respuesta = false
     
-    
-    if(this.state.tramos===false){}
+    //Resolucion simple
+    if(this.state.tramos===false){
     let {funcion, extremoA, extremoB, delta, obj } = this.state.model
     
     respuesta = busquedaFuncion(funcion, extremoA, extremoB, delta,obj)
-        
+    }
+    //Resolucion por tramos
+    else{
+      let {funciones } = this.state;
+      let{delta, obj} = this.state.model;
+      try {
+        respuesta = busquedaTramos(funciones, delta, obj)
+      }
+      catch(error){
+        console.log('Calculando')
+      }
+      
+    }    
         if (respuesta!==false){
           
             this.state.salida = respuesta
@@ -211,7 +256,7 @@ handleObjective = objective => {
 
 
 render(){
-  
+    
     let buttonsOptType = (
         <ButtonGroup>
           <Button
@@ -369,10 +414,10 @@ let botonTipoFuncion = (
               </InputGroup>
 
               <br/>
-              <div id="funcionExtra">
+              <div id="funcionExtra1">
 
               </div>
-              <div id="funcionExtra1">
+              <div id="funcionExtra2">
 
               </div>
               <InputGroup className="mt-1" id="delta">
