@@ -62,16 +62,17 @@ handleObjective = objective => {
     let {funcion, puntoInicialA,
     puntoInicialB,
     epsilon } = this.state.model
-    let puntoX0 = `(${puntoInicialA},${puntoInicialB})`
-    //Metodo every para ver que todos los elementos tengan algo concreto
-    //a partir del estado
-    if(Array.from(this.state.model).every( elem=> elem!=="" )){
+    let puntoX0 = [puntoInicialA,puntoInicialA]
+    console.log(puntoX0)
+      try {
+        console.log(funcionGradiente(funcion, puntoX0, epsilon))
+    
+      } catch (error) {
+        console.log(error)
+      }
       
-      console.log("Completitud")
-      //funcionGradiente(funcion, puntoX0, epsilon)
     
     
-    }
       
 
   
