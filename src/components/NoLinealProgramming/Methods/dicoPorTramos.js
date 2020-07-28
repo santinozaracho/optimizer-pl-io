@@ -5,6 +5,8 @@ var Parser = require('expr-eval').Parser;
 var parser = new Parser();
 
 const busquedaTramos = (funciones, delta, tipo) => { 
+    //Javascript pasa arreglos y objetos por referencia en funciones,
+    //eliminamos la referencia para que no afecte al funcionamiento en react con lo siguiente:
     var funcionesIntervalos=[];
     for (var i = 0, len = funciones.length; i < len; i++) {
         funcionesIntervalos[i] = {}; // empty object to hold properties added below
