@@ -1,5 +1,5 @@
 import React from 'react';
-
+import ReactDOM from 'react-dom'
 import { ButtonGroup, Button, Container, Row, Col, Card, CardBody, CardHeader, CardTitle, Jumbotron } from "reactstrap";
 import { Alert, UncontrolledPopover, PopoverBody, PopoverHeader, Input,InputGroupText,InputGroup,InputGroupAddon, } from "reactstrap";
 import logo from "../../components/LinealProgramming/logo.svg";
@@ -56,14 +56,30 @@ handleObjective = objective => {
       
       
         respuesta = busquedaFuncion(funcion, extremoA, extremoB, delta,obj)
-      
+        console.log(respuesta)
         if (respuesta!==false){
           
             this.state.salida = respuesta
-            console.log(this.state)
+
             
+              let resp = (<div>
+                
+                <b>Punto xl:</b> {this.state.salida[0].toFixed(3)}
+                <br/>
+                <b>Punto xr:</b> {this.state.salida[1]}
+                
+              </div>)
+              ReactDOM.render(resp, document.getElementById("resultadosDico"))
+              
+          
+        }else{
+          console.log('caca')
+          let resp = (<div>
+                No se encontro solucion
+              </div>)
+               ReactDOM.render(resp, document.getElementById("resultadosDico"))
         }
-        
+       
     
       }
 
@@ -76,9 +92,7 @@ handleObjective = objective => {
 
 
 render(){
-  let solucion = <>
-            No se encontro solucion
-            </>
+  
     let buttonsOptType = (
         <ButtonGroup>
           <Button
@@ -101,15 +115,7 @@ render(){
 
 
       
-        if(this.state.salida!==false){
-            solucion = (<div>
-              <b>Punto xl:</b> {this.state.salida[0].toFixed(3)}
-              <br/>
-              <b>Punto xr:</b> {this.state.salida[1]}
-              
-            </div>)
-            
-        }
+        
 
 
       
@@ -224,7 +230,7 @@ render(){
                     type="number"
                   />
                   <UncontrolledPopover flip={false} trigger="focus hover" placement="auto" target="extremoB">
-                    <PopoverBody>Aquí debes ingresar el extremo b del intervalo.</PopoverBody>
+                    <PopoverBody>Aquí debes ingresar el extremo b del intervalo. El mismo debe ser >a </PopoverBody>
                   </UncontrolledPopover>
               </InputGroup>
 
@@ -248,8 +254,10 @@ render(){
                   <h4>Resolucion del problema</h4>
                 </CardTitle>
               </CardHeader>
-              <CardBody>
-              {solucion}
+              <CardBody id="resultadosDico">
+              <div>
+                No se encontro solucion
+              </div>
 
               </CardBody>
             </Card>
