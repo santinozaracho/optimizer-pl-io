@@ -79,7 +79,7 @@ const busquedaBinaria = (funcionesIntervalos, delta, tipo) => {
             }
         });
 
-        // viejo
+        
         // es la misma f para ambas
         // var fx1 = expr.evaluate({x: x1})
         // var fx2 = expr.evaluate({x: x2})

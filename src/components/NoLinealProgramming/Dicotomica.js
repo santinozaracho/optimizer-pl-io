@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom'
 import { ButtonGroup, Button, Container, Row, Col, Card, CardBody, CardHeader, CardTitle, Jumbotron } from "reactstrap";
-import { Alert, UncontrolledPopover, PopoverBody, PopoverHeader, Input,InputGroupText,InputGroup,InputGroupAddon, } from "reactstrap";
+import { FormGroup,Label, UncontrolledPopover, PopoverBody, PopoverHeader, Input,InputGroupText,InputGroup,InputGroupAddon, } from "reactstrap";
 import logo from "../../components/LinealProgramming/logo.svg";
 import busquedaFuncion from "./Methods/dicotomica";
 import {busquedaBinaria as busquedaTramos} from "./Methods/dicoPorTramos"
@@ -18,7 +18,10 @@ constructor(props){
             obj:"max",
             
         },
-        salida:false
+        salida:false,
+        tramos:false,
+        cantTramos:0,
+        funciones:[{}]
         
     }
 }
@@ -39,24 +42,140 @@ handleObjective = objective => {
     model[nombre] = valor;
     this.setState({model})
     
-
+    //cargamos la primer funcion del primer tramo
+    if(this.state.tramos===true){
+      var objetoFuncion=this.state.funciones[0];
+      if (nombre==="funcion"){
+        objetoFuncion["expresion"]=valor
+      }else if(nombre==="extremoA"){
+        objetoFuncion["li"]=valor
+      }
+      else if(nombre==="extremoB"){
+        objetoFuncion["ls"]=valor
+      }
+    }
+    this.state.funciones[0]=objetoFuncion;
+    console.log(this.state)
   }
 
   componentDidUpdate(){
     this.resolucionModelo()
   }
 
+  //Tratar funciones por tramos
+  handleTramos(tipo){
+    //tipo: si es por tramos es true, si es unica es false
+
+    this.setState({tramos:tipo})
+    
+    let cantTramos=(
+    <Col>
+    <br/>
+    <FormGroup check>
+          <Label check>
+            <Input type="radio" name="radio1" onClick={()=>this.renderizarTramos(1)}/>
+            2 tramos
+          </Label>
+        </FormGroup>
+        <FormGroup check>
+          <Label check>
+            <Input type="radio" name="radio1" onClick={()=>this.renderizarTramos(2)} />
+              3 tramos
+          </Label>
+          </FormGroup>
+    </Col>)
+  //this.setState()
+    if (tipo===false){
+      ReactDOM.render(<div></div>,document.getElementById("tramos"))
+    }else{
+      ReactDOM.render(cantTramos,document.getElementById("tramos"))
+    }
+
+
+  }
+
+  //Renderizamos campos extra para la carga de cada funcion
+  renderizarTramos(cant){
+    ReactDOM.render(<div></div>,document.getElementById("funcionExtra1"))
+    let funcion=(<div>
+      <InputGroup className="mt-1">
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText >
+                      <b>Funcion</b>
+                    </InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    name="funcion"
+                    placeholder="Ingrese la funcion"
+                    
+                    onChange={this.cargaTramos(cant)}
+                    
+                  />
+                  
+      </InputGroup>
+
+              <br/>
+
+      <InputGroup className="mt-1">
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText >
+                      Extremo a
+                    </InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    name="extremoA"
+                    placeholder="Ingrese el extremo a "
+                    
+                    onChange={this.cargaTramos}
+                    type="number"
+                  />
+                  
+      </InputGroup>
+
+              <br/>
+
+      <InputGroup className="mt-1" >
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText >
+                      Extremo b
+                    </InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    name="extremoB"
+                    placeholder="Ingrese el extremo b "
+                    
+                    onChange={this.cargaTramos}
+                    type="number"
+                  />
+                  
+      </InputGroup>
+              <br/>
+              
+    </div>)
+
+  if(cant===1){
+    ReactDOM.render(funcion,document.getElementById("funcionExtra"))
+  }
+  else{
+    ReactDOM.render(funcion,document.getElementById("funcionExtra"))
+    ReactDOM.render(funcion,document.getElementById("funcionExtra1"))
+  }
+  }
+
+  cargaTramos(){
+
+  }
+
   //Resolver el problema si el modelo es completo
   resolucionModelo(){
     let respuesta = false
+    
+    
+    if(this.state.tramos===false){}
     let {funcion, extremoA, extremoB, delta, obj } = this.state.model
     
-    
-    if(funcion!=="" & extremoA!=="" & extremoB!=="" & delta!==""){
-      
-      
-        respuesta = busquedaFuncion(funcion, extremoA, extremoB, delta,obj)
-        console.log(respuesta)
+    respuesta = busquedaFuncion(funcion, extremoA, extremoB, delta,obj)
+        
         if (respuesta!==false){
           
             this.state.salida = respuesta
@@ -73,7 +192,7 @@ handleObjective = objective => {
               
           
         }else{
-          console.log('caca')
+          
           let resp = (<div>
                 No se encontro solucion
               </div>)
@@ -81,7 +200,7 @@ handleObjective = objective => {
         }
        
     
-      }
+      
 
 
     
@@ -113,6 +232,25 @@ render(){
           </Button>
         </ButtonGroup>)
 
+let botonTipoFuncion = (
+  <ButtonGroup>
+    <Button
+      outline
+      onClick={() => this.handleTramos(false)}
+      active={this.state.tramos === false}
+      color="primary"
+    >
+      Unica
+    </Button>
+    <Button
+      outline
+      onClick={() => this.handleTramos(true)}
+      active={this.state.tramos === true}
+      color="primary"
+    >
+      Tramos
+    </Button>
+  </ButtonGroup>)
 
       
         
@@ -132,7 +270,7 @@ render(){
                 <Jumbotron className='w-100'>
                 <h2>Busqueda Dicotomica</h2>
                 <h4>Comenzamos configurando nuestro modelo</h4>
-                <Col>
+            <Col>
               <UncontrolledPopover flip={false} trigger="hover" placement="top" target="CardOpt">
                 <PopoverBody>
                   Aqui debes seleccionar el tipo de optimizacion que deseas realizar: si deseas maximizar o minimizar la función.
@@ -142,6 +280,20 @@ render(){
                 <CardHeader>Tipo de optimización</CardHeader>
                 <CardBody>{buttonsOptType}</CardBody>
               </Card>
+            </Col>
+            <Col>
+              <UncontrolledPopover flip={false} trigger="hover" placement="top" target="CardFuncion">
+                <PopoverBody>
+                  Aqui debes seleccionar la estructura de la funcion: Unica o por tramos
+                </PopoverBody>
+              </UncontrolledPopover>
+              <Card outline color="secondary" id="CardFuncion" className="mt-3 mx-auto">
+                <CardHeader>Estructura de la funcion</CardHeader>
+                <CardBody>{botonTipoFuncion}</CardBody>
+              </Card>
+            </Col>
+            <Col id="tramos">
+            
             </Col>
             <Row>
             <UncontrolledPopover flip={false} trigger="hover" placement="top" target="CardVariables">
@@ -173,24 +325,6 @@ render(){
                   />
                   <UncontrolledPopover flip={false} trigger="focus hover" placement="auto" target="funcionObj">
                     <PopoverBody>Aquí debes ingresar la funcion objetivo a optimizar.</PopoverBody>
-                  </UncontrolledPopover>
-              </InputGroup>
-              <br/>
-              <InputGroup className="mt-1" id="delta">
-                  <InputGroupAddon addonType="prepend">
-                    <InputGroupText >
-                      Delta
-                    </InputGroupText>
-                  </InputGroupAddon>
-                  <Input
-                    name="delta"
-                    placeholder="Ingrese un delta"
-                    
-                    onChange={this.handleInput}
-                    type="number"
-                  />
-                  <UncontrolledPopover flip={false} trigger="focus hover" placement="auto" target="delta">
-                    <PopoverBody>Aquí debes ingresar el delta provisto por problema.</PopoverBody>
                   </UncontrolledPopover>
               </InputGroup>
 
@@ -230,10 +364,34 @@ render(){
                     type="number"
                   />
                   <UncontrolledPopover flip={false} trigger="focus hover" placement="auto" target="extremoB">
-                    <PopoverBody>Aquí debes ingresar el extremo b del intervalo. El mismo debe ser >a </PopoverBody>
+                    <PopoverBody>Aquí debes ingresar el extremo b del intervalo. El mismo debe ser mayor al extremo a </PopoverBody>
                   </UncontrolledPopover>
               </InputGroup>
 
+              <br/>
+              <div id="funcionExtra">
+
+              </div>
+              <div id="funcionExtra1">
+
+              </div>
+              <InputGroup className="mt-1" id="delta">
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText >
+                      Delta
+                    </InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    name="delta"
+                    placeholder="Ingrese un delta, 0 por defecto"
+                    
+                    onChange={this.handleInput}
+                    type="number"
+                  />
+                  <UncontrolledPopover flip={false} trigger="focus hover" placement="auto" target="delta">
+                    <PopoverBody>Aquí debes ingresar el delta provisto por problema.</PopoverBody>
+                  </UncontrolledPopover>
+              </InputGroup>
 
 
               </CardBody>
