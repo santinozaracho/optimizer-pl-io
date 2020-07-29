@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const algebra = require('algebra.js');
 const math = require('mathjs');
 const fetch = require('node-fetch');

@@ -3,14 +3,14 @@ import { ButtonGroup, Button, Container, Row, Col, Card, CardBody, CardHeader, C
 import { Alert, UncontrolledPopover, PopoverBody, PopoverHeader, Input,InputGroupText,InputGroup,InputGroupAddon, } from "reactstrap";
 import logo from "../../components/LinealProgramming/logo.svg";
 import Variables from '../LinealProgramming/Configuration/Variables/index'
-
+import {metodoDerivadas} from "../NoLinealProgramming/Methods/pruebaDerivadas/getDerivadas"
 class Derivadas extends React.Component{
     constructor(props){
         super(props)
         this.state={
             model:{
                 funcion:"",
-                incognitas:[],
+                incognitas:"",
                 obj:"max",
                 salida:"No se encontro solucion"
             }
@@ -25,16 +25,8 @@ class Derivadas extends React.Component{
     
       handleInput = e =>{
         let nombre = e.target.name;
-        let valor = e.target.value
-        if(nombre!=="funcion"){
-          valor = Number(valor)
-        }
-        if(nombre==="epsilon"){
-            if(valor < 0){
-                e.target.value = 0 
-                valor = 0
-            } 
-        }
+        let valor = e.target.value;
+      
         
         let { model } = this.state;
         model[nombre] = valor;
@@ -44,8 +36,32 @@ class Derivadas extends React.Component{
         
     
       }
+
+
+
+    resolucionModelo(){
+      let {incognitas, funcion} = this.state.model;
+      let arregloIncognitas = [];
+      if (funcion!==""){
+        if(incognitas!==""){
+          arregloIncognitas=incognitas.split(",")
+          console.log(arregloIncognitas)
+          
+          try {
+            metodoDerivadas(funcion, arregloIncognitas)
+            .then(resp => 
+              console.log(resp))
+          } catch (error) {
+            console.log(error)
+          } 
+
+        }
+      }
+    }
+
     render(){
-        let buttonsOptType = (
+      
+       let buttonsOptType = (
             <ButtonGroup>
               <Button
                 outline
@@ -121,11 +137,34 @@ class Derivadas extends React.Component{
                         <PopoverBody>Aquí debes ingresar la funcion objetivo a optimizar.</PopoverBody>
                       </UncontrolledPopover>
                   </InputGroup>
-                  
+                  <InputGroup className="mt-1" id="incognitas">
+                      <InputGroupAddon addonType="prepend">
+                        <InputGroupText >
+                          <b>Incognitas</b>
+                        </InputGroupText>
+                      </InputGroupAddon>
+                      <Input
+                        name="incognitas"
+                        placeholder="x1,x2,...,xn"
+                        
+                        onChange={this.handleInput}
+                        
+                      />
+                      <UncontrolledPopover flip={false} trigger="focus hover" placement="auto" target="incognitas">
+                        <PopoverBody>Aquí debes ingresar las incognitas que se encuentren en la funcion separadas por coma.</PopoverBody>
+                      </UncontrolledPopover>
+                  </InputGroup>
     
     
                   </CardBody>
-    
+                  <Button
+                outline
+                onClick={() => this.resolucionModelo()}
+                
+                color="success"
+              >
+                Resolver
+              </Button>
                 </Card>
                 
                
