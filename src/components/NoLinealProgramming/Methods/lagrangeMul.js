@@ -83,7 +83,7 @@ const lagrangeMul =(f,g, objective) => {
             // return await x1;
         });
         
-
+        return variable;
     }
 
     callbackFunction = (data) =>{
@@ -181,7 +181,9 @@ const lagrangeMul =(f,g, objective) => {
         }
         // console.log("Q")
         // console.log(Q)
-
+        //generate identity matrix
+        identidad = math.identity(n,n)
+        console.log(identidad)
         //copy Q into Hessian Matrix
         for(var i = 0;i < n; i+=1){
             for (let j = 0; j < n; j++) {
