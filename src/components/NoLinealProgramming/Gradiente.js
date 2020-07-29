@@ -5,7 +5,7 @@ import { UncontrolledPopover, PopoverBody, PopoverHeader, Input,InputGroupText,I
 import logo from "../../components/LinealProgramming/logo.svg";
 
 
-import {funcionGradiente} from "./Methods/Gradiente"
+import funcionGradiente from "./Methods/Gradiente"
 
 class Gradiente extends React.Component{
 constructor(props){
@@ -45,8 +45,6 @@ handleObjective = objective => {
     model[nombre] = valor;
     this.setState({model})
 
-    console.log(this.state.model)
-    
 
   }
 
@@ -58,18 +56,19 @@ handleObjective = objective => {
   }
 
   //Resolver el problema si el modelo es completo
-  resolucionModelo(){
+  async resolucionModelo(){
     let {funcion, puntoInicialA,
     puntoInicialB,
     epsilon } = this.state.model
     let puntoX0 = [puntoInicialA,puntoInicialA]
-    console.log(puntoX0)
-      try {
-        console.log(funcionGradiente(funcion, puntoX0, epsilon))
     
-      } catch (error) {
-        console.log(error)
-      }
+    if(funcion!=="" % puntoInicialA!=="" & puntoInicialB !=="" & epsilon!==""){
+    funcionGradiente(funcion, puntoX0, epsilon).then(resp=>console.log(resp.toString()))
+     
+    setTimeout(funcionGradiente(funcion, puntoX0, epsilon).then(resp=>console.log(resp.toString())),200)
+
+    
+  }
       
     
     
@@ -80,6 +79,7 @@ handleObjective = objective => {
 
 
 render(){
+  console.log(this.state.model)
     let buttonsOptType = (
         <ButtonGroup>
           <Button

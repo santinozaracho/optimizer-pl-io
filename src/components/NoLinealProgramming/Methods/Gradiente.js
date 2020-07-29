@@ -1,8 +1,8 @@
 const math = require("mathjs");
 
 // Funcion que engloba todas las funciones
-function funcionGradiente (f,x0,e) {
-
+const funcionGradiente = (f,x0,e) => {
+  var cont=0;
   const separaVariables = (x) => {
     const scope = x.map((xi, i) => {
       const name = `x${i + 1}`;
@@ -52,7 +52,7 @@ function funcionGradiente (f,x0,e) {
 
     const gradiente = calculaGradiente(f, x0);
 
-    // Here is where the sht happen
+    
     return new Promise((resolve) => {
       const minimize = (f, e) => {
         let eps = e;
@@ -63,6 +63,7 @@ function funcionGradiente (f,x0,e) {
       
         // Calcula el punto proximo
         const min = (k, x) => {
+          console.log("entre")
           if (k > 99) return x;
       
           const f1 = d1.evaluate({ x });
@@ -74,7 +75,7 @@ function funcionGradiente (f,x0,e) {
           const xn = x - f1 / f2;
           
           // Indica si se cumple con la condicion de parada
-          if (math.abs(xn - x) / math.max(math.abs(xn), 1) < eps * 0.001) return xn;
+          if (math.abs(xn - x) / math.max(math.abs(xn), 1) < eps * 0.001) {return xn};
       
           return min(k + 1, xn);
         };
@@ -106,7 +107,8 @@ function funcionGradiente (f,x0,e) {
       return resolve(
         `X* = (${min(0, x0)
           .map((xi) => xi.toFixed(4))
-          .join(" ")})`
+          .join(" ")}) ${cont}`
+          
       );
     });
   };
@@ -114,6 +116,8 @@ function funcionGradiente (f,x0,e) {
   return llamadoGradiente(f,x0,e);
 };
 
-module.exports = {funcionGradiente};
+funcionGradiente('(-x1)^2 - (x2+1)^2',[0,0],0.1).then((p) => { console.log(p.toString()) })
+
+module.exports = funcionGradiente;
 
 //Algo asi seria el llamado = funcionGradiente('(-x1)^2 - (x2+1)^2',[0,0],0.1).then((p) => { console.log(p.toString()) });
