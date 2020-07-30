@@ -84,11 +84,9 @@ const seccionDoradaTramosFuncion = (funciones, delta, tipo) => {
         var fx1, fx2
         funcionesIntervalos.forEach( f  => {
             if( x1 >= f.li && x1 <= f.ls ){
-                //console.log('el valor ' + x1 + ' valuar en funcion: ' + f.expresion.toString())
                 fx1 = f.expresion.evaluate({x: x1})
             }
             if( x2 >= f.li && x2 <= f.ls ){
-                //console.log('el valor ' + x2 + ' valuar en funcion: ' + f.expresion.toString())
                 fx2 = f.expresion.evaluate({x: x2})
             }
         });

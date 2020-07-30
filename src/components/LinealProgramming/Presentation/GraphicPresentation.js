@@ -234,12 +234,12 @@ class GraphicPresentation extends React.Component{
                     let xPoint = !Number.isInteger(Number(optimPoint.x)) ? getFrac(Number(optimPoint.x)):Number(optimPoint.x);
 
                     let yPoint = !Number.isInteger(Number(optimPoint.y)) ? getFrac(Number(optimPoint.y)):Number(optimPoint.y);
-               
+
                     let xExp = new Expression('x').subtract(xPoint).multiply(variables[0].coeficiente);
                     let yExp = new Expression('y').subtract(yPoint).multiply(variables[1].coeficiente);
                     
                     let expFunObj = new Equation(new Expression().add(xExp).add(yExp),0);  
-          
+
                     let xEqu = (new Equation(expFunObj.solveFor('y'),0)).solveFor('x');
 
                     let yEqu = (new Equation(expFunObj.solveFor('x'),0)).solveFor('y');
