@@ -1,8 +1,9 @@
 const Parser = require('expr-eval').Parser;
 const parser = new Parser();
 const math = require('mathjs');
-const { exp, expression } = require('mathjs');
+const { exp, expression, nthRootsDependencies } = require('mathjs');
 const fetch = require('node-fetch');
+const algebrite = require('algebrite')
 
 
 
@@ -46,7 +47,7 @@ const lagrangeMul =(f,g, objective) => {
     })
     ecuacionesURL = ecuacionesURL.slice(0,ecuacionesURL.length-1);
     variablesURL = variablesURL.slice(0,variablesURL.length-1);
-
+    console.log(ecuacionesURL)
     url = url + '?ecuaciones=' + ecuacionesURL + '&variables=' + variablesURL;
     
     // Replace every plus with a %2B
@@ -59,18 +60,7 @@ const lagrangeMul =(f,g, objective) => {
     url = url.split('^').join('**');
     
     x0=[]
-    /*// Fetch to get the variables values
-    var respuesta;
-    const traerValores = async (url,callback) => {
-        fetch(url,{method:'GET'})
-        .then(res => res.json())
-        .then(json => {
-            x1=[]
-            x1=callback(json.MESSAGE)
-            return await x1;
-        })
-        return x1;
-    }*/
+ 
 
     // peto 
     // Fetch to get the variables values
@@ -80,7 +70,6 @@ const lagrangeMul =(f,g, objective) => {
         .then(json => {
             x1=[]
             return callback(json.MESSAGE)
-            // return await x1;
         });
         
         return variable;
@@ -100,16 +89,13 @@ const lagrangeMul =(f,g, objective) => {
         respuesta = respuesta.replace(/'/g,"")
         respuesta = respuesta.replace(/ /g,"")
         respuesta = respuesta.split(",");
-        //console.log('Respuesta')
-        ///console.log(respuesta)
-        //console.log('Tipo de respuesta: '+typeof respuesta)
         var x0=[]
         respuesta.forEach(element => {
             // Do some refactoring here in some distant future
             x0.push(eval((element.split('sqrt').join('Math.sqrt')).toString()))
         })
-        //console.log('x0')
-        //console.log(x0)
+        console.log('x0')
+        console.log(x0)
 
         var m = ladoIzqRestriccion.length; //Columns number of restrictions
         n = n-g.length //substracting the lambdas
@@ -120,20 +106,24 @@ const lagrangeMul =(f,g, objective) => {
         var tempRestriccion;
         var varP;
         var scope = {}
+        console.log("Variables")
+        console.log(variables)
         for (let k = 0; k < variables.length; k++) {
             scope[variables[k]]=x0[k]    
         }
-        // console.log('scope')
-        // console.log(scope)
         for(var i = 0; i < m; i+=1) //each restriction
         {
             for(var j = 0; j < n; j+=1) //each variable
             {
                 tempRestriccion = ladoIzqRestriccion[i];   
+                console.log("tempRestriccion")
+                console.log(tempRestriccion)
                 varP = variables[j].toString();
                 tempRestriccion = math.derivative(tempRestriccion, varP); 
-                tempRestriccionParsed = Parser.parse(tempRestriccion.toString());
-                P.subset(math.index(i, j), tempRestriccionParsed.evaluate({ varP : x0[j] }));
+                tempRestriccion = math.evaluate(tempRestriccion.toString(),scope)
+                console.log("tempReestriccion evaluada")
+                console.log(tempRestriccion)
+                P.subset(math.index(i, j), tempRestriccion);
             }
         }
 
@@ -161,29 +151,31 @@ const lagrangeMul =(f,g, objective) => {
         var derivadasSegundas=[]
         var derivSegEvaluadas =[]
         var tempDerSeg;
-        // console.log('n')
-        //console.log(n)
 
         var Q= math.zeros(n,n)
-        //console.log("Q")
-        // console.log(Q)
+
         for(let k = 0; k < n; k++)
         {
             derivadasPrimeras.push(math.derivative(lagrange,variables[k]).toString())
             for(let l = 0; l < n; l++)
             {
                 tempDerSeg = math.derivative(derivadasPrimeras[k],variables[l]).toString()
+                
                 derivadasSegundas.push(tempDerSeg)
                 tempDerSeg = math.evaluate(tempDerSeg,scope)
+                if(k===l)//diagonal points
+                {
+                    tempDerSeg+= '-k'
+                    console.log(tempDerSeg)
+                    
+                }
+                //var tempDerSegP=anotherParser.evaluate(tempDerSeg.toString())
                 derivSegEvaluadas.push(tempDerSeg)
                 Q.subset(math.index(k,l),tempDerSeg)
             }
         }
-        // console.log("Q")
-        // console.log(Q)
-        //generate identity matrix
-        identidad = math.identity(n,n)
-        console.log(identidad)
+        console.log("Q")
+        console.log(Q)
         //copy Q into Hessian Matrix
         for(var i = 0;i < n; i+=1){
             for (let j = 0; j < n; j++) {
@@ -191,29 +183,36 @@ const lagrangeMul =(f,g, objective) => {
             }
         }
         
-        // -----------------------------------------
-        var matrizHessianaMath = math.clone(math.matrix(hessiano))
-        var subMatrices=[]
-        // [subMatrizn,subMatrizn-1,subMatrizn-2]
-        var SubDeterminantes = []
-        // [Detn,Detn-1,Detn-2]
-        for (let i = m+n; i >= (m+n)-(n-m); i--) {
-            //meto al arreglo de subDeterminantes de atras para adelante,porque el reize me trimea los datos
-            subMatrices.push(math.clone(matrizHessianaMath.resize([i,i])))
-        }
-        //ahora que tengo las submatrices, calculo los subdeterminantes
-        subMatrices.forEach(subMat=>{
-            SubDeterminantes.push(math.det(subMat._data))
-        })
-        //console.log("Determinantes")
-        //console.log(SubDeterminantes)
+        var elementos=(math.flatten(hessiano))._data
+        elementos = elementos.toString()
+       
 
-        //------------------------------------------
-        //console.log(derivadasPrimeras.toString())
-        //console.log(derivadasSegundas.toString())
+        //Generate url for determinant solver
+        tamHessiano = m+n
+        urlDetSolver='https://nlsystemsolver.herokuapp.com/detSolver?n='+tamHessiano+'&elementos='+elementos
+        console.log(urlDetSolver)
         
-        //console.log(hessiano.toString())
-        //console.log(x0)
+        fetch(urlDetSolver,{method:'GET'})
+        .then((response) => response.json())
+        .then(json => {
+            var ecuacionDeterminante = json.MESSAGE
+            
+            ecuacionDeterminante= ecuacionDeterminante.split('**').join('^')
+            ecuacionDeterminante= ecuacionDeterminante.split('k').join('x')
+            console.log("Ecuacion del determinante")
+            console.log(ecuacionDeterminante)
+            var resolucion = algebrite.nroots(ecuacionDeterminante)
+            console.log(resolucion.toString())
+            
+
+
+            
+        })
+
+
+        
+        
+        
         return x0    
     }
     
@@ -228,5 +227,6 @@ const lagrangeMul =(f,g, objective) => {
 // URL Should be like --> https://nlsystemsolver.herokuapp.com/getmsg/?ecuaciones=1-2*x;z-2*y;2%2By-2*z&variables=x,y,z
 // 2*x**2-L1*3x  "2*x^2",["3*x=12"],"max"
 //console.log(lagrangeMul("-x1^2 -(x2 -1)^2",["2*x1+x2-1=0"],"min"));
-//console.log(lagrangeMul("x^2+y^2+z^2",["x+y+3*z-2=0","5*x+2*y+z-5=0"],"max"));
-console.log(lagrangeMul("-(x1)^2-(x2)^2-(x3)^2+4*x1+8*x2+16*x3",["x1+x2+x3-2=0","x1+2*x2=0"],"max"));
+//console.log(lagrangeMul("x^2+y^2+z^2",["x^2+y+3*z-2=0","5*x+2*y+z-5=0"],"max"));
+
+lagrangeMul("x1^2 +2*x2^2+10*x3^2",["x1 +x2^2 + x3 - 5=0","x1 +5*x2 +x3 -7 = 0"],"max");
