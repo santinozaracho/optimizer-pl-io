@@ -63,7 +63,7 @@ const funcionGradiente = (f,x0,e) => {
       
         // Calcula el punto proximo
         const min = (k, x) => {
-          console.log("entre")
+          
           if (k > 99) return x;
       
           const f1 = d1.evaluate({ x });
@@ -116,7 +116,7 @@ const funcionGradiente = (f,x0,e) => {
   return llamadoGradiente(f,x0,e);
 };
 
-funcionGradiente('(-x1)^2 - (x2+1)^2',[0,0],0.1).then((p) => { console.log(p.toString()) })
+//funcionGradiente('(-x1)^2 - (x2+1)^2',[0,0],0.1).then((p) => { console.log(p.toString()) })
 
 module.exports = funcionGradiente;
 

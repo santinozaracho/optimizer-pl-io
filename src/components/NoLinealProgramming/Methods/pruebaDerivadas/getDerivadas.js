@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const algebra = require('algebra.js');
 const math = require('mathjs');
 const {ptoFactible} = require('./getPtoFactible')
@@ -10,7 +11,9 @@ const {getMatrizHessiana} = require('./getMatrizHessiana')
 //     .then( punto => punto)
 // }
 
+
 const metodoDerivadas = async (z,incognitas)=>{
+    try{
     var hessiano;
     var detHessiano;
     const getDerivadas = (z,incognitas) =>{
@@ -217,7 +220,9 @@ const metodoDerivadas = async (z,incognitas)=>{
     })
 
     return puntoFactible
-    
+}catch(error){
+    console.log(error)
+}
 }
 
 //const z = "x1 + 2*x3 + x2*x3 - x1^2 - x2^2 - x3^2"
