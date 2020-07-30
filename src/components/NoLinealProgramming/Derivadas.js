@@ -1,5 +1,5 @@
 import React from 'react';
-import { ButtonGroup, Button, Container, Row, Col, Card, CardBody, CardHeader, CardTitle, Jumbotron } from "reactstrap";
+import {  Button, Container, Row, Col, Card, CardBody, CardHeader, CardTitle, Jumbotron } from "reactstrap";
 import {UncontrolledPopover, PopoverBody, PopoverHeader, Input,InputGroupText,InputGroup,InputGroupAddon, } from "reactstrap";
 import ReactDOM from 'react-dom'
 import logo from "../../components/LinealProgramming/logo.svg";
