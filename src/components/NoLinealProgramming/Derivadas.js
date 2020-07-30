@@ -1,8 +1,8 @@
 import React from 'react';
 import { ButtonGroup, Button, Container, Row, Col, Card, CardBody, CardHeader, CardTitle, Jumbotron } from "reactstrap";
-import { Alert, UncontrolledPopover, PopoverBody, PopoverHeader, Input,InputGroupText,InputGroup,InputGroupAddon, } from "reactstrap";
+import {UncontrolledPopover, PopoverBody, PopoverHeader, Input,InputGroupText,InputGroup,InputGroupAddon, } from "reactstrap";
+import ReactDOM from 'react-dom'
 import logo from "../../components/LinealProgramming/logo.svg";
-import Variables from '../LinealProgramming/Configuration/Variables/index'
 import {metodoDerivadas} from "../NoLinealProgramming/Methods/pruebaDerivadas/getDerivadas"
 class Derivadas extends React.Component{
     constructor(props){
@@ -11,17 +11,15 @@ class Derivadas extends React.Component{
             model:{
                 funcion:"",
                 incognitas:"",
-                obj:"max",
-                salida:"No se encontro solucion"
+                
+            },
+            solucionMetodo:{
+              caso:""
             }
             
         }
     }
-    handleObjective = objective => {
-        let { model } = this.state;
-        model.obj = objective;
-        this.setState({ model });
-      };
+
     
       handleInput = e =>{
         let nombre = e.target.name;
@@ -32,7 +30,7 @@ class Derivadas extends React.Component{
         model[nombre] = valor;
         this.setState({model})
     
-        console.log(this.state.model)
+        
         
     
       }
@@ -45,41 +43,96 @@ class Derivadas extends React.Component{
       if (funcion!==""){
         if(incognitas!==""){
           arregloIncognitas=incognitas.split(",")
-          console.log(arregloIncognitas)
+          for (var i = 0; i < arregloIncognitas.length; i++) {
+            arregloIncognitas[i] = arregloIncognitas[i].trim()
+             }
+          
           
           try {
             metodoDerivadas(funcion, arregloIncognitas)
-            .then(resp => 
-              console.log(resp))
+            .then(resp => {
+              if(resp!==undefined){
+                if(resp.hasOwnProperty("caso")){
+                  this.setState({solucionMetodo:resp})
+              }}
+          
+              this.muestraResultado();
+            }
+            )
           } catch (error) {
             console.log(error)
+            
+            this.state.solucionMetodo.caso=""
+            ReactDOM.render(<></>, document.getElementById("resolucion"))
           } 
 
         }
       }
     }
 
+
+    
+    
+    muestraResultado(){
+      let {solucionMetodo} = this.state
+      let caso = solucionMetodo.caso
+      let resolucion;
+      if (caso ===""){
+        
+        ReactDOM.render(<></>, document.getElementById("resolucion"))
+      }
+      else if(caso === "metodonovalido"){
+        //Metodo no concluye nada
+        resolucion = (
+        <div> 
+        El metodo no es suficiente para concluir algo.
+        </div>)
+        ReactDOM.render(resolucion, document.getElementById("resolucion"))
+      }
+      else if(caso === "puntosilla"){
+        //Punto de ensilladura
+        resolucion = (
+          <div> 
+          La funcion presenta un punto de ensilladura.
+          </div>)
+          ReactDOM.render(resolucion, document.getElementById("resolucion"))
+      }
+      else if(caso === "nonegatividadinvalido"){
+        //Condicion de no negatividad incumplida
+        resolucion = (
+          <div> 
+          No cumple la condicion de no negatividad.<br/>
+          No se puede determinar por este metodo
+          </div>)
+          ReactDOM.render(resolucion, document.getElementById("resolucion"))
+      }
+      else{
+        //Resolucion
+        let {caso, ptofactible, funcionvaluada} = solucionMetodo
+        
+        caso = caso.charAt(0).toUpperCase() + caso.slice(1)
+
+
+        resolucion=(
+          <div>
+            <b>Caso</b>: {caso}
+            {
+              ptofactible.map((elem,index)=><div>
+                <b>X{index+1}</b> : {elem.toFixed(2)}
+
+
+              </div>)
+            }
+            <b>Funcion valuada en el punto:</b> {funcionvaluada.toFixed(4)}
+          </div>
+        )
+        
+        ReactDOM.render(resolucion, document.getElementById("resolucion"))
+      }
+    }
+
     render(){
       
-       let buttonsOptType = (
-            <ButtonGroup>
-              <Button
-                outline
-                onClick={() => this.handleObjective("max")}
-                active={this.state.model.obj === "max"}
-                color="primary"
-              >
-                Maximizar
-              </Button>
-              <Button
-                outline
-                onClick={() => this.handleObjective("min")}
-                active={this.state.model.obj === "min"}
-                color="primary"
-              >
-                Minimizar
-              </Button>
-            </ButtonGroup>)
     
         return(
             <Container fluid className="App">
@@ -94,17 +147,7 @@ class Derivadas extends React.Component{
                     <Jumbotron className='w-100'>
                     <h2>Metodo de las derivadas</h2>
                     <h4>Comenzamos configurando nuestro modelo</h4>
-                    <Col>
-                  <UncontrolledPopover flip={false} trigger="hover" placement="top" target="CardOpt">
-                    <PopoverBody>
-                      Aqui debes seleccionar el tipo de optimizacion que deseas realizar: si deseas maximizar o minimizar la función.
-                    </PopoverBody>
-                  </UncontrolledPopover>
-                  <Card outline color="secondary" id="CardOpt" className="mt-3 mx-auto">
-                    <CardHeader>Tipo de optimización</CardHeader>
-                    <CardBody>{buttonsOptType}</CardBody>
-                  </Card>
-                </Col>
+                    
                 <Row>
                 <UncontrolledPopover flip={false} trigger="hover" placement="top" target="CardVariables">
                   <PopoverHeader>Datos</PopoverHeader>
@@ -157,7 +200,16 @@ class Derivadas extends React.Component{
     
     
                   </CardBody>
-                  <Button
+                  
+                </Card>
+                
+                
+               
+              </Row>
+              <br/>
+              <Button
+                
+                
                 outline
                 onClick={() => this.resolucionModelo()}
                 
@@ -165,11 +217,6 @@ class Derivadas extends React.Component{
               >
                 Resolver
               </Button>
-                </Card>
-                
-               
-              </Row>
-    
     
     
               <Row>
@@ -181,8 +228,8 @@ class Derivadas extends React.Component{
                       <h4>Resolucion del problema</h4>
                     </CardTitle>
                   </CardHeader>
-                  <CardBody>
-                  {this.state.model.salida}
+                  <CardBody id="resolucion">
+                  
     
                   </CardBody>
                 </Card>

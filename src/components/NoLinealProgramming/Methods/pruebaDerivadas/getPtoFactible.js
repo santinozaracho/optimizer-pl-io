@@ -50,7 +50,10 @@ const ptoFactible = async (derivadasPrim,variables)=>{
     
     var rtaFetchNum = []
     for (let i = 0; i < rtaFetch.length; i++) {
+        
+        rtaFetch[i]=rtaFetch[i].split('sqrt').join('Math.sqrt')
         //console.log(rtaFetch[i])
+
         rtaFetchNum.push(eval(rtaFetch[i]))
         
     }
