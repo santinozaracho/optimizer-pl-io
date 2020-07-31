@@ -116,4 +116,4 @@ function funcionGradiente (f,x0,e) {
 
 module.exports = {funcionGradiente};
 
-//Algo asi seria el llamado = funcionGradiente('(-x1)^2 - (x2+1)^2',[0,0],0.1).then((p) => { console.log(p.toString()) });
+//funcionGradiente("(x1)^2 ",[0,0],0.1).then((p) => { console.log(p.toString()) });
