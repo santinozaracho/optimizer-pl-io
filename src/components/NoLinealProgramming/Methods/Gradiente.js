@@ -2,6 +2,7 @@ const math = require("mathjs");
 
 // Funcion que engloba todas las funciones
 const funcionGradiente = (f,x0,e) => {
+  var i = 0;
   var cont=0;
   const separaVariables = (x) => {
     const scope = x.map((xi, i) => {
@@ -34,6 +35,7 @@ const funcionGradiente = (f,x0,e) => {
     const g = [];
     for (let i = 0; i < x.length; i += 1) {
       g.push(calculaFuncion(gradiente[i], x));
+      //console.log(g)
     }
     return g;
   };
@@ -57,9 +59,13 @@ const funcionGradiente = (f,x0,e) => {
       const minimize = (f, e) => {
         let eps = e;
         if (e === undefined) eps = 1;
-      
+        
+        console.log(f.toString())
+        
         const d1 = math.derivative(f, "x");
         const d2 = math.derivative(d1, "x");
+
+        console.log(d1.toString()+"  algo "+d2.toString())
       
         // Calcula el punto proximo
         const min = (k, x) => {
@@ -68,15 +74,15 @@ const funcionGradiente = (f,x0,e) => {
       
           const f1 = d1.evaluate({ x });
           const f2 = d2.evaluate({ x });
+          console.log(f1,f2)
       
           if (math.abs(f1) < eps * 0.001) return x;
       
           // calcula el proximo Xi
           const xn = x - f1 / f2;
-          
+
           // Indica si se cumple con la condicion de parada
           if (math.abs(xn - x) / math.max(math.abs(xn), 1) < eps * 0.001) {return xn};
-      
           return min(k + 1, xn);
         };
       
@@ -88,6 +94,7 @@ const funcionGradiente = (f,x0,e) => {
 
         // Define la direccion de busqueda
         const d = math.multiply(-1, valorGradiente(x, gradiente));
+        console.log(d[0])
 
         // Substituye incognitas por xk+lambda*d
         for (let i = 0; i < x0.length; i += 1)
@@ -100,7 +107,10 @@ const funcionGradiente = (f,x0,e) => {
         // eslint-disable-next-line no-param-reassign
         x = math.add(x, math.multiply(lambda, d));
 
-        if (k > 9999) return x; // Numero de interaciones alto
+        if (k > 2000)
+        {
+          return x; // Numero de interaciones alto
+        }
         if (criterioParada(x, gradiente) < e) return x; // Para CP < e
         return min(k + 1, x);
       };
@@ -116,8 +126,9 @@ const funcionGradiente = (f,x0,e) => {
   return llamadoGradiente(f,x0,e);
 };
 
-//funcionGradiente('(-x1)^2 - (x2+1)^2',[0,0],0.1).then((p) => { console.log(p.toString()) })
 
 module.exports = funcionGradiente;
 
-//funcionGradiente("(x1)^2 ",[0,0],0.1).then((p) => { console.log(p.toString()) });
+//funcionGradiente('(x1) - (x2)',[0,0],0.1).then((p) => { console.log(p.toString()) })
+
+funcionGradiente("- ((x)^2) + ((y-1)^2)",[0,0],0.1).then((p) => { console.log(p.toString()) });
