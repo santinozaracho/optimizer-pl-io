@@ -59,8 +59,8 @@ class NoLinealProgramming extends React.Component {
                     </Row> 
                     <Row className="mt-3 mx-auto">
                         <Col>
-                            <Link to={"/NoLinealProgramming/KuhnTucker"} >
-                                <Button size='lg' outline color="success">Metodo de Kuhn y Tucker</Button>
+                            <Link to={"/NoLinealProgramming/Aurea"} >
+                                <Button size='lg' outline color="success">Metodo Seccion dorada</Button>
 
                             </Link>
                         </Col>
