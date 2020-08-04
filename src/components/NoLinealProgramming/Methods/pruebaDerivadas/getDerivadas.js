@@ -230,10 +230,10 @@ const metodoDerivadas = async (z,incognitas)=>{
 //const z = "x1 + 2x3 + x2*x3 - x1^2 - x2^2 - x3^2"
 //const incognitas = ['x1','x2','x3']
 
-metodoDerivadas(z,incognitas)
+/*metodoDerivadas(z,incognitas)
 .then((p)=>{
     console.log(p)
-})
+})*/
 
 //auxiliarDerivadas = [['2*x1', '4'],['5', '3*x2']]
 
