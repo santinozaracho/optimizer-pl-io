@@ -1,134 +1,115 @@
-const math = require("mathjs");
+const algebra = require('algebra.js');
+const math = require('mathjs');
+const { Expression } = require('algebra.js');
+const { exp, expression } = require('mathjs');
+const Equation = algebra.Equation;
+const Parser = require('expr-eval').Parser;
+var parser = new Parser();
+const algebrite = require('algebrite');
 
-// Funcion que engloba todas las funciones
-const funcionGradiente = (f,x0,e) => {
-  var i = 0;
-  var cont=0;
-  const separaVariables = (x) => {
-    const scope = x.map((xi, i) => {
-      const name = `x${i + 1}`;
-      return { [name]: xi };
-    });
-    
-    const target = {};
-    for (let i = 0; i < scope.length; i += 1) {
-      Object.assign(target, scope[i]);
-    }
-    return target;
-  };
+//console.log(algebrite.nroots('-(0*(0*x))^2-(0*(-2*x)+1)^2').toString())     -(x-4)^2-(3*(y-2)^2)-4  -(x^2)-(y+1)^2
+const Gradiente = (funcionObjetivo,puntoa,puntob,e,Objetivo) => {
+     var Z=funcionObjetivo.toString();
+     var a=puntoa;
+     var b=puntob;
+     var epsilon=e;
+     var objetivo=Objetivo.toString();
+     const expr = parser.parse(Z);
 
-  // Calcula la funcion para un valor de x
-  const calculaFuncion = (f, x) => {
-    return f.evaluate(separaVariables(x));
-  };
+     var deltaf = [];
+     var x0 = [];
+     var x1conR = [];
+     var x1 = [];
+     var valorR;
+     var ZconR;
+     var derivadaExpr = [];
+     var Z0;
+     var Z1;
 
-  // deriva la funcion respecto de xi
-  const derivadaParcial = (f, i) => {
-    return math.derivative(f, `x${i}`);
-  };
+     // Defino el punto X0
+     x0 = [a,b];
 
-  // Indica la direccion en que se tiene que seguir para la proxima iteracion
-  const calculaGradiente = (f, x) => x.map((xi, i) => derivadaParcial(f, i + 1));
+     // Reemplazo X0 en la funcion z
+     Z0 = expr.evaluate({x: x0[0], y: x0[1]});
+     Z1 = 0;
+     valorR = 1;
+     var salida = 0;
 
-  // Calcula el gradiente 
-  const valorGradiente = (x, gradiente) => {
-    const g = [];
-    for (let i = 0; i < x.length; i += 1) {
-      g.push(calculaFuncion(gradiente[i], x));
-      //console.log(g)
-    }
-    return g;
-  };
+     // Calculo las derivadas de la funcion en x y en y
+     derivadaExpr = [ math.derivative(expr.toString(),'x') , math.derivative(expr.toString(),'y')];
 
-  // Verifica que se cumpla la condicion de parada
-  const criterioParada = (x, gradiente) => {
-    const vlrG = valorGradiente(x, gradiente);
-    return math.norm(vlrG);
-  };
+     while ((math.abs(Z0-Z1) > epsilon) && (valorR > epsilon) && (salida < 999)){
 
-  const llamadoGradiente = ( f, x0, e ) => {
-    // Define vetor gradiente
-    if (e == 0){
-      e = 0.1;
-    }
+          // La variable salida representa la condicion en la que el punto se encuentra en el infinito
+          salida = salida + 1;
 
-    const gradiente = calculaGradiente(f, x0);
+          // Reemplazo x0 en las derivas 
+          deltaf = [ derivadaExpr[0].evaluate({x: x0[0], y: x0[1]}) , derivadaExpr[1].evaluate({x: x0[1], y: x0[1]})];
 
-    
-    return new Promise((resolve) => {
-      const minimize = (f, e) => {
-        let eps = e;
-        if (e === undefined) eps = 1;
-        
-        console.log(f.toString())
-        
-        const d1 = math.derivative(f, "x");
-        const d2 = math.derivative(d1, "x");
+          if (math.abs(parseFloat(deltaf[0].toString())) < 0.0001){
+               deltaf[0]=0;
+          }
+          if (math.abs(parseFloat(deltaf[1].toString())) < 0.0001){
+               deltaf[1]=0;
+          }
 
-        console.log(d1.toString()+"  algo "+d2.toString())
-      
-        // Calcula el punto proximo
-        const min = (k, x) => {
+          if (objetivo=='max'){
+               deltaf = ['('+deltaf[0]+'*r)','('+deltaf[1]+'*r)'];
+          }else{
+               deltaf = ['-('+deltaf[0]+'*r)','-('+deltaf[1]+'*r)'];
+          }
           
-          if (k > 99) return x;
-      
-          const f1 = d1.evaluate({ x });
-          const f2 = d2.evaluate({ x });
-          console.log(f1,f2)
-      
-          if (math.abs(f1) < eps * 0.001) return x;
-      
-          // calcula el proximo Xi
-          const xn = x - f1 / f2;
+          deltaf = [ math.simplify(deltaf[0]) , math.simplify(deltaf[1]) ];
 
-          // Indica si se cumple con la condicion de parada
-          if (math.abs(xn - x) / math.max(math.abs(xn), 1) < eps * 0.001) {return xn};
-          return min(k + 1, xn);
-        };
-      
-        return min(0, 0);
-      };
+          // Genero el punto X1 el cual contiene una variable r que despues tendremos que despejar
+          if (x0[0]==0){
+               x1conR[0]='('+deltaf[0]+')';
+          }else{
+               x1conR[0]=x0[0]+'('+deltaf[0]+')';
+          }
 
-      const min = (k, x) => {
-        let fP = f;
-
-        // Define la direccion de busqueda
-        const d = math.multiply(-1, valorGradiente(x, gradiente));
-        console.log(d[0])
-
-        // Substituye incognitas por xk+lambda*d
-        for (let i = 0; i < x0.length; i += 1)
-          fP = fP.replace(new RegExp(`x${i + 1}`, "g"), `(${x[i]}+x*${d[i]})`);
-
-        // Encuentra el valor de lambda
-        const lambda = minimize(fP);
-
-        // Encuentra el nuevo valor de x
-        // eslint-disable-next-line no-param-reassign
-        x = math.add(x, math.multiply(lambda, d));
-
-        if (k > 2000)
-        {
-          return x; // Numero de interaciones alto
-        }
-        if (criterioParada(x, gradiente) < e) return x; // Para CP < e
-        return min(k + 1, x);
-      };
-      return resolve(
-        `X* = (${min(0, x0)
-          .map((xi) => xi.toFixed(4))
-          .join(" ")}) ${cont}`
+          if (x0[1]==0){
+               x1conR[1]='('+deltaf[1]+')';
+          }else{
+               x1conR[1]=x0[1]+'('+deltaf[1]+')';
+          }
           
-      );
-    });
-  };
+          //x1conR = [ x0[0]+'('+deltaf[0]+')' , x0[1] +'('+ deltaf[1]+')' ];
+          x1conR = [ math.simplify(x1conR[0]) , math.simplify(x1conR[1]) ];
 
-  return llamadoGradiente(f,x0,e);
-};
+          // Reemplazo los valores de X1 en la funcion objetivo y luego despejo r
+          ZconR = Z.split("x").join(x1conR[0]);
+          ZconR = ZconR.split("y").join(x1conR[1]);
+
+          if ( (ZconR).includes("r") ){
+               //Aca se despejaria r pero nada anda
+               helper = ZconR.split("r").join("x");
+               helper = math.simplify(helper);
+               helper = (helper.toString()).split("+ -").join("-");
+               valorR = algebrite.nroots(helper.toString());
+
+               valorR = valorR.toString()
+               valorR = valorR[1]+valorR[2]+valorR[3]+valorR[4]+valorR[5]+valorR[6]+valorR[7]
+               valorR = parseFloat(valorR);
+          } else {
+               valorR = 0;
+               break;
+          }
+
+          // Reemplazo r en X1
+          x1 = [ (Parser.parse(x1conR[0].toString())).evaluate({r: eval(valorR)}) , (Parser.parse(x1conR[1].toString())).evaluate({r: eval(valorR.toString())}) ];
+
+          // Calculamos 
+          Z1 = expr.evaluate({x: x1[0], y: x1[1]});
+          x0 = [ x1[0] , x1[1] ];
+     }
 
 
-module.exports = funcionGradiente;
+     if ((isNaN(x1[0])) || (isNaN(x1[1]))){
+          x1 = [ -Infinity , Infinity ];
+     } 
 
-//funcionGradiente('(x1) - (x2)',[0,0],0.1).then((p) => { console.log(p.toString()) })
+     return x1;
+}
 
-funcionGradiente("- ((x)^2) + ((y-1)^2)",[0,0],0.1).then((p) => { console.log(p.toString()) });
+module.exports = Gradiente
