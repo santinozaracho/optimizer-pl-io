@@ -17,7 +17,9 @@ const ptoFactible = async (derivadasPrim,variables)=>{
     //saco los espacios 
     urlEcuaciones = urlEcuaciones.replace(/ /g,"")
     //cambio los signos +
-    urlEcuaciones = urlEcuaciones.replace('+','%2B')
+    
+    urlEcuaciones = urlEcuaciones.split('+').join('%2B')
+    //urlEcuaciones = urlEcuaciones.replace('+','%2B')
     //variables
     var urlVariables = "&variables="
     variables.forEach(variable =>{
@@ -40,14 +42,13 @@ const ptoFactible = async (derivadasPrim,variables)=>{
         rtaFetch = json.MESSAGE
     }); //ESTO RETORNA TODO UN STRING, NO ARREGLO
 
-
-    rtaFetch = rtaFetch.replace("[","");
-    rtaFetch = rtaFetch.replace("]","");
+    rtaFetch = rtaFetch.replace("((","");
+    rtaFetch = rtaFetch.replace("),)","");
     //paso a un arreglo
     rtaFetch = rtaFetch.replace(/'/g,"")
     rtaFetch = rtaFetch.replace(/ /g,"")
     rtaFetch = rtaFetch.split(",");
-    
+
     var rtaFetchNum = []
     for (let i = 0; i < rtaFetch.length; i++) {
         

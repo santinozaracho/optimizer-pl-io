@@ -43,14 +43,6 @@ const metodoDerivadas = async (z,incognitas)=>{
         }
         return salida
     }
-    //const z="(x1-4)^2 -3*(x2-2)^2 +24"
-    // const z2 = "(x1-2)^2 +(x2-3)^2 +5"
-    //const z = "x1 + 2*x3 + x2*x3 - x1^2 - x2^2 - x3^2"
-    //const z = "-x1^2 -(x2+1)^2"
-    //const z = "x1 + 2*x3 + x2*x3 - x1^2 - x2^2 - x3^2 +x4^2"
-    //const z = "(x1-2)^2 + (x2-3)^2 +5"
-    //const z = "-(x1-4)^2 -3*(x2-2)^2 +24"
-    
     //const incognitas = ['x1','x2','x3']
     const resultado = getDerivadas(z,incognitas)
     var objetoResultado = {}
@@ -226,6 +218,16 @@ const metodoDerivadas = async (z,incognitas)=>{
 }
 
 //const z = "x1 + 2*x3 + x2*x3 - x1^2 - x2^2 - x3^2"
+
+//const z = "x1 + 2*x3 + x2*x3 - x1^2 - x2^2 - x3^2"
+//const z = "-x1^2 -(x2+1)^2" //Ej4
+//const z = "x1 + 2*x3 + x2*x3 - x1^2 - x2^2 - x3^2 +x4^2"
+//const z = "x1 + 2*x3 + x1*x3 - x1^2 - x2^2 - x3^2" //Ej5
+//const z = "(x1-2)^2 + (x2-3)^2 +5" //EJ1
+//const z = "-(x1-4)^2 -3*(x2-2)^2 +24" //Ej3
+
+//este tiene raices creo
+//const z = "x1 + 2x3 + x2*x3 - x1^2 - x2^2 - x3^2"
 //const incognitas = ['x1','x2','x3']
 
 /*metodoDerivadas(z,incognitas)
@@ -234,10 +236,6 @@ const metodoDerivadas = async (z,incognitas)=>{
 })*/
 
 //auxiliarDerivadas = [['2*x1', '4'],['5', '3*x2']]
-//auxiliarPuntoFactible = [ 1, 2, 3 ]
 
-//getMatrizHessiana(auxiliarDerivadas, auxiliarPuntoFactible ,incognitas,z)
-// getMatrizHessiana(auxiliar, puntoFactible ,incognitas,z)
-// getMatrizHessiana(resultado.derivadas, puntoFactible,incognitas,z)
 
 module.exports = {metodoDerivadas}
