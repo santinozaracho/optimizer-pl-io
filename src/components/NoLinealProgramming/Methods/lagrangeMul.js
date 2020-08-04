@@ -114,6 +114,11 @@ const lagrangeMul =(f,g, objective) => {
         console.log(respuesta)
         respuesta = respuesta.split(' ').join('')
         respuesta = respuesta.split("\)\,\(")
+        //facu toco aca
+        //Facu asume que la situazao de ((, se presenta solo al principio, primer elemento. Y que la de )), solo al ultimo
+        respuesta[0] = respuesta[0].replace('((','')
+        respuesta[respuesta.length-1] = respuesta[respuesta.length-1].replace('))','')
+        console.log('respuesta')
         console.log(respuesta)
         var m = ladoIzqRestriccion.length; //Columns number of restrictions
         n = n-g.length //substracting the lambdas
