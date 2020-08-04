@@ -241,9 +241,9 @@ handleObjective = objective => {
           let resp = (<div>
                 No se encontro solucion
               </div>)
-               ReactDOM.render(resp, document.getElementById("resultadosDico"))
+                ReactDOM.render(resp, document.getElementById("resultadosDico"))
         }
-       
+      
     
       
 

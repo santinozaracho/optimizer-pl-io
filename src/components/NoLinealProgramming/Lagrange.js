@@ -1,9 +1,11 @@
 import React from 'react';
-
 import { ButtonGroup, Button, Container, Row, Col, Card, CardBody, CardHeader, CardTitle, Jumbotron } from "reactstrap";
 import { Alert, UncontrolledPopover, PopoverBody, PopoverHeader, Input,InputGroupText,InputGroup,InputGroupAddon, } from "reactstrap";
 import logo from "../../components/LinealProgramming/logo.svg";
 import Variables from '../LinealProgramming/Configuration/Variables/index'
+const {lagrangeMul} = require('./Methods/lagrangeMul')
+
+//import lagrangeMul from './Methods/lagrangeMul'
 
 class Lagrange extends React.Component{
 constructor(props){
@@ -11,15 +13,13 @@ constructor(props){
     this.state={
         model:{
             funcion:"",
-            puntoInicialA:"",
-            puntoInicialB:"",
+            restricciones: [],
             obj:"max",
-            epsilon:"",
-            salida:"No se encontro solucion"
-        }
-        
+        },
+        salida:false
     }
 }
+
 handleObjective = objective => {
     let { model } = this.state;
     model.obj = objective;
@@ -28,26 +28,31 @@ handleObjective = objective => {
 
   handleInput = e =>{
     let nombre = e.target.name;
-    let valor = e.target.value
-    if(nombre!=="funcion"){
-      valor = Number(valor)
-    }
-    if(nombre==="epsilon"){
-        if(valor < 0){
-            e.target.value = 0 
-            valor = 0
-        } 
-    }
-    
+    let valor = e.target.value;    
     let { model } = this.state;
-    model[nombre] = valor;
+    if(nombre === "restricciones")
+    {
+      //se pone [0] porque probamos cargar una sola restriccion
+      model["restricciones"][0]=valor;
+    }
+    else{
+      model[nombre] = valor;
+    }
     this.setState({model})
-
     console.log(this.state.model)
-    
-
   }
-render(){
+
+  resolverLagrange(){
+    let respuesta = false;
+    let {funcion, restricciones, obj } = this.state.model;
+    lagrangeMul("x^2", ["x^2+y-4=0"],"max")
+    .then((solucion) => {
+      this.setState({salida:solucion})
+    }); 
+    console.log(this.state.salida);  
+  }
+
+  render(){
     let buttonsOptType = (
         <ButtonGroup>
           <Button
@@ -124,25 +129,38 @@ render(){
                     <PopoverBody>Aquí debes ingresar la funcion objetivo a optimizar.</PopoverBody>
                   </UncontrolledPopover>
               </InputGroup>
-              
-
-              
-
-              
-
-
-
+              <br/>
+              <InputGroup className="mt-1" id="restricciones">
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText >
+                      <b>Restricciones</b>
+                    </InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    name="restricciones"
+                    placeholder="Ingrese la restriccion"
+                    
+                    onChange={this.handleInput}
+                    
+                  />
+                  <UncontrolledPopover flip={false} trigger="focus hover" placement="auto" target="funcionObj">
+                    <PopoverBody>Aquí debes ingresar las restricciones del modelo.</PopoverBody>
+                  </UncontrolledPopover>
+              </InputGroup>
               </CardBody>
-
             </Card>
-            
-           
           </Row>
 
-
-
           <Row>
+            <Button 
+            variant="success"
+            onClick={() => this.resolverLagrange()}
+            >
+              Resolver
+            </Button>
+          </Row>
             
+          <Row>
             <br/>
             <Card outline color="secondary" id="CardVariables" className="w-100 mt-3 mx-auto">
               <CardHeader>
@@ -151,7 +169,7 @@ render(){
                 </CardTitle>
               </CardHeader>
               <CardBody>
-              {this.state.model.salida}
+              {this.state.salida}
 
               </CardBody>
             </Card>
@@ -161,11 +179,8 @@ render(){
     </Col>
     </Row>
   </Container>
-    
-    
     )
 }
-
 
 }
 
