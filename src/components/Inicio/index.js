@@ -28,7 +28,7 @@ const Inicio = () =>{
                     </Row>
                     
                     <Row className="mt-5">
-                        <h5>Colaboradores:</h5>
+                        <h5>Creadores:</h5>
                     </Row>
                     <Row>
                         <ButtonGroup className="mx-auto">
@@ -56,6 +56,34 @@ const Inicio = () =>{
                             <Button id='btnzs' outline tag="a" href="https://github.com/santinozaracho">
                                 ZS
                             </Button>
+                        </ButtonGroup>
+                    </Row>
+                    <Row className="mt-5">
+                        <h5>Colaboradores:</h5>
+                    </Row>
+                    <Row>
+                        <ButtonGroup className="mx-auto">
+                            <UncontrolledTooltip target='btncf'>Cuzziol, Facundo</UncontrolledTooltip>
+                            <Button id='btncf' outline tag="a" href="https://github.com/FacuCuzzio">
+                                CF
+                            </Button>
+                            <UncontrolledTooltip target='btndd'>Diez, Danilo</UncontrolledTooltip>
+                            <Button id='btndd' outline tag="a" href="https://github.com/danilodiez">
+                                DD
+                            </Button>
+                            <UncontrolledTooltip target='btnna'>Nadal, Alejandro</UncontrolledTooltip>
+                            <Button id='btnna' outline tag="a" href="https://github.com/AlejandroFNadal">
+                                NA
+                            </Button>
+                            <UncontrolledTooltip target='btnse'>Schuster, Exequiel</UncontrolledTooltip>
+                            <Button id='btnse' outline tag="a" href="https://github.com/ExequielSchuster">
+                                SE
+                            </Button>
+                            <UncontrolledTooltip target='btntm'>Troncoso, Mariano</UncontrolledTooltip>
+                            <Button id='btntm' outline tag="a" href="https://github.com/MarianoTroncoso">
+                                TM
+                            </Button>
+                            
                         </ButtonGroup>
                     </Row>
                     <Row className="mt-3">
