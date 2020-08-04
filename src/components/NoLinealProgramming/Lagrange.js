@@ -3,6 +3,7 @@ import { ButtonGroup, Button, Container, Row, Col, Card, CardBody, CardHeader, C
 import { Alert, UncontrolledPopover, PopoverBody, PopoverHeader, Input,InputGroupText,InputGroup,InputGroupAddon, } from "reactstrap";
 import logo from "../../components/LinealProgramming/logo.svg";
 import Variables from '../LinealProgramming/Configuration/Variables/index'
+import ReactDOM from 'react-dom'
 const {lagrangeMul} = require('./Methods/lagrangeMul')
 
 //import lagrangeMul from './Methods/lagrangeMul'
@@ -28,29 +29,70 @@ handleObjective = objective => {
 
   handleInput = e =>{
     let nombre = e.target.name;
-    let valor = e.target.value;    
+    let valor = e.target.value;
+    let arregloRestricciones = []    
     let { model } = this.state;
     if(nombre === "restricciones")
     {
+      //Parseamos la separacion por ; para hacer la carga de restricciones en un arreglo
+      arregloRestricciones = valor.split(";");
+      
+      for (var i = 0; i < arregloRestricciones.length; i++) {
+        arregloRestricciones[i] = arregloRestricciones[i].trim()
+         }
       //se pone [0] porque probamos cargar una sola restriccion
-      model["restricciones"][0]=valor;
+      model["restricciones"]=arregloRestricciones;
     }
     else{
       model[nombre] = valor;
     }
     this.setState({model})
-    console.log(this.state.model)
+    
   }
 
   resolverLagrange(){
-    let respuesta = false;
+    
     let {funcion, restricciones, obj } = this.state.model;
-    lagrangeMul("x^2", ["x^2+y-4=0"],"max")
+    try{
+    lagrangeMul(funcion, restricciones, obj)
     .then((solucion) => {
       this.setState({salida:solucion})
-    }); 
+    });
+    this.muestraResultado();
+  }
+  catch(error) {
+    console.log(error)
+  } 
     console.log(this.state.salida);  
   }
+
+
+  muestraResultado(){
+    let {salida} = this.state
+    
+    
+      //Resolucion
+      
+      
+      
+      let resolucion=(
+        <div>
+          <b>Caso</b>: 
+          {/*
+            ptofactible.map((elem,index)=><div>
+              <b>X{index+1}</b> : {elem.toFixed(2)}
+
+
+            </div>)
+          */ }
+          <b>Funcion valuada en el punto:</b> 
+        </div>
+      )
+      
+      ReactDOM.render(resolucion, document.getElementById("resolucion"))
+    }
+  
+
 
   render(){
     let buttonsOptType = (
@@ -130,6 +172,7 @@ handleObjective = objective => {
                   </UncontrolledPopover>
               </InputGroup>
               <br/>
+
               <InputGroup className="mt-1" id="restricciones">
                   <InputGroupAddon addonType="prepend">
                     <InputGroupText >
@@ -138,27 +181,27 @@ handleObjective = objective => {
                   </InputGroupAddon>
                   <Input
                     name="restricciones"
-                    placeholder="Ingrese la restriccion"
+                    placeholder="a*x1 = 0 ;...; b*xn = 0"
                     
                     onChange={this.handleInput}
                     
                   />
-                  <UncontrolledPopover flip={false} trigger="focus hover" placement="auto" target="funcionObj">
-                    <PopoverBody>Aquí debes ingresar las restricciones del modelo.</PopoverBody>
+                  <UncontrolledPopover flip={false} trigger="focus hover" placement="auto" target="restricciones">
+                    <PopoverBody>Aquí debes ingresar las restricciones del modelo, separadas por ;</PopoverBody>
                   </UncontrolledPopover>
               </InputGroup>
               </CardBody>
             </Card>
           </Row>
 
-          <Row>
-            <Button 
-            variant="success"
-            onClick={() => this.resolverLagrange()}
-            >
+            <br/>
+            <Button
+            outline 
+            color="success"
+            onClick={() => this.resolverLagrange()} >
               Resolver
             </Button>
-          </Row>
+          
             
           <Row>
             <br/>
@@ -168,8 +211,8 @@ handleObjective = objective => {
                   <h4>Resolucion del problema</h4>
                 </CardTitle>
               </CardHeader>
-              <CardBody>
-              {this.state.salida}
+              <CardBody id="resolucion">
+              
 
               </CardBody>
             </Card>
