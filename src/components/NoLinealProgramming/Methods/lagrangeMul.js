@@ -33,7 +33,7 @@ const lagrangeMul =(f,g, objective) => {
         variables = lagrangeExpr.variables()
         i+=1
     });
-
+    //var url= 'http://localhost:5000/'
     var url = 'https://nlsystemsolver.herokuapp.com/getmsg/' 
     var variablesURL='';
     var ecuacionesURL='';
@@ -58,7 +58,8 @@ const lagrangeMul =(f,g, objective) => {
 
     // Change ^ to **
     url = url.split('^').join('**');
-    
+    console.log("First Url")
+    console.log(url)
     x0=[]
  
 
@@ -83,20 +84,37 @@ const lagrangeMul =(f,g, objective) => {
         var dem;
         var estadoFraccion = false // Controls if we are processing a fraction or not
         var cont = 0
-        respuesta = respuesta.replace("[","");
-        respuesta = respuesta.replace("]","");
+        /*
+        respuesta = respuesta.replace("((","(");
+        respuesta = respuesta.replace("))",")");
         // Paso a un arreglo
-        respuesta = respuesta.replace(/'/g,"")
+        //respuesta = respuesta.replace(/'/g,"")
         respuesta = respuesta.replace(/ /g,"")
         respuesta = respuesta.split(",");
+        console.log(respuesta)*/
         var x0=[]
+        var estado = 0 //aca contenemos la posicion del subarreglo de solucion
+        /*
+        console.log("Cantidad de variables")
+        console.log(variables.length)
+        cantSoluciones = respuesta.length/variables.length
         respuesta.forEach(element => {
             // Do some refactoring here in some distant future
-            x0.push(eval((element.split('sqrt').join('Math.sqrt')).toString()))
+            
+            var modElement = element.replace(/\(/,'')
+            console.log(modElement)
+            modElement.replace(/\)/,'')
+            console.log(modElement)
+            x0.push(eval((modElement.split('sqrt').join('Math.sqrt')).toString()))
         })
         console.log('x0')
         console.log(x0)
-
+        */
+        //eliminate whitespace
+        console.log(respuesta)
+        respuesta = respuesta.split(' ').join('')
+        respuesta = respuesta.split("\)\,\(")
+        console.log(respuesta)
         var m = ladoIzqRestriccion.length; //Columns number of restrictions
         n = n-g.length //substracting the lambdas
         
@@ -229,4 +247,5 @@ const lagrangeMul =(f,g, objective) => {
 //console.log(lagrangeMul("-x1^2 -(x2 -1)^2",["2*x1+x2-1=0"],"min"));
 //console.log(lagrangeMul("x^2+y^2+z^2",["x^2+y+3*z-2=0","5*x+2*y+z-5=0"],"max"));
 
-lagrangeMul("x1^2 +2*x2^2+10*x3^2",["x1 +x2^2 + x3 - 5=0","x1 +5*x2 +x3 -7 = 0"],"max");
+lagrangeMul("x1^2+x2^2+x3^2",["4*x1 +x2^2 + 2*x3 - 14=0"],"min");
+
