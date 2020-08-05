@@ -8,7 +8,8 @@ var parser = new Parser();
 const algebrite = require('algebrite');
 
 //console.log(algebrite.nroots('-(0*(0*x))^2-(0*(-2*x)+1)^2').toString())     -(x-4)^2-(3*(y-2)^2)-4  -(x^2)-(y+1)^2
-const Gradiente = (funcionObjetivo,puntoa,puntob,e,Objetivo) => {
+const fGradiente = (funcionObjetivo,puntoa,puntob,e,Objetivo) => {
+     
      var Z=funcionObjetivo.toString();
      var a=puntoa;
      var b=puntob;
@@ -25,7 +26,7 @@ const Gradiente = (funcionObjetivo,puntoa,puntob,e,Objetivo) => {
      var derivadaExpr = [];
      var Z0;
      var Z1;
-
+     var helper;
      // Defino el punto X0
      x0 = [a,b];
 
@@ -38,7 +39,7 @@ const Gradiente = (funcionObjetivo,puntoa,puntob,e,Objetivo) => {
      // Calculo las derivadas de la funcion en x y en y
      derivadaExpr = [ math.derivative(expr.toString(),'x') , math.derivative(expr.toString(),'y')];
 
-     while ((math.abs(Z0-Z1) > epsilon) && (valorR > epsilon) && (salida < 999)){
+     while ((math.abs(Z0-Z1) > epsilon) && (valorR > 0) && (salida < 999)){
 
           // La variable salida representa la condicion en la que el punto se encuentra en el infinito
           salida = salida + 1;
@@ -53,7 +54,7 @@ const Gradiente = (funcionObjetivo,puntoa,puntob,e,Objetivo) => {
                deltaf[1]=0;
           }
 
-          if (objetivo=='max'){
+          if (objetivo==='max'){
                deltaf = ['('+deltaf[0]+'*r)','('+deltaf[1]+'*r)'];
           }else{
                deltaf = ['-('+deltaf[0]+'*r)','-('+deltaf[1]+'*r)'];
@@ -62,13 +63,13 @@ const Gradiente = (funcionObjetivo,puntoa,puntob,e,Objetivo) => {
           deltaf = [ math.simplify(deltaf[0]) , math.simplify(deltaf[1]) ];
 
           // Genero el punto X1 el cual contiene una variable r que despues tendremos que despejar
-          if (x0[0]==0){
+          if (x0[0]===0){
                x1conR[0]='('+deltaf[0]+')';
           }else{
                x1conR[0]=x0[0]+'('+deltaf[0]+')';
           }
 
-          if (x0[1]==0){
+          if (x0[1]===0){
                x1conR[1]='('+deltaf[1]+')';
           }else{
                x1conR[1]=x0[1]+'('+deltaf[1]+')';
@@ -110,6 +111,8 @@ const Gradiente = (funcionObjetivo,puntoa,puntob,e,Objetivo) => {
      } 
 
      return x1;
+
+
 }
 
-module.exports = Gradiente
+console.log(fGradiente("(x+3)^2+(y+4)^2",1,5,3,"max"))
