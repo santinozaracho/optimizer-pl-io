@@ -84,7 +84,7 @@ const busquedaFuncion = (f, xl, xr, delta, tipo) => {
     return [xl, xr]
 }
 
-var funcion = "x^(2)+3*x-5"
-console.log(busquedaFuncion(funcion, -5, 2, 0.01, 'min'))
+//var funcion = "x^(2)+3*x-5"
+//console.log(busquedaFuncion(funcion, -5, 2, 0.01, 'min'))
 
 module.exports = busquedaFuncion 
