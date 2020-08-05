@@ -94,130 +94,145 @@ const lagrangeMul =(f,g, objective) => {
         console.log(respuesta)*/
         var x0=[]
         var estado = 0 //aca contenemos la posicion del subarreglo de solucion
-        /*
-        console.log("Cantidad de variables")
-        console.log(variables.length)
-        cantSoluciones = respuesta.length/variables.length
-        respuesta.forEach(element => {
-            // Do some refactoring here in some distant future
-            
-            var modElement = element.replace(/\(/,'')
-            console.log(modElement)
-            modElement.replace(/\)/,'')
-            console.log(modElement)
-            x0.push(eval((modElement.split('sqrt').join('Math.sqrt')).toString()))
-        })
-        console.log('x0')
-        console.log(x0)
-        */
+        
         //eliminate whitespace
-        console.log(respuesta)
         respuesta = respuesta.split(' ').join('')
         respuesta = respuesta.split("\)\,\(")
         //facu toco aca
+        //((val1, val2,val3),(val1,val))
         //Facu asume que la situazao de ((, se presenta solo al principio, primer elemento. Y que la de )), solo al ultimo
         respuesta[0] = respuesta[0].replace('((','')
         respuesta[respuesta.length-1] = respuesta[respuesta.length-1].replace('))','')
-        console.log('respuesta')
-        console.log(respuesta)
-        var m = ladoIzqRestriccion.length; //Columns number of restrictions
-        n = n-g.length //substracting the lambdas
+        arregloRespuesta=[]
+        var tempArreglo=[]
+        //Transformar el arreglo en un conjunto de subarreglos
+        n = n-g.length
+        respuesta.forEach(element => {
+            tempArreglo=element.split(',')
+            arregloRespuesta.push(element.split(','))
+        })
         
-        // Generate P array, where [[Ng1(x), Ng1(x2)],[Ng2(x1),Ng2(x2)]]
-        var P = math.zeros(m,n)
-        
-        var tempRestriccion;
-        var varP;
-        var scope = {}
-        console.log("Variables")
-        console.log(variables)
-        for (let k = 0; k < variables.length; k++) {
-            scope[variables[k]]=x0[k]    
-        }
-        for(var i = 0; i < m; i+=1) //each restriction
+
+        //Evaluar los elementos en caso de fraccion o raiz
+        var tempElement
+        tempArreglo=[]
+        arregloRespuesta.forEach(element =>{
+            element.forEach(element2 =>{
+                tempElement = element2.split('sqrt').join('Math.sqrt').toString()
+                tempElement = eval(tempElement)
+                tempArreglo.push(tempElement)
+            })
+            x0.push(tempArreglo)
+            tempArreglo=[]
+        })
+
+        //console.log("x0 en lagrangeMul")
+        const compruebaExtremo= function(punto)
         {
-            for(var j = 0; j < n; j+=1) //each variable
-            {
-                tempRestriccion = ladoIzqRestriccion[i];   
-                console.log("tempRestriccion")
-                console.log(tempRestriccion)
-                varP = variables[j].toString();
-                tempRestriccion = math.derivative(tempRestriccion, varP); 
-                tempRestriccion = math.evaluate(tempRestriccion.toString(),scope)
-                console.log("tempReestriccion evaluada")
-                console.log(tempRestriccion)
-                P.subset(math.index(i, j), tempRestriccion);
+            let x0 = punto;
+            var m = ladoIzqRestriccion.length; //Columns number of restrictions
+            console.log("n al principio de compruebaExtremo")
+            console.log(n)
+             //substracting the lambdas
+            // Generate P array, where [[Ng1(x), Ng1(x2)],[Ng2(x1),Ng2(x2)]]
+            var P = math.zeros(m,n)
+            
+            var tempRestriccion;
+            var varP;
+            var scope = {}
+            console.log("Variables")
+            console.log(variables)
+            for (let k = 0; k < variables.length; k++) {
+                scope[variables[k]]=x0[k]    
             }
-        }
-
-        // Load P in Hessiano
-        var hessiano = math.zeros(m+n,m+n)
-        for(var i = 0; i < m; i+=1) //each restriction
-        {
-            for(var j = n-1; j < m+n; j+=1) //each variable
+            for(var i = 0; i < m; i+=1) //each restriction
             {
-                hessiano.subset(math.index(i, j), P.subset(math.index(i,j-n+1)));
-            }
-        }
-
-        // Load P^T in Hessiano
-        for(var i = n-1; i < m+n; i+=1) //each restriction
-        {
-            for(var j = 0; j < m; j+=1) //each variable
-            {   
-                hessiano.subset(math.index(i, j), P.subset(math.index(j,i-n+1)));
-            }
-        }
-        
-        //Generate Q
-        var derivadasPrimeras=[]
-        var derivadasSegundas=[]
-        var derivSegEvaluadas =[]
-        var tempDerSeg;
-
-        var Q= math.zeros(n,n)
-
-        for(let k = 0; k < n; k++)
-        {
-            derivadasPrimeras.push(math.derivative(lagrange,variables[k]).toString())
-            for(let l = 0; l < n; l++)
-            {
-                tempDerSeg = math.derivative(derivadasPrimeras[k],variables[l]).toString()
-                
-                derivadasSegundas.push(tempDerSeg)
-                tempDerSeg = math.evaluate(tempDerSeg,scope)
-                if(k===l)//diagonal points
+                for(var j = 0; j < n; j+=1) //each variable
                 {
-                    tempDerSeg+= '-k'
-                    console.log(tempDerSeg)
-                    
+                    tempRestriccion = ladoIzqRestriccion[i];   
+                    console.log("tempRestriccion")
+                    console.log(tempRestriccion)
+                    varP = variables[j].toString();
+                    tempRestriccion = math.derivative(tempRestriccion, varP); 
+                    tempRestriccion = math.evaluate(tempRestriccion.toString(),scope)
+                    console.log("tempReestriccion evaluada")
+                    console.log(tempRestriccion)
+                    P.subset(math.index(i, j), tempRestriccion);
                 }
-                //var tempDerSegP=anotherParser.evaluate(tempDerSeg.toString())
-                derivSegEvaluadas.push(tempDerSeg)
-                Q.subset(math.index(k,l),tempDerSeg)
             }
-        }
-        console.log("Q")
-        console.log(Q)
-        //copy Q into Hessian Matrix
-        for(var i = 0;i < n; i+=1){
-            for (let j = 0; j < n; j++) {
-                hessiano.subset(math.index(m+i,m+j), Q.subset(math.index(i,j)))
-            }
-        }
-        
-        var elementos=(math.flatten(hessiano))._data
-        elementos = elementos.toString()
-       
 
-        //Generate url for determinant solver
-        tamHessiano = m+n
-        urlDetSolver='https://nlsystemsolver.herokuapp.com/detSolver?n='+tamHessiano+'&elementos='+elementos
-        console.log(urlDetSolver)
+            // Load P in Hessiano
+            var hessiano = math.zeros(m+n,m+n)
+            //P deberia ser mas grande
+            console.log(P._data)
+            for(var i = 0; i < m; i+=1) //each restriction
+            {
+                for(var j = n-1; j < m+n; j+=1) //each variable
+                {
+                    let subsetP = P.subset(math.index(i,j-n+1))
+                    let indice = math.index(i,j)
+                    hessiano.subset(indice, subsetP);
+                }
+            }
+
+            // Load P^T in Hessiano
+            for(var i = n-1; i < m+n; i+=1) //each restriction
+            {
+                for(var j = 0; j < m; j+=1) //each variable
+                {   
+                    hessiano.subset(math.index(i, j), P.subset(math.index(j,i-n+1)));
+                }
+            }
+            
+            //Generate Q
+            var derivadasPrimeras=[]
+            var derivadasSegundas=[]
+            var derivSegEvaluadas =[]
+            var tempDerSeg;
+
+            var Q= math.zeros(n,n)
+
+            for(let k = 0; k < n; k++)
+            {
+                derivadasPrimeras.push(math.derivative(lagrange,variables[k]).toString())
+                for(let l = 0; l < n; l++)
+                {
+                    tempDerSeg = math.derivative(derivadasPrimeras[k],variables[l]).toString()
+                    
+                    derivadasSegundas.push(tempDerSeg)
+                    tempDerSeg = math.evaluate(tempDerSeg,scope)
+                    if(k===l)//diagonal points
+                    {
+                        tempDerSeg+= '-k'
+                        console.log(tempDerSeg)
+                        
+                    }
+                    //var tempDerSegP=anotherParser.evaluate(tempDerSeg.toString())
+                    derivSegEvaluadas.push(tempDerSeg)
+                    Q.subset(math.index(k,l),tempDerSeg)
+                }
+            }
+            console.log("Q")
+            console.log(Q)
+            //copy Q into Hessian Matrix
+            for(var i = 0;i < n; i+=1){
+                for (let j = 0; j < n; j++) {
+                    hessiano.subset(math.index(m+i,m+j), Q.subset(math.index(i,j)))
+                }
+            }
+            
+            var elementos=(math.flatten(hessiano))._data
+            elementos = elementos.toString()
         
-        fetch(urlDetSolver,{method:'GET'})
-        .then((response) => response.json())
-        .then(json => {
+
+            //Generate url for determinant solver
+            tamHessiano = m+n
+            urlDetSolver='https://nlsystemsolver.herokuapp.com/detSolver?n='+tamHessiano+'&elementos='+elementos
+            console.log(urlDetSolver)
+
+            fetch(urlDetSolver,{method:'GET'})
+            .then((response) => response.json())
+            .then(json => {
             var ecuacionDeterminante = json.MESSAGE
             
             ecuacionDeterminante= ecuacionDeterminante.split('**').join('^')
@@ -226,11 +241,20 @@ const lagrangeMul =(f,g, objective) => {
             console.log(ecuacionDeterminante)
             var resolucion = algebrite.nroots(ecuacionDeterminante)
             console.log(resolucion.toString())
-            
-
-
-            
+        
         })
+        }
+        x0.forEach(element =>{
+            compruebaExtremo(element)
+        })
+        //console.log(x0)
+        
+        
+        
+        
+        
+        
+        
 
 
         
@@ -241,7 +265,7 @@ const lagrangeMul =(f,g, objective) => {
     
     // x0=traerValores(url,callbackFunction);
 
-    traerValores(url,callbackFunction).then(result => console.log(result))
+    traerValores(url,callbackFunction)
     
     
     //return x0.splice(0,n);
