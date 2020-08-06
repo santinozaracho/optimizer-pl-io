@@ -8,7 +8,8 @@ var parser = new Parser();
 const algebrite = require('algebrite');
 
 //console.log(algebrite.nroots('-(0*(0*x))^2-(0*(-2*x)+1)^2').toString())     -(x-4)^2-(3*(y-2)^2)-4  -(x^2)-(y+1)^2
-const Gradiente = (funcionObjetivo,puntoa,puntob,e,Objetivo) => {
+const fGradiente = (funcionObjetivo,puntoa,puntob,e,Objetivo) => {
+     
      var Z=funcionObjetivo.toString();
      var a=puntoa;
      var b=puntob;
@@ -64,13 +65,13 @@ const Gradiente = (funcionObjetivo,puntoa,puntob,e,Objetivo) => {
           deltaf = [ math.simplify(deltaf[0]) , math.simplify(deltaf[1]) ];
 
           // Genero el punto X1 el cual contiene una variable r que despues tendremos que despejar
-          if (x0[0]==0){
+          if (x0[0]===0){
                x1conR[0]='('+deltaf[0]+')';
           }else{
                x1conR[0]=x0[0]+'('+deltaf[0]+')';
           }
 
-          if (x0[1]==0){
+          if (x0[1]===0){
                x1conR[1]='('+deltaf[1]+')';
           }else{
                x1conR[1]=x0[1]+'('+deltaf[1]+')';
@@ -141,8 +142,8 @@ const Gradiente = (funcionObjetivo,puntoa,puntob,e,Objetivo) => {
 
      console.log((math.abs(Z0-Z1)),epsilon,valorR,salida);
      return x1;
+
+
 }
 
-//console.log(Gradiente("-(x-4)^2-(3*(y-2)^2)-4",0,0,1,"min"))
-
-module.exports = Gradiente
+module.exports = fGradiente
