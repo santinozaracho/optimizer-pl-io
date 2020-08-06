@@ -41,7 +41,8 @@ const Gradiente = (funcionObjetivo,puntoa,puntob,e,Objetivo) => {
      // Calculo las derivadas de la funcion en x y en y
      derivadaExpr = [ math.derivative(expr.toString(),'x') , math.derivative(expr.toString(),'y')];
 
-     while ((math.abs(Z0-Z1) > epsilon) && (valorR > epsilon) && (salida < 999)){
+     while (((math.abs(valorR)) > epsilon) && (salida < 999)){
+          console.log((math.abs(Z0-Z1)),epsilon,valorR,salida);
           epsilon=e;
           // La variable salida representa la condicion en la que el punto se encuentra en el infinito
           salida = salida + 1;
@@ -138,9 +139,10 @@ const Gradiente = (funcionObjetivo,puntoa,puntob,e,Objetivo) => {
           x1 = [ -Infinity , Infinity ];
      } 
 
+     console.log((math.abs(Z0-Z1)),epsilon,valorR,salida);
      return x1;
 }
 
-console.log(Gradiente("(x+3)^2+(y+4)^2",1,5,3,"max"))
+//console.log(Gradiente("-(x-4)^2-(3*(y-2)^2)-4",0,0,1,"min"))
 
 module.exports = Gradiente
