@@ -13,7 +13,7 @@ const fGradiente = (funcionObjetivo,puntoa,puntob,e,Objetivo) => {
      var Z=funcionObjetivo.toString();
      var a=puntoa;
      var b=puntob;
-     var epsilon=e;
+     var epsilon=0;
      var objetivo=Objetivo.toString();
      const expr = parser.parse(Z);
 
@@ -27,6 +27,9 @@ const fGradiente = (funcionObjetivo,puntoa,puntob,e,Objetivo) => {
      var Z0;
      var Z1;
      var helper;
+     var regder = /\d r/;
+     var regiz = /r \d/;
+
      // Defino el punto X0
      x0 = [a,b];
 
@@ -39,8 +42,8 @@ const fGradiente = (funcionObjetivo,puntoa,puntob,e,Objetivo) => {
      // Calculo las derivadas de la funcion en x y en y
      derivadaExpr = [ math.derivative(expr.toString(),'x') , math.derivative(expr.toString(),'y')];
 
-     while ((math.abs(Z0-Z1) > epsilon) && (valorR > 0) && (salida < 999)){
-
+     while ((math.abs(Z0-Z1) > epsilon) && (valorR > epsilon) && (salida < 999)){
+          epsilon=e;
           // La variable salida representa la condicion en la que el punto se encuentra en el infinito
           salida = salida + 1;
 
@@ -53,13 +56,11 @@ const fGradiente = (funcionObjetivo,puntoa,puntob,e,Objetivo) => {
           if (math.abs(parseFloat(deltaf[1].toString())) < 0.0001){
                deltaf[1]=0;
           }
-
-          if (objetivo==='max'){
+          if (objetivo=='max'){
                deltaf = ['('+deltaf[0]+'*r)','('+deltaf[1]+'*r)'];
           }else{
                deltaf = ['-('+deltaf[0]+'*r)','-('+deltaf[1]+'*r)'];
           }
-          
           deltaf = [ math.simplify(deltaf[0]) , math.simplify(deltaf[1]) ];
 
           // Genero el punto X1 el cual contiene una variable r que despues tendremos que despejar
@@ -74,9 +75,37 @@ const fGradiente = (funcionObjetivo,puntoa,puntob,e,Objetivo) => {
           }else{
                x1conR[1]=x0[1]+'('+deltaf[1]+')';
           }
-          
           //x1conR = [ x0[0]+'('+deltaf[0]+')' , x0[1] +'('+ deltaf[1]+')' ];
           x1conR = [ math.simplify(x1conR[0]) , math.simplify(x1conR[1]) ];
+
+          x1conR = [ (x1conR[0].toString()) , (x1conR[1].toString()) ];
+
+          // Aca se corrige el error de que por algun motivo elimina el simbolo *
+          if (x1conR[0].match(regder) != null)
+          {
+               x1conR[0]=x1conR[0].split(" r").join("* r");
+          }
+          if (x1conR[1].match(regder) != null)
+          {
+               x1conR[1]=x1conR[1].split(" r").join("* r");
+          }
+
+          if (x1conR[0].match(regiz) != null)
+          {
+               x1conR[0]=x1conR[0].split("r ").join("r *");
+          }
+          if (x1conR[1].match(regiz) != null)
+          {
+               x1conR[1]=x1conR[1].split("r ").join("r *");
+          }
+          
+          //x1conR = [ x1conR[0].split("r").join("* r") , x1conR[1].split("r").join("* r") ];
+          //x1conR = [ x1conR[0].split("* *").join("*") , x1conR[1].split("* *").join("*") ];
+
+          // Se simplifica para que sea mas facil realizar la wea
+          x1conR = [ math.simplify(x1conR[0]) , math.simplify(x1conR[1]) ];
+
+
 
           // Reemplazo los valores de X1 en la funcion objetivo y luego despejo r
           ZconR = Z.split("x").join(x1conR[0]);
@@ -103,8 +132,8 @@ const fGradiente = (funcionObjetivo,puntoa,puntob,e,Objetivo) => {
           // Calculamos 
           Z1 = expr.evaluate({x: x1[0], y: x1[1]});
           x0 = [ x1[0] , x1[1] ];
-     }
 
+     }
 
      if ((isNaN(x1[0])) || (isNaN(x1[1]))){
           x1 = [ -Infinity , Infinity ];
@@ -115,4 +144,6 @@ const fGradiente = (funcionObjetivo,puntoa,puntob,e,Objetivo) => {
 
 }
 
-console.log(fGradiente("(x+3)^2+(y+4)^2",1,5,3,"max"))
+console.log(Gradiente("(x+3)^2+(y+4)^2",1,5,3,"max"))
+
+module.exports = Gradiente
