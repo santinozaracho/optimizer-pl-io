@@ -144,6 +144,6 @@ const fGradiente = (funcionObjetivo,puntoa,puntob,e,Objetivo) => {
 
 }
 
-console.log(Gradiente("(x+3)^2+(y+4)^2",1,5,3,"max"))
+//console.log(fGradiente("(x+3)^2+(y+4)^2",1,5,3,"max"))
 
-module.exports = Gradiente
+module.exports = fGradiente

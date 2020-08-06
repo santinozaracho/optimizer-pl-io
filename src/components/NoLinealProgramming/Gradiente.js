@@ -3,7 +3,7 @@ import React from 'react';
 import { ButtonGroup, Button, Container, Row, Col, Card, CardBody, CardHeader, CardTitle, Jumbotron } from "reactstrap";
 import { UncontrolledPopover, PopoverBody, PopoverHeader, Input,InputGroupText,InputGroup,InputGroupAddon, } from "reactstrap";
 import logo from "../../components/LinealProgramming/logo.svg";
-
+import ReactDOM from 'react-dom'
 
 import fGradiente from "./Methods/Gradiente"
 
@@ -49,45 +49,61 @@ handleObjective = objective => {
   }
 
 
-  //Ver que en update verifique por la completitud del modelo para la resolucion
-
-  componentDidUpdate(){
-    this.resolucionModelo()
-  }
-
   //Resolver el problema si el modelo es completo
-  async resolucionModelo(){
+  resolucionModelo(){
     let {funcion, puntoInicialA,
     puntoInicialB,
     epsilon, obj } = this.state.model
+    let solucion;
     
     
     if(funcion!=="" % puntoInicialA!=="" & puntoInicialB !=="" & epsilon!==""){
       puntoInicialA = Number(puntoInicialA);
       puntoInicialB = Number(puntoInicialB);
     
-      console.log(fGradiente(funcion, puntoInicialA,puntoInicialB, epsilon, obj ))
-      
-   
-      
+      solucion = fGradiente(funcion, puntoInicialA,puntoInicialB, epsilon, obj )
+      this.state.model.salida = solucion;
+      this.muestraResultado()
     
-      
-     
+    }
     
+} 
 
+muestraResultado(){
+  let {salida, obj} = this.state.model
+  let tipo;
+
+  obj==="max" ? tipo="Maximizacion":tipo="Minimizacion";
+
+  let resolucion;
+  if (salida ==="No se encontro solucion"){
     
+    ReactDOM.render(<>No se encontro solucion</>, document.getElementById("resolucion"))
   }
-      
+  else{
+    let puntoX = salida[0];
+    let puntoY = salida[1]
     
+    resolucion=(
+      <div>
+        <b>Aplicacion del metodo del Gradiente para {tipo}</b> 
+        <br/>
+        <br/>
+        <b>Punto X: </b> {puntoX.toFixed(4)}
+        <br/>
+        <b>Punto Y: </b> {puntoY.toFixed(4)}
+      </div>
+    )
     
-      
+    ReactDOM.render(resolucion, document.getElementById("resolucion"))
+  }
+}
 
-  
-  } 
+
 
 
 render(){
-  console.log(this.state.model)
+  
     let buttonsOptType = (
         <ButtonGroup>
           <Button
@@ -155,13 +171,13 @@ render(){
                   </InputGroupAddon>
                   <Input
                     name="funcion"
-                    placeholder="Ingrese la funcion"
+                    placeholder="Ingrese la funcion: a*x^n +- b*y^n"
                     
                     onChange={this.handleInput}
                     
                   />
                   <UncontrolledPopover flip={false} trigger="focus hover" placement="auto" target="funcionObj">
-                    <PopoverBody>Aquí debes ingresar la funcion objetivo a optimizar.</PopoverBody>
+                    <PopoverBody>Aquí debes ingresar la funcion objetivo a optimizar. Usar las variables <b>x</b> e <b>y</b> </PopoverBody>
                   </UncontrolledPopover>
               </InputGroup>
               <br/>
@@ -232,7 +248,17 @@ render(){
             
            
           </Row>
-
+          <br/>
+              <Button
+                
+                
+                outline
+                onClick={() => this.resolucionModelo()}
+                
+                color="success"
+              >
+                Resolver
+              </Button>
 
 
           <Row>
@@ -244,8 +270,8 @@ render(){
                   <h4>Resolucion del problema</h4>
                 </CardTitle>
               </CardHeader>
-              <CardBody>
-              {this.state.model.salida}
+              <CardBody id="resolucion">
+              
 
               </CardBody>
             </Card>
