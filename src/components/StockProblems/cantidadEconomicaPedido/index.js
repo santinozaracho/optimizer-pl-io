@@ -222,17 +222,6 @@ class CantidadEconomicaPedido extends React.Component{
                     <Col>
                         <h2>Modelo clasico con cantidad economica de pedido</h2><br></br>                   
                     </Col>
-                    {/*<Col>
-                    <div>
-                        <div className="justify-content-center">
-                            <div className="info-descarga">
-                            <i class="fas fa-info-circle"></i>
-                            <a>Las números decimales ingresar con . (Ejemplo: 0.02)</a>
-                            </div>
-                        </div>
-                    </div>
-                    </Col>*/}
-                   
                     <Col> 
                         <InputGroup className="mt-3" id={"demanda"} key={"demanda"}>
                             <InputGroupAddon addonType="prepend">
@@ -327,51 +316,28 @@ class CantidadEconomicaPedido extends React.Component{
                             />                        
                         </InputGroup>
                     </Col>
-                    <Col>
-                        <InputGroup className="mt-3">
-                            <InputGroupAddon addonType="prepend">
-                            <InputGroupText><b>{"t0*"}</b></InputGroupText>
-                            </InputGroupAddon>
-                            <Input
-                            name={"longitudCiclo"}
-                            value={longitudCiclo}
-                            placeholder="Ingresar la longitud del ciclo"
-                            onChange={this.handleInputChange}
-                            />                        
-                        </InputGroup>
-                    </Col>
-
-                    <Col>
-                        <InputGroup className="mt-3">
-                            <InputGroupAddon addonType="prepend">
-                            <InputGroupText><b>{"y*"}</b></InputGroupText>
-                            </InputGroupAddon>
-                            <Input
-                            name={"cantidadEconomica"}
-                            value={cantidadEconomica}
-                            placeholder="Ingresar la cantidad economica"
-                            onChange={this.handleInputChange}
-                            />                        
-                        </InputGroup>
-                    </Col>
                     
                     
                     {mostrarResultados && (    //Si mostrarResultados esta en true que quiere decir que apreto el boton
                                                           
                     <Col>
                         <Row>
-                            <Card body inverse style={{ backgroundColor: '#333', borderColor: '#333', marginTop:10}}>
+                            <Card body inverse style={{ backgroundColor: '#333', borderColor: '#333', margin: 15}}>
                                 <CardText>
+                                    <h6 style={{display:'inline'}}>La longitud del ciclo t0* es:</h6> <h5 style={{display:'inline'}}><b>{Number(longitudCiclo).toFixed(2)}</b></h5><br></br>
+                                    <h6 style={{display:'inline'}}>La cantidad economica y* es:</h6> <h5 style={{display:'inline'}}><b>{Number(cantidadEconomica).toFixed(2)} {unidadesDemanda}</b></h5><br></br>
                                     <h6 style={{display:'inline'}}>El costo de inventario TCU(y) es:</h6> <h5 style={{display:'inline'}}><b>${Number(TCU).toFixed(2)}</b></h5><br></br>
                                     <h6 style={{display:'inline'}}>El punto de reorden es:</h6> <h5 style={{display:'inline'}}><b>{Number(puntoDeReorden).toFixed(2)} {unidadesDemanda}</b></h5>
                                     {controlarPolitica}
                                 </CardText>
                             </Card> 
                         </Row>
-                        <Row>
-                            <Card body>
-                                <Graph y={cantidadEconomica} t={longitudCiclo} yProm={Number(cantidadEconomica)/2} title={'Grafico CEP'}/>
-                            </Card>
+                        <Row className="justify-content-end" style={{justifyContent:"center"}}>
+                            <Col>
+                                <Card body>
+                                    <Graph y={cantidadEconomica} t={longitudCiclo} yProm={Number(cantidadEconomica)/2} title={'Grafico CEP'}/>
+                                </Card>
+                            </Col>
                         </Row>  
                     </Col>)}
                            
