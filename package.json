@@ -2,7 +2,7 @@
   "name": "optimizer-pl-io",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://santinozaracho.github.io/optimizer-pl-io",
+  "homepage": "https://nicmalegre.github.io/optimizer-pl-io",
   "dependencies": {
     "@react-pdf/renderer": "^2.0.0-beta.6",
     "algebra.js": "^0.2.6",
@@ -10,7 +10,6 @@
     "chart.js": "^2.9.3",
     "firebase": "^6.2.4",
     "font-awesome": "^4.7.0",
-    "gh-pages": "^2.0.1",
     "javascript-lp-solver": "^0.4.5",
     "randomcolor": "^0.5.4",
     "react": "^16.8.6",
@@ -49,5 +48,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "gh-pages": "^2.2.0"
   }
 }
