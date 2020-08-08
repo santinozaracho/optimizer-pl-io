@@ -5,12 +5,39 @@ const { exp, expression, nthRootsDependencies } = require('mathjs');
 const fetch = require('node-fetch');
 const algebrite = require('algebrite')
 
+var checkIfAllPositive = function(str)
+{
+    let plus = /\[[0-9]|\,[0-9]/;
+    let minus = /-/;
+    if(plus.test(str) && !minus.test(str)){
+        console.log("Fully positive")
+        return true;
+    }
+    else{
+        return false;
+    }
+}
 
+var checkIfAllNegative = function(str)
+{
+    let plus = /\[[0-9]|\,[0-9]/;
+    let minus = /-/;
+    if(minus.test(str) && !plus.test(str)){
+        return true;
+    }
+    else{
+        return false
+    }
+}
 
 //f is the function, g is an array of constraints
-const lagrangeMul =(f,g, objective) => {
+const lagrangeMul =async (f,g, objective) => {
     var nConstraints= g.length
 
+    var resultadoADevolver={
+        puntos:[],
+        tipo:[]
+    }
 
     //first, we create the lagrangian 
     var lagrange = f
@@ -114,6 +141,7 @@ const lagrangeMul =(f,g, objective) => {
         
 
         //Evaluar los elementos en caso de fraccion o raiz
+        console.log("Evaluando los elementos")
         var tempElement
         tempArreglo=[]
         arregloRespuesta.forEach(element =>{
@@ -125,6 +153,8 @@ const lagrangeMul =(f,g, objective) => {
             x0.push(tempArreglo)
             tempArreglo=[]
         })
+        console.log("x0")
+        console.log(x0)
 
         //console.log("x0 en lagrangeMul")
         const compruebaExtremo= function(punto)
@@ -241,34 +271,38 @@ const lagrangeMul =(f,g, objective) => {
             console.log(ecuacionDeterminante)
             var resolucion = algebrite.nroots(ecuacionDeterminante)
             console.log(resolucion.toString())
-        
+            //Now, we must check whether the values are positives or negatives.
+            //An all positive solution means we face a minimum
+            //An all negative solution means we face a maximum
+            //resolucion= resolucion.toString().split(',')
+            console.log("resolucion como arreglo")
+            resolucion= resolucion.toString()
+            if(checkIfAllPositive(resolucion)){
+                resultadoADevolver.puntos.push(punto)
+                resultadoADevolver.tipo.push("min")
+            }
+            else{
+                if(checkIfAllNegative(resolucion)){
+                    resultadoADevolver.puntos.push(punto)
+                    resultadoADevolver.tipo.push("max")
+                }
+                else{
+                    resultadoADevolver.puntos.push(punto)
+                    resultadoADevolver.tipo.push("nae")
+                }
+            }
+            console.log(resultadoADevolver)
+            return resultadoADevolver;
         })
         }
         x0.forEach(element =>{
             compruebaExtremo(element)
         })
         //console.log(x0)
-        
-        
-        
-        
-        
-        
-        
-
-
-        
-        
-        
-        return x0    
+        return resultadoADevolver;    
     }
-    
-    // x0=traerValores(url,callbackFunction);
-
-    traerValores(url,callbackFunction)
-    
-    
-    //return x0.splice(0,n);
+    await traerValores(url,callbackFunction)
+    return resultadoADevolver;
 }
 
 // URL Should be like --> https://nlsystemsolver.herokuapp.com/getmsg/?ecuaciones=1-2*x;z-2*y;2%2By-2*z&variables=x,y,z
@@ -276,5 +310,5 @@ const lagrangeMul =(f,g, objective) => {
 //console.log(lagrangeMul("-x1^2 -(x2 -1)^2",["2*x1+x2-1=0"],"min"));
 //console.log(lagrangeMul("x^2+y^2+z^2",["x^2+y+3*z-2=0","5*x+2*y+z-5=0"],"max"));
 
-lagrangeMul("x1^2+x2^2+x3^2",["4*x1 +x2^2 + 2*x3 - 14=0"],"min");
+console.log(lagrangeMul("x1^2+x2^2+x3^2",["4*x1 +x2^2 + 2*x3 - 14=0"],"min"));
 
