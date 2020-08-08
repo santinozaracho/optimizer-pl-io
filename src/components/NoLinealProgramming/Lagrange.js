@@ -7,7 +7,13 @@ import ReactDOM from 'react-dom'
 const {lagrangeMul} = require('./Methods/lagrangeMul')
 
 //import lagrangeMul from './Methods/lagrangeMul'
+//El formato de lo que se devuelve es el siguiente
 
+//salida:{
+//  puntos:[[x,y,z], [x2,y2,z2],[x3,y3,z3]],
+//  tipos:["min","max","nae",...]
+//}
+//cada punto es una tupla de valores, y puede tener tres tipos, minimo, maximo, y notanextreme: nae
 class Lagrange extends React.Component{
 constructor(props){
     super(props)
@@ -59,11 +65,14 @@ handleObjective = objective => {
     try{
       lagrangeMul(funcion, ["4*x1+x2^2+2*x3-14=0"],"min")
       .then((solucion) => {
-        console.log("Then en resolverLagrange - lagrangeMul")
-        console.log(solucion)
-        this.setState({salida:solucion})
-        this.muestraResultado();
-      });
+        if(solucion !== undefined && solucion.hasOwnProperty("tipo")){
+          console.log("Then en resolverLagrange - lagrangeMul")
+          console.log(solucion)
+          this.setState({salida:solucion})
+          this.muestraResultado();
+        }
+        
+      })
       
     }
     catch(error) {
@@ -74,7 +83,7 @@ handleObjective = objective => {
 
 
   muestraResultado(){
-    let {salida} = this.state
+    let {salida} = this.state.salida
     console.log("En muestraResultado")
     console.log(this.state.salida)
     
@@ -93,7 +102,7 @@ handleObjective = objective => {
             </div>)
           */ }
          
-          <b>Funcion valuada en el punto:</b> 
+        <b>Funcion valuada en el punto:</b>{this.state.salida.tipo[0]}
         </div>
       )
       
