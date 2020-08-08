@@ -65,11 +65,26 @@ handleObjective = objective => {
     try{
       lagrangeMul(funcion, ["4*x1+x2^2+2*x3-14=0"],"min")
       .then((solucion) => {
-        if(solucion !== undefined && solucion.hasOwnProperty("tipo")){
+        if(solucion !== undefined && solucion!== false && solucion.hasOwnProperty("tipo")){
           console.log("Then en resolverLagrange - lagrangeMul")
           console.log(solucion)
           this.setState({salida:solucion})
-          this.muestraResultado();
+          let resolucion=(
+            <div>
+              <b>Caso</b>: 
+              {/*
+                ptofactible.map((elem,index)=><div>
+                  <b>X{index+1}</b> : {elem.toFixed(2)}
+    
+    
+                </div>)
+              */ }
+             
+            <b>Funcion valuada en el punto:</b>{solucion.tipo[0]}
+            </div>
+          )
+          
+          ReactDOM.render(resolucion, document.getElementById("resolucion"))
         }
         
       })
@@ -86,7 +101,6 @@ handleObjective = objective => {
     let {salida} = this.state.salida
     console.log("En muestraResultado")
     console.log(this.state.salida)
-    
       //Resolucion
       
       
@@ -102,7 +116,7 @@ handleObjective = objective => {
             </div>)
           */ }
          
-        <b>Funcion valuada en el punto:</b>{this.state.salida.tipo[0]}
+        <b>Funcion valuada en el punto:</b>{}
         </div>
       )
       
