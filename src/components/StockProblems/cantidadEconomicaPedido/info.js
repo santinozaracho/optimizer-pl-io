@@ -25,11 +25,15 @@ const info = () => {
                         <h5><b>Hipotesis</b></h5>
                     </Row>
                     <ul className='lista'>
-                        <li></li>
-                        <li></li>
-                        <li></li>
-                        <li></li>
-                        <li></li>
+                        <li>No tenemos en cuenta si contamos o no con los recursos financieros</li>
+                        <li>No hay inflasión</li>
+                        <li>No se permiten faltantes</li>
+                        <li>Demanda constante y conocida.</li>
+                        <li>Resposición instantánea.</li>
+                        <li>Costo unitario de almacenamiento por unidad de tiempo h, constante.</li>
+                        <li>Costo de preparacion 𝑘, constante.</li>
+                        <li>No existen otros costos.</li>
+                        <li>Al comienzo de cada periodo no hay stock ni pedidos insatisfechos.</li>
                     </ul>
                 </Card>
             </Row>
@@ -40,7 +44,7 @@ const info = () => {
                     </Row>
                     <ul className='lista'>
                         <li><b>D: </b>Demanda</li>
-                        <li><b>K: </b>Costo por pedido</li>
+                        <li><b>K: </b>Costo de preparacion</li>
                         <li><b>h: </b>Costo de almacenamiento</li>
                         <li><b>L: </b>Tiempo de entrega</li>
                         <li><b>t0*: </b>Longitud de ciclo</li>

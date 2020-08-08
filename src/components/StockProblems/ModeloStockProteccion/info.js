@@ -26,11 +26,18 @@ const info = () => {
                         <h5><b>Hipotesis</b></h5>
                     </Row>
                     <ul className='lista'>
-                        <li>Tasa constante de demanda con el surtido instantáneo del pedido y sin faltante</li>
-                        <li>Una vez pedido el stock se actualiza automaticamente.</li>
-                        <li></li>
-                        <li></li>
-                        <li></li>
+                        <li>No tenemos en cuenta si contamos o no con los recursos financieros</li>
+                        <li>No hay inflasión</li>
+                        <li>No se permiten faltantes</li>
+                        <li>Demanda constante y conocida.</li>
+                        <li>Resposición instantánea.</li>
+                        <li>Costo unitario de almacenamiento por unidad de tiempo 𝑐1, constante.</li>
+                        <li>Costo de preparacion 𝑘, constante.</li>
+                        <li>Costo unitario de producto 𝑏, constante.</li>
+                        <li>No existen otros costos.</li>
+                        <li>No existen restricciones.</li>
+                        <li>Se mantiene almacenada una cantidad 𝑆𝑝 en forma permanente.</li>
+                        <li>Al comienzo de cada periodo no hay stock ni pedidos insatisfechos.</li>
                     </ul>
                 </Card>
             </Row>
@@ -43,7 +50,8 @@ const info = () => {
                         <li><b>D: </b>Demanda</li>
                         <li><b>K: </b>Costo de preparacion</li>
                         <li><b>c1: </b>Costo de almacenamiento</li>
-                        <li><b>b: </b>Costo por compra por unidad</li>
+                        <li><b>b: </b>Costo unitario de producto</li>
+                        <li><b>sp: </b>Stock de protección</li>
                         
                     </ul>
                 </Card>

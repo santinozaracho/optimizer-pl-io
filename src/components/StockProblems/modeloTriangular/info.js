@@ -25,11 +25,16 @@ const info = () => {
                         <h5><b>Hipotesis</b></h5>
                     </Row>
                     <ul className='lista'>
-                        <li></li>
-                        <li></li>
-                        <li></li>
-                        <li></li>
-                        <li></li>
+                        <li>No tenemos en cuenta si contamos o no con los recursos financieros</li>
+                        <li>No hay inflasión</li>
+                        <li>Demanda constante y conocida.</li>
+                        <li>Resposición se hace a una tasa constante 𝑝.</li>
+                        <li>Costo unitario de almacenamiento por unidad de tiempo 𝑐1, constante.</li>
+                        <li>Costo de preparacion 𝑘, constante.</li>
+                        <li>Costo unitario de producto 𝑏, constante.</li>
+                        <li>No existen otros costos.</li>
+                        <li>No existen restricciones.</li>
+                        <li>Al comienzo de cada periodo no hay stock ni pedidos insatisfechos.</li>
                     </ul>
                 </Card>
             </Row>
@@ -40,18 +45,18 @@ const info = () => {
                     </Row>
                     <ul className='lista'>
                         <li><b>D: </b>Demanda</li>
-                        <li><b>K: </b>Costo por pedido</li>
-                        <li><b>h: </b>Costo de almacenamiento</li>
-                        <li><b>L: </b>Tiempo de entrega</li>
-                        <li><b>t0*: </b>Longitud de ciclo</li>
-                        <li><b>y*: </b>Cantidad economica</li>  
+                        <li><b>K: </b>Costo de preparacion</li>
+                        <li><b>c1: </b>Costo de almacenamiento</li>
+                        <li><b>b: </b>Costo unitario de producto</li>
+                        <li><b>p: </b>Velocidad de reposición</li>
+                        
                     </ul>
                 </Card>
             </Row>
             <Row className="justify-content-left">
                 <Card body outline color="secondary">
                     <CardTitle><b>Bibliografia</b></CardTitle>
-                    <CardText>TAHA HAMDY A., “Investigación de Operaciones”, EDITORIAL Pearson Prentice Hall, 2004 </CardText>
+                    <CardText>Claudio L. R. Sturla</CardText>
                 </Card>
             </Row>
             
