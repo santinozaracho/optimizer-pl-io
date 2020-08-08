@@ -1,7 +1,7 @@
 import React from 'react';
 import {CardBody, Card, CardHeader,CardFooter,Table,Row,Col,CardTitle,Button} from 'reactstrap';
 import {XYPlot, XAxis, YAxis, HorizontalGridLines,LineSeries, AreaSeries, VerticalGridLines,MarkSeries,DiscreteColorLegend,Hint} from 'react-vis';
-import {Expression, Equation,Fraction} from 'algebra.js';
+import {Expression, Equation, Fraction} from 'algebra.js';
 // import { Fraction as otroFraction } from 'fraction.js'
 
 import ReferencesList from '../ReferencesList';
@@ -66,9 +66,6 @@ class GraphicPresentation extends React.Component{
     }
     // funcion para controlar si el numero es float 
     
-
-
-
     getLinesAndExpressions = restricciones => {
 
         // original (y asquerosa)
@@ -76,6 +73,8 @@ class GraphicPresentation extends React.Component{
 
         // nueva
         const getFrac = real => {
+            console.log('ESTOY EN getFrac')
+            console.log(real)
             if(real !== 0){
 
                 if(real.toString().includes('e')){
@@ -89,8 +88,6 @@ class GraphicPresentation extends React.Component{
                     var denominador = Math.round(Math.pow(10,(real - real.toFixed()).toString().length - 2))
                     return new Fraction(numerador, denominador)
                 }
-
-
             }else{
                 // lado derecho igual a 0 
                 return 0
@@ -113,60 +110,25 @@ class GraphicPresentation extends React.Component{
 
             let yNum = !Number.isInteger(Number(restri.coeficientes[1])) ? getFrac(Number(restri.coeficientes[1])):Number(restri.coeficientes[1]);
             
-            // if(esFlotante(restri.derecha)){
-            //     // el lado derecho de la restrccion es float, tiene tratamiento distinto
-
-            //     var nuevaFraction = new otroFraction(restri.derecha)
-
-            //     if(restri.derecha.toString().includes('e')){
-            //         // el numero esta expresado en formato con "e", ej: 10e-9
-            //         // tambien tiene tratamiento distinto
-
-            //         console.log('numero CON e: ' + restri.derecha)
-            //         var convertido = Number(fromExponential(restri.derecha))
-            //         console.log('numero SIN e: ' + convertido)
-
-            //         var f  = new Fractional(convertido);
-            //         // console.log(f.numerator+"/"+f.denominator);
-            //         restri.derecha = new Fraction(f.numerator,f.denominator);
-
-            //     } else {
-            //         // el numero es float, pero no esta expresado en e-notation
-            //         // var f  = new Fractional(restri.derecha);
-            //         // console.log(f.numerator+"/"+f.denominator);
-            //         console.log('sin pasar a fraccion: ' + restri.derecha)
-            //         restri.derecha = new Fraction(nuevaFraction.numerator,nuevaFraction.denominator);
-            //         console.log('pasando a fraccion: ' + restri.derecha)
-            //     }
-
-            // }
-
             // Si posee ambos coeficientes entoces es una recta con pendiente.
             if ( xNum !== 0  &&  yNum!== 0) {
                 let x = new Expression('x').multiply(xNum);
                 let y = new Expression('y').multiply(yNum);
                 let expressRestri = new Expression().add(x).add(y);  
 
-                console.log(restri.derecha);
-                console.log(typeof restri.derecha);
-
                 //No se puede pasar con decimal a la ecuacion (lado derecho de la restriccion)
                 //Se lo pasa a fraccion en ese caso
                 
-
-                // if(esFlotante(restri.derecha)){
-                //     var f  = new Fractional(restri.derecha);
-                //     console.log(f.numerator+"/"+f.denominator);
-                //     restri.derecha = new Fraction(f.numerator,f.denominator);
-                // }
-
+                if(esFlotante(restri.derecha)){
+                    // si el lado derecho de la restriccion es float, tenemos que pasar
+                    // a Fraction
+                    var ladoDerecho = getFrac(restri.derecha)
+                } else{
+                    // si el lado derecho de la restriccion NO es float, lo dejamos
+                    // como esta (Expression)
+                    var ladoDerecho = restri.derecha
+                }
                 
-                // restri.derecha = new Fraction(f.numerator,f.denominator);
-
-                console.log('SIN CONVERTIR: ' + restri.derecha)
-                var ladoDerecho = getFrac(restri.derecha)
-                console.log('CONVERTIDO: ' + ladoDerecho)
-
                 // A restri.derecha la tenemos que hacer pasar por getFrac 
                 let restriEquation = new Equation(expressRestri,ladoDerecho)
                 expresiones.push({restriEquation,tipo:2})
@@ -272,12 +234,12 @@ class GraphicPresentation extends React.Component{
                     let xPoint = !Number.isInteger(Number(optimPoint.x)) ? getFrac(Number(optimPoint.x)):Number(optimPoint.x);
 
                     let yPoint = !Number.isInteger(Number(optimPoint.y)) ? getFrac(Number(optimPoint.y)):Number(optimPoint.y);
-               
+
                     let xExp = new Expression('x').subtract(xPoint).multiply(variables[0].coeficiente);
                     let yExp = new Expression('y').subtract(yPoint).multiply(variables[1].coeficiente);
                     
                     let expFunObj = new Equation(new Expression().add(xExp).add(yExp),0);  
-          
+
                     let xEqu = (new Equation(expFunObj.solveFor('y'),0)).solveFor('x');
 
                     let yEqu = (new Equation(expFunObj.solveFor('x'),0)).solveFor('y');

@@ -47,7 +47,7 @@ const lagrangeMul =async (f,g, objective) => {
     var ladoIzqRestriccion = [];
     var lagrangeExpr;
     var variables;
-    var n= 0; //number of variables
+    var n = 0; //number of variables
     var todosLagrange=[];
     g.forEach(element => {
         ladoIzqRestriccion.push(element.split('=')[0])
@@ -76,6 +76,9 @@ const lagrangeMul =async (f,g, objective) => {
     variablesURL = variablesURL.slice(0,variablesURL.length-1);
     console.log(ecuacionesURL)
     url = url + '?ecuaciones=' + ecuacionesURL + '&variables=' + variablesURL;
+    url = url.split('+').join('%2B'); // Replace every plus with a %2B
+    url = url.split(/\s/g).join(''); // Eliminate spaces for url
+    url = url.split('^').join('**'); // Change ^ to **
     
     // Replace every plus with a %2B
     url = url.split('+').join('%2B');
