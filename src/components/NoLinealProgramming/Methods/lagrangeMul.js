@@ -89,21 +89,18 @@ const lagrangeMul =async (f,g, objective) => {
     console.log(url)
     x0=[]
  
-
-    // peto 
     // Fetch to get the variables values
     const traerValores = async (url,callback) => {
         const variable = await fetch(url,{method:'GET'})
         .then(res => res.json())
         .then(json => {
-            x1=[]
             return callback(json.MESSAGE)
         });
         
         return variable;
     }
 
-    callbackFunction = (data) =>{
+    callbackFunction = async (data) =>{
         // console.log(data)
         respuesta = data
         var stringRespuesta =''
@@ -153,25 +150,25 @@ const lagrangeMul =async (f,g, objective) => {
             x0.push(tempArreglo)
             tempArreglo=[]
         })
-        console.log("x0")
-        console.log(x0)
+        //console.log("x0")
+        //console.log(x0)
 
         //console.log("x0 en lagrangeMul")
-        const compruebaExtremo= function(punto)
+        const compruebaExtremo= async function(punto)
         {
             let x0 = punto;
             var m = ladoIzqRestriccion.length; //Columns number of restrictions
-            console.log("n al principio de compruebaExtremo")
-            console.log(n)
-             //substracting the lambdas
+            //console.log("n al principio de compruebaExtremo")
+            //console.log(n)
+            
             // Generate P array, where [[Ng1(x), Ng1(x2)],[Ng2(x1),Ng2(x2)]]
             var P = math.zeros(m,n)
             
             var tempRestriccion;
             var varP;
             var scope = {}
-            console.log("Variables")
-            console.log(variables)
+            //console.log("Variables")
+            //console.log(variables)
             for (let k = 0; k < variables.length; k++) {
                 scope[variables[k]]=x0[k]    
             }
@@ -180,13 +177,13 @@ const lagrangeMul =async (f,g, objective) => {
                 for(var j = 0; j < n; j+=1) //each variable
                 {
                     tempRestriccion = ladoIzqRestriccion[i];   
-                    console.log("tempRestriccion")
-                    console.log(tempRestriccion)
+                    //console.log("tempRestriccion")
+                    //console.log(tempRestriccion)
                     varP = variables[j].toString();
                     tempRestriccion = math.derivative(tempRestriccion, varP); 
                     tempRestriccion = math.evaluate(tempRestriccion.toString(),scope)
-                    console.log("tempReestriccion evaluada")
-                    console.log(tempRestriccion)
+                    //console.log("tempReestriccion evaluada")
+                    //console.log(tempRestriccion)
                     P.subset(math.index(i, j), tempRestriccion);
                 }
             }
@@ -194,7 +191,7 @@ const lagrangeMul =async (f,g, objective) => {
             // Load P in Hessiano
             var hessiano = math.zeros(m+n,m+n)
             //P deberia ser mas grande
-            console.log(P._data)
+            //console.log(P._data)
             for(var i = 0; i < m; i+=1) //each restriction
             {
                 for(var j = n-1; j < m+n; j+=1) //each variable
@@ -234,7 +231,7 @@ const lagrangeMul =async (f,g, objective) => {
                     if(k===l)//diagonal points
                     {
                         tempDerSeg+= '-k'
-                        console.log(tempDerSeg)
+                        //console.log(tempDerSeg)
                         
                     }
                     //var tempDerSegP=anotherParser.evaluate(tempDerSeg.toString())
@@ -242,8 +239,8 @@ const lagrangeMul =async (f,g, objective) => {
                     Q.subset(math.index(k,l),tempDerSeg)
                 }
             }
-            console.log("Q")
-            console.log(Q)
+            //console.log("Q")
+            //console.log(Q)
             //copy Q into Hessian Matrix
             for(var i = 0;i < n; i+=1){
                 for (let j = 0; j < n; j++) {
@@ -258,51 +255,53 @@ const lagrangeMul =async (f,g, objective) => {
             //Generate url for determinant solver
             tamHessiano = m+n
             urlDetSolver='https://nlsystemsolver.herokuapp.com/detSolver?n='+tamHessiano+'&elementos='+elementos
-            console.log(urlDetSolver)
+            //console.log(urlDetSolver)
 
-            fetch(urlDetSolver,{method:'GET'})
+            await fetch(urlDetSolver,{method:'GET'})
             .then((response) => response.json())
             .then(json => {
-            var ecuacionDeterminante = json.MESSAGE
+                var ecuacionDeterminante = json.MESSAGE
             
-            ecuacionDeterminante= ecuacionDeterminante.split('**').join('^')
-            ecuacionDeterminante= ecuacionDeterminante.split('k').join('x')
-            console.log("Ecuacion del determinante")
-            console.log(ecuacionDeterminante)
-            var resolucion = algebrite.nroots(ecuacionDeterminante)
-            console.log(resolucion.toString())
-            //Now, we must check whether the values are positives or negatives.
-            //An all positive solution means we face a minimum
-            //An all negative solution means we face a maximum
-            //resolucion= resolucion.toString().split(',')
-            console.log("resolucion como arreglo")
-            resolucion= resolucion.toString()
-            if(checkIfAllPositive(resolucion)){
-                resultadoADevolver.puntos.push(punto)
-                resultadoADevolver.tipo.push("min")
-            }
-            else{
-                if(checkIfAllNegative(resolucion)){
+                ecuacionDeterminante= ecuacionDeterminante.split('**').join('^')
+                ecuacionDeterminante= ecuacionDeterminante.split('k').join('x')
+                //console.log("Ecuacion del determinante")
+                //console.log(ecuacionDeterminante)
+                var resolucion = algebrite.nroots(ecuacionDeterminante)
+                //console.log(resolucion.toString())
+                //Now, we must check whether the values are positives or negatives.
+                //An all positive solution means we face a minimum
+                //An all negative solution means we face a maximum
+                 //resolucion= resolucion.toString().split(',')
+                //console.log("resolucion como arreglo")
+                resolucion= resolucion.toString()
+                if(checkIfAllPositive(resolucion)){
                     resultadoADevolver.puntos.push(punto)
-                    resultadoADevolver.tipo.push("max")
+                    resultadoADevolver.tipo.push("min")
                 }
                 else{
-                    resultadoADevolver.puntos.push(punto)
-                    resultadoADevolver.tipo.push("nae")
+                    if(checkIfAllNegative(resolucion)){
+                        resultadoADevolver.puntos.push(punto)
+                        resultadoADevolver.tipo.push("max")
+                    }
+                    else{
+                        resultadoADevolver.puntos.push(punto)
+                        resultadoADevolver.tipo.push("nae")
+                    }
                 }
-            }
-            console.log(resultadoADevolver)
-            return resultadoADevolver;
-        })
+                console.log("Despues de hacer la comprobacion")
+                console.log(resultadoADevolver)
+                return resultadoADevolver;
+            })
         }
-        x0.forEach(element =>{
-            compruebaExtremo(element)
+        x0.forEach(async element =>{
+            await compruebaExtremo(element)
         })
         //console.log(x0)
         return resultadoADevolver;    
     }
-    await traerValores(url,callbackFunction)
-    return resultadoADevolver;
+    var objetoADevolver = await traerValores(url,callbackFunction)
+    
+    return objetoADevolver;
 }
 module.exports ={lagrangeMul};
 // URL Should be like --> https://nlsystemsolver.herokuapp.com/getmsg/?ecuaciones=1-2*x;z-2*y;2%2By-2*z&variables=x,y,z
@@ -310,5 +309,5 @@ module.exports ={lagrangeMul};
 //console.log(lagrangeMul("-x1^2 -(x2 -1)^2",["2*x1+x2-1=0"],"min"));
 //console.log(lagrangeMul("x^2+y^2+z^2",["x^2+y+3*z-2=0","5*x+2*y+z-5=0"],"max"));
 
-console.log(lagrangeMul("x1^2+x2^2+x3^2",["4*x1 +x2^2 + 2*x3 - 14=0"],"min"));
+lagrangeMul("x1^2+x2^2+x3^2",["4*x1 +x2^2 + 2*x3 - 14=0"],"min");
 
