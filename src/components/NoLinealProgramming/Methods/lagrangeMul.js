@@ -304,7 +304,7 @@ const lagrangeMul =async (f,g, objective) => {
     await traerValores(url,callbackFunction)
     return resultadoADevolver;
 }
-
+module.exports ={lagrangeMul};
 // URL Should be like --> https://nlsystemsolver.herokuapp.com/getmsg/?ecuaciones=1-2*x;z-2*y;2%2By-2*z&variables=x,y,z
 // 2*x**2-L1*3x  "2*x^2",["3*x=12"],"max"
 //console.log(lagrangeMul("-x1^2 -(x2 -1)^2",["2*x1+x2-1=0"],"min"));
