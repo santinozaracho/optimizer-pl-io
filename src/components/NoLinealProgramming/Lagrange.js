@@ -39,7 +39,7 @@ handleObjective = objective => {
       
       for (var i = 0; i < arregloRestricciones.length; i++) {
         arregloRestricciones[i] = arregloRestricciones[i].trim()
-         }
+      }
       //se pone [0] porque probamos cargar una sola restriccion
       model["restricciones"]=arregloRestricciones;
     }
@@ -47,29 +47,36 @@ handleObjective = objective => {
       model[nombre] = valor;
     }
     this.setState({model})
-    
+    console.log("Dentro de handle input")
+    console.log(this.state.model)
   }
 
   resolverLagrange(){
     
     let {funcion, restricciones, obj } = this.state.model;
+    console.log("Dentro de resolverLagrange")
+    console.log(funcion)
     try{
-    lagrangeMul(funcion, restricciones, obj)
-    .then((solucion) => {
-      this.setState({salida:solucion})
-    });
-    this.muestraResultado();
-  }
-  catch(error) {
-    console.log(error)
-  } 
+      lagrangeMul(funcion, ["4*x1+x2^2+2*x3-14=0"],"min")
+      .then((solucion) => {
+        console.log("Then en resolverLagrange - lagrangeMul")
+        console.log(solucion)
+        this.setState({salida:solucion})
+        this.muestraResultado();
+      });
+      
+    }
+    catch(error) {
+      console.log(error)
+    } 
     console.log(this.state.salida);  
   }
 
 
   muestraResultado(){
     let {salida} = this.state
-    
+    console.log("En muestraResultado")
+    console.log(this.state.salida)
     
       //Resolucion
       
@@ -85,6 +92,7 @@ handleObjective = objective => {
 
             </div>)
           */ }
+         
           <b>Funcion valuada en el punto:</b> 
         </div>
       )
