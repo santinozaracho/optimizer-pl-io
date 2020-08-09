@@ -291,7 +291,7 @@ class ModeloStockProteccion extends React.Component{
                         </Row>
                         <Row>
                             <Card body>
-                                <Graph sr={StockDeProteccion} y={loteOptimo} t={tiempoEntrePedidos} yProm={Number(loteOptimo)/2} title={'Grafico Stock de Proteccion'}/>
+                                <Graph y={loteOptimo} t={tiempoEntrePedidos} sr={StockDeProteccion} yProm={Number(loteOptimo)/2} title={'Grafico Stock de Proteccion'}/>
                             </Card>
                         </Row>  
                     </Col>)}

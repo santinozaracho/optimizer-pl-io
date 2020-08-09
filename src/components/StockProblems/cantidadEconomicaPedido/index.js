@@ -363,7 +363,7 @@ class CantidadEconomicaPedido extends React.Component{
                         <Row className="justify-content-end" style={{justifyContent:"center"}}>
                             <Col>
                                 <Card body>
-                                    <Graph y={cantidadEconomica} t={longitudCiclo} yProm={Number(cantidadEconomica)/2} title={'Grafico CEP'}/>
+                                    <Graph y={cantidadEconomica} t={longitudCiclo} puntoDeReorden={puntoDeReorden} yProm={Number(cantidadEconomica)/2} title={'Grafico CEP'}/>
                                 </Card>
                             </Col>
                         </Row>  
