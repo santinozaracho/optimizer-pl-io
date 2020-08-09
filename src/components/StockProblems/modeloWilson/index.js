@@ -1,6 +1,6 @@
 import React from "react";
 import { ButtonGroup, Button, Container, Row, Col, Card, CardBody, CardHeader, CardTitle, Jumbotron, Dropdown, DropdownItem, ButtonDropdown, DropdownMenu, DropdownToggle} from "reactstrap";
-import {InputGroupText,InputGroup, Input,InputGroupAddon,PopoverBody, CardText} from 'reactstrap';
+import {InputGroupText,InputGroup, Input,InputGroupAddon,PopoverBody, CardText, Table} from 'reactstrap';
 import {Link} from 'react-router-dom';
 import '../index.css'
 import Graph from "../Graph";
@@ -237,9 +237,50 @@ class ModeloWilson extends React.Component{
                                                           
                     <Col>
                         <Row>
-                            <Card body inverse style={{ backgroundColor: '#333', borderColor: '#333', marginTop:10}}>
-                                <CardText>
-                                    <h6 style={{display:'inline'}}>El lote optimo es:</h6> <h5 style={{display:'inline'}}><b>{Number(loteOptimo).toFixed(2)}</b></h5><br></br>
+                            <Card body inverse style={{ backgroundColor: '#333', borderColor: '#333', marginTop:20}}>
+                                <CardText className="text-left">
+                                <Table dark>
+                                <thead>
+                                    <tr>
+                                    <th>Variable</th>
+                                    <th>Nombre Variable</th>
+                                    <th><b>Resultado</b></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>q</td>
+                                        <td>Lote optimo</td>
+                                        <td>{Number(loteOptimo).toFixed(2)}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>t0</td>
+                                        <td>Tiempo entre Pedidos</td>
+                                        <td>{Number(tiempoEntrePedidos).toFixed(2)}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>CTPrep</td>
+                                        <td>Costo Total Preparacion</td>
+                                        <td>{Number(costoDePreparacionTotal).toFixed(2)}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>CTProp</td>
+                                        <td>Costo total Producto</td>
+                                        <td>{Number(costoDeProductoTotal).toFixed(2)}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>CTA</td>
+                                        <td>Costo Total Almacenamiento</td>
+                                        <td>{Number(costoDeAlmacenamientoTotal).toFixed(2)}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>CTE</td>
+                                        <td>Costo Total Esperado</td>
+                                        <td>{Number(CTE).toFixed(2)}</td>
+                                    </tr>
+                                </tbody>
+                                </Table>
+                                    
                                     <h6 style={{display:'inline'}}>El tiempo entre pedidos es:</h6> <h5 style={{display:'inline'}}><b>{Number(tiempoEntrePedidos).toFixed(2)}</b></h5><br></br>
                                     <h6 style={{display:'inline'}}>El costo total de preparacion es:</h6> <h5 style={{display:'inline'}}><b>{Number(costoDePreparacionTotal).toFixed(2)}</b></h5><br></br>
                                     <h6 style={{display:'inline'}}>El costo total propio del producto es:</h6> <h5 style={{display:'inline'}}><b>{Number(costoDeProductoTotal).toFixed(2)}</b></h5><br></br>
@@ -247,7 +288,7 @@ class ModeloWilson extends React.Component{
                                     <h6 style={{display:'inline'}}>El costo total esperado es:</h6> <h5 style={{display:'inline'}}><b>${Number(CTE).toFixed(2)}</b></h5><br></br>
                                     <Col>
                                         <Card body inverse color="primary" style={{marginTop:10, padding: '5px 0 0 0'}}>
-                                            <CardText>
+                                            <CardText className="text-center">
                                             <h5>Pedir {Number(loteOptimo).toFixed(2)} {unidadesDemanda} cada {Number(tiempoEntrePedidos).toFixed(2)} {unidadesAlmacenamiento}</h5>
                                             </CardText>
                                         </Card>   
@@ -255,7 +296,7 @@ class ModeloWilson extends React.Component{
                                 </CardText>
                             </Card>
                         </Row>
-                        <Row>
+                        <Row style={{marginTop:10}}>
                             <Card body>
                                 <Graph y={loteOptimo} t={tiempoEntrePedidos} yProm={Number(loteOptimo)/2} title={'Grafico Modelo Wilson'}/>
                             </Card>
