@@ -1,6 +1,6 @@
 import React from "react";
-import { ButtonGroup, Button, Container, Row, Col, Card, CardBody, CardHeader, CardTitle, Jumbotron, Dropdown, DropdownItem, ButtonDropdown, DropdownMenu, DropdownToggle} from "reactstrap";
-import {InputGroupText,InputGroup, Input,InputGroupAddon,PopoverBody, CardText} from 'reactstrap';
+import { Button, Container, Row, Col, Card,Jumbotron} from "reactstrap";
+import {InputGroupText,InputGroup, Input,InputGroupAddon,CardText,Table} from 'reactstrap';
 import {Link} from 'react-router-dom';
 import '../index.css';
 import Graph from "../Graph";
@@ -324,10 +324,38 @@ class CantidadEconomicaPedido extends React.Component{
                         <Row>
                             <Card body inverse style={{ backgroundColor: '#333', borderColor: '#333', margin: 15}}>
                                 <CardText>
-                                    <h6 style={{display:'inline'}}>La longitud del ciclo t0* es:</h6> <h5 style={{display:'inline'}}><b>{Number(longitudCiclo).toFixed(2)}</b></h5><br></br>
-                                    <h6 style={{display:'inline'}}>La cantidad economica y* es:</h6> <h5 style={{display:'inline'}}><b>{Number(cantidadEconomica).toFixed(2)} {unidadesDemanda}</b></h5><br></br>
-                                    <h6 style={{display:'inline'}}>El costo de inventario TCU(y) es:</h6> <h5 style={{display:'inline'}}><b>${Number(TCU).toFixed(2)}</b></h5><br></br>
-                                    <h6 style={{display:'inline'}}>El punto de reorden es:</h6> <h5 style={{display:'inline'}}><b>{Number(puntoDeReorden).toFixed(2)} {unidadesDemanda}</b></h5>
+                                <Table dark className="text-center">
+                                        <thead>
+                                            <tr>
+                                                <th>Variable</th>
+                                                <th>Nombre Variable</th>
+                                                <th className="text-left"><b>Resultado</b></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>t0*</td>
+                                                <td>Longitud del Ciclo</td>
+                                                <td className="text-left"><b>{Number(longitudCiclo).toFixed(2)} {unidadesAlmacenamiento}</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td>y*</td>
+                                                <td>Cantidad Economica</td>
+                                                <td className="text-left"><b>{Number(cantidadEconomica).toFixed(2)} {unidadesDemanda}</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>Punto de Reorden</td>
+                                                <td className="text-left"><b>{Number(puntoDeReorden).toFixed(2)} {unidadesDemanda}</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td>TCU(y)</td>
+                                                <td>Costo de Inventario</td>
+                                                <td className="text-left"><b>${Number(TCU).toFixed(2)}</b></td>
+                                            </tr>
+                                            
+                                        </tbody>
+                                    </Table>
                                     {controlarPolitica}
                                 </CardText>
                             </Card> 

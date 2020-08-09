@@ -1,6 +1,6 @@
 import React from "react";
-import { ButtonGroup, Button, Container, Row, Col, Card, CardBody, CardHeader, CardTitle, Jumbotron, Dropdown, DropdownItem, ButtonDropdown, DropdownMenu, DropdownToggle} from "reactstrap";
-import {InputGroupText,InputGroup, Input,InputGroupAddon,PopoverBody, CardText} from 'reactstrap';
+import {Button, Container, Row, Col, Card,Jumbotron, Table} from "reactstrap";
+import {InputGroupText,InputGroup, Input,InputGroupAddon, CardText} from 'reactstrap';
 import {Link} from 'react-router-dom';
 import '../index.css'
 import Graph from "../Graph";
@@ -84,26 +84,6 @@ class ModeloStockProteccion extends React.Component{
         let {LeadTime,demanda,StockDeProteccion} = this.state;
       return((LeadTime*demanda)+StockDeProteccion)//sp
     }
-
-    /* //FUNCIONES QUE NO ESTAMOS OCUPANDO
-    calcularCostoTotalEsperadoConQ(){
-        let {costoDeAdquisicion,demanda,CostoDeUnaOrden,CostoUnitarioDeAlmacenamiento,StockDeProteccion,T} = this.state;
-        let q = this.calcularTamañoDelLote();
-        return((costoDeAdquisicion*demanda)+(q*CostoUnitarioDeAlmacenamiento*T)/2+CostoDeUnaOrden/(demanda/q)*StockDeProteccion*CostoUnitarioDeAlmacenamiento*T)//CTEo
-    }
-
-    calcularIntervaloDeUnCicloSinRaiz()
-    {
-        let {demanda, T} = this.state;
-        return ((this.calcularTamañoDelLote()*T)/(demanda)); //to
-    }
-
-    calcularTamañoDelLoteSinRaiz(){
-        let {demanda, T, } = this.state;
-        let to = this.calcularIntervaloDeUnCiclo()
-        return ((demanda*to)/T); //q
-    }
-    */
 
     mostrarResultados = () => {
         let {demanda, costoDeAdquisicion, CostoUnitarioDeAlmacenamiento, CostoDeUnaOrden, T,LeadTime,StockDeProteccion} = this.state;
@@ -253,11 +233,52 @@ class ModeloStockProteccion extends React.Component{
                                                           
                     <Col>
                         <Row>
-                            <Card body inverse style={{ backgroundColor: '#333', borderColor: '#333', marginTop:10}}>
+                            <Card body inverse style={{ backgroundColor: '#333', borderColor: '#333', margin:15}}>
                                 <CardText>
-                                    <h6 style={{display:'inline'}}>El lote optimo es:</h6> <h5 style={{display:'inline'}}><b>{Number(loteOptimo).toFixed(2)}</b></h5><br></br>
-                                    <h6 style={{display:'inline'}}>El tiempo entre pedidos es:</h6> <h5 style={{display:'inline'}}><b>{Number(tiempoEntrePedidos).toFixed(2)}</b></h5><br></br>
-                                    <h6 style={{display:'inline'}}>El costo total esperado es:</h6> <h5 style={{display:'inline'}}><b>${Number(CTE).toFixed(2)}</b></h5><br></br>
+                                <Table dark className="text-center">
+                                        <thead>
+                                            <tr>
+                                                <th>Variable</th>
+                                                <th>Nombre Variable</th>
+                                                <th className="text-left"><b>Resultado</b></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>q</td>
+                                                <td>Lote optimo</td>
+                                                <td className="text-left"><b>{Number(loteOptimo).toFixed(2)} {unidadesDemanda}</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td>t0</td>
+                                                <td>Tiempo entre Pedidos</td>
+                                                <td className="text-left"><b>{Number(tiempoEntrePedidos).toFixed(2)} {unidadesAlmacenamiento}</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td>CTPrep</td>
+                                                <td>Costo Total Preparacion</td>
+                                                <td></td>
+                                                {/*<td className="text-left"><b>$ {Number(costoDePreparacionTotal).toFixed(2)}</b></td>*/}
+                                            </tr>
+                                            <tr>
+                                                <td>CTProp</td>
+                                                <td>Costo total Producto</td>
+                                                <td></td>
+                                                {/*<td className="text-left"><b>$ {Number(costoDeProductoTotal).toFixed(2)}</b></td>*/}
+                                            </tr>
+                                            <tr>
+                                                <td>CTA</td>
+                                                <td>Costo Total Almacenamiento</td>
+                                                <td></td>
+                                                {/*<td className="text-left"><b>$ {Number(costoDeAlmacenamientoTotal).toFixed(2)}</b></td>*/}
+                                            </tr>
+                                            <tr>
+                                                <td>CTE</td>
+                                                <td>Costo Total Esperado</td>
+                                                <td className="text-left"><b>$ {Number(CTE).toFixed(2)}</b></td>
+                                            </tr>
+                                        </tbody>
+                                    </Table>
                                     <Col>
                                         <Card body inverse color="primary" style={{marginTop:10, padding: '5px 0 0 0'}}>
                                             <CardText>
