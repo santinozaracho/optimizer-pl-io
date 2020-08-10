@@ -285,6 +285,7 @@ const lagrangeMul =async (f,g, objective) => {
                     console.log("resolucion como arreglo")
                     resolucion= resolucion.toString()
                     console.log(resolucion)
+                    punto = punto.splice(0,punto.length-m)
                     if(checkIfAllPositive(resolucion)){
                         resultadoADevolver.puntos.push(punto)
                         resultadoADevolver.tipo.push("min")
