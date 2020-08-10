@@ -108,21 +108,15 @@ const lagrangeMul =async (f,g, objective) => {
         }
     
         var callbackFunction = async (data) =>{
-            // console.log(data)
+            console.log("Respuesta del back: syssolver")
+            console.log(data)
             var respuesta = data
             var stringRespuesta =''
             var num;
             var dem;
             var estadoFraccion = false // Controls if we are processing a fraction or not
             var cont = 0
-            /*
-            respuesta = respuesta.replace("((","(");
-            respuesta = respuesta.replace("))",")");
-            // Paso a un arreglo
-            //respuesta = respuesta.replace(/'/g,"")
-            respuesta = respuesta.replace(/ /g,"")
-            respuesta = respuesta.split(",");
-            console.log(respuesta)*/
+           
             x0=[]
             var estado = 0 //aca contenemos la posicion del subarreglo de solucion
             
@@ -134,6 +128,9 @@ const lagrangeMul =async (f,g, objective) => {
             //Facu asume que la situazao de ((, se presenta solo al principio, primer elemento. Y que la de )), solo al ultimo
             respuesta[0] = respuesta[0].replace('((','')
             respuesta[respuesta.length-1] = respuesta[respuesta.length-1].replace('))','')
+            respuesta[respuesta.length-1] = respuesta[respuesta.length-1].replace('),)','')
+            console.log("Respuesta tras parseo inicial")
+            console.log(respuesta)
             var arregloRespuesta=[]
             var tempArreglo=[]
             //Transformar el arreglo en un conjunto de subarreglos
@@ -325,5 +322,5 @@ module.exports ={lagrangeMul};
 //console.log(lagrangeMul("-x1^2 -(x2 -1)^2",["2*x1+x2-1=0"],"min"));
 //console.log(lagrangeMul("x^2+y^2+z^2",["x^2+y+3*z-2=0","5*x+2*y+z-5=0"],"max"));
 
-//lagrangeMul("x1^2+x2^2+x3^2",["4*x1 +x2^2 + 2*x3 - 14=0"],"min");
+lagrangeMul("x1^2+x2^2-2*x1-2*x2+4",["x1+x2-4=0"],"min");
 
