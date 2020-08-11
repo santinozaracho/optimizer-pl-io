@@ -69,7 +69,7 @@ const StockProblems = () => {
                 </Link>
               </Col>
             </Row>
-            <Row className="mt-3 mx-auto">
+            {/*<Row className="mt-3 mx-auto">
               <Col>
                 <Link to={"/StockProblems/ModelStockDiscontinuidadDePrecio"} >
                     <Button size='lg' outline color="success">Modelo stock discontinuidad del precio</Button>
@@ -78,7 +78,7 @@ const StockProblems = () => {
                   <BsFillInfoSquareFill color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillInfoSquareFill>
                 </Link>
               </Col>
-            </Row>
+            </Row>*/}
             <Row className="mt-3 mx-auto">
               <Col>
                 <Link to={"StockProblems/modeloSimpleSinAgotamiento"} >
