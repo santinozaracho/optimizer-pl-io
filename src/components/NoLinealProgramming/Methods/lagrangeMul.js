@@ -7,7 +7,8 @@ const algebrite = require('algebrite')
 
 var checkIfAllPositive = function(str)
 {
-    let plus = /\[[0-9]|\,[0-9]/;
+    str= str.toString()
+    let plus = /\[[0-9]|\,[0-9]|^[0-9]/;
     let minus = /-/;
     if(plus.test(str) && !minus.test(str)){
         console.log("Fully positive")
@@ -20,6 +21,7 @@ var checkIfAllPositive = function(str)
 
 var checkIfAllNegative = function(str)
 {
+    str=str.toString()
     let plus = /\[[0-9]|\,[0-9]/;
     let minus = /-/;
     if(minus.test(str) && !plus.test(str)){
@@ -280,8 +282,10 @@ const lagrangeMul =async (f,g, objective) => {
                     //An all positive solution means we face a minimum
                     //An all negative solution means we face a maximum
                      //resolucion= resolucion.toString().split(',')
-                    //console.log("resolucion como arreglo")
+                    console.log("resolucion como arreglo")
                     resolucion= resolucion.toString()
+                    console.log(resolucion)
+                    punto = punto.splice(0,punto.length-m)
                     if(checkIfAllPositive(resolucion)){
                         resultadoADevolver.puntos.push(punto)
                         resultadoADevolver.tipo.push("min")
@@ -322,5 +326,5 @@ module.exports ={lagrangeMul};
 //console.log(lagrangeMul("-x1^2 -(x2 -1)^2",["2*x1+x2-1=0"],"min"));
 //console.log(lagrangeMul("x^2+y^2+z^2",["x^2+y+3*z-2=0","5*x+2*y+z-5=0"],"max"));
 
-lagrangeMul("x1^2+x2^2-2*x1-2*x2+4",["x1+x2-4=0"],"min");
+//lagrangeMul("-x1^2-x2^2-x3^2+4*x1+8*x2+16*x3^2",["x1+x2+x3-2=0","x1+2*x2=0"],"max");
 
