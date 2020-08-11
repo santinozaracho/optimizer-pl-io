@@ -4,6 +4,7 @@ import {InputGroupText,InputGroup, Input,InputGroupAddon,PopoverBody, CardText, 
 import {Link} from 'react-router-dom';
 import '../index.css'
 import { Variable } from "javascript-lp-solver/src/expressions";
+import MathJax from "react-mathjax"
 
 
 
@@ -35,6 +36,44 @@ const infoModeloSimpleSinAgotamiento = () => {
             </Row>
             <Row style={{marginBottom:10}}>
                 <Card body outline color="secondary">
+                <Row className="justify-content-center">
+                        <h5><b>Formulas</b></h5>
+                </Row>
+                        
+                <MathJax.Provider>
+                    <div>
+                        <MathJax.Node formula={"Costo Total De Preparacion = \\frac{D}{q}*K"} />
+                    </div>
+                </MathJax.Provider>
+                <MathJax.Provider>
+                    <div>
+                        <MathJax.Node formula={"Costo Total Del Producto = bi*D"} />
+                    </div>
+                </MathJax.Provider>
+                <MathJax.Provider>
+                    <div>
+                        <MathJax.Node formula={"Costo Total De Almacenamiento = \\frac{1}{2}*q*T*Ci"} />
+                    </div>
+                </MathJax.Provider>
+                <MathJax.Provider>
+                    <div>
+                        <MathJax.Node formula={"Costo Del Dinero Inmovilizado = P*bi"} />
+                    </div>
+                </MathJax.Provider>
+                <MathJax.Provider>
+                    <div>
+                        <MathJax.Node formula={"Costo Total Esperado = \\frac{D}{q}*K + b*K + \\frac{1}{2}*q*T*Ci + P*bi"} />
+                    </div>
+                </MathJax.Provider>    
+                <MathJax.Provider>
+                    <div>
+                        <MathJax.Node formula={"q_{0i} = \\sqrt{\\frac{2*K*D}{T*(P*bi*Ci)}}   "} />
+                    </div>
+                </MathJax.Provider>
+                </Card>
+            </Row>
+            <Row style={{marginBottom:10}}>
+                <Card body outline color="secondary">
                     <Row className="justify-content-center">
                         <h5><b>Variables</b></h5>
                     </Row>
@@ -42,8 +81,9 @@ const infoModeloSimpleSinAgotamiento = () => {
                         <li><b>D: </b>Demanda</li>
                         <li><b>K: </b>Costo de preparacion</li>
                         <li><b>c1: </b>Costo de almacenamiento</li>
-                        <li><b>b: </b>Costo por compra por unidad</li>
-                        
+                        <li><b>P: porcentaje de interés que se produciría con el dinero inmovilizado</b></li>
+                        <li><b>C’i: Costo efectivo de almacenamient</b></li>
+                        <li><b>bi: Costo  del i-esimoproducto</b></li>
                     </ul>
                 </Card>
             </Row>
