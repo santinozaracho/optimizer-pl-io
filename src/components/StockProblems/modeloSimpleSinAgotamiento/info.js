@@ -11,7 +11,6 @@ const infoModeloSimpleSinAgotamiento = () => {
     return(
     <Container fluid className="App">
       <Row>
-          <h1>HOLA MAJO</h1>
         <Col xs={12} md={6} className="mx-auto my-5">
           <Jumbotron>
             <Row className="justify-content-center">

@@ -155,7 +155,6 @@ class ModeloSimpleSinAgotamiento extends React.Component{
         return (
             <Container fluid className="App"> 
             <Row>
-                <h1>HOLA MAJO</h1>
               <Col xs={12} md={8} className="my-4 mx-auto">
                 <Jumbotron>
                     <Col>
