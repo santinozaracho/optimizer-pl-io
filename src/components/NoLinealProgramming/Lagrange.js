@@ -46,15 +46,14 @@ handleObjective = objective => {
       for (var i = 0; i < arregloRestricciones.length; i++) {
         arregloRestricciones[i] = arregloRestricciones[i].trim()
       }
-      //se pone [0] porque probamos cargar una sola restriccion
+      
       model["restricciones"]=arregloRestricciones;
     }
     else{
       model[nombre] = valor;
     }
     this.setState({model})
-    console.log("Dentro de handle input")
-    console.log(this.state.model)
+    
   }
 
   resolverLagrange(){
@@ -63,11 +62,14 @@ handleObjective = objective => {
     try{
       lagrangeMul(funcion, restricciones,obj)
       .then((solucion) => {
+        console.log("hola")
+        console.log(solucion)
         this.setState({salida:solucion})
         this.muestraResultado(solucion)
-
+        
         
       })
+      
       
     }
     catch(error) {
@@ -79,15 +81,15 @@ handleObjective = objective => {
 
   muestraResultado(solucion){
               
-    let {puntos, tipo} = solucion
+    
     console.log('puntos')
-    console.log(puntos);
+    console.log(solucion.puntos);
     
     let resolucion=(
       <div>
         
-        {puntos[0]}
-        {
+        {this.state.salida.puntos.length}
+        {/*
           puntos.map((elem,indicePunto)=>
             <div>
              { 
@@ -98,12 +100,12 @@ handleObjective = objective => {
               )
             
             
-            }
+             }
 
           </div>
           
         )
-      }
+      */}
           
          
        
@@ -118,6 +120,8 @@ handleObjective = objective => {
 
 
   render(){
+    console.log("salida")
+    console.log(this.state.salida)
     let buttonsOptType = (
         <ButtonGroup>
           <Button
