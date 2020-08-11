@@ -4,6 +4,7 @@ import {InputGroupText,InputGroup, Input,InputGroupAddon,PopoverBody, CardText, 
 import {Link} from 'react-router-dom';
 import '../index.css'
 import { Variable } from "javascript-lp-solver/src/expressions";
+import MathJax from "react-mathjax"
 
 
 
@@ -35,6 +36,39 @@ const info = () => {
                         <li>No existen otros costos.</li>
                         <li>Al comienzo de cada periodo no hay stock ni pedidos insatisfechos.</li>
                     </ul>
+                </Card>
+            </Row>
+            <Row style={{marginBottom:10}}>
+                <Card body outline color="secondary">
+                <Row className="justify-content-center">
+                        <h5><b>Formulas</b></h5>
+                </Row>
+                        
+                <MathJax.Provider>
+                    <div>
+                        <MathJax.Node formula={"Tiempo De Ciclo = \\frac{y}{D}"} />
+                    </div>
+                </MathJax.Provider>
+                <MathJax.Provider>
+                    <div>
+                        <MathJax.Node formula={"Costo De Preparacion = \\frac{K}{\\frac{y}{D}}"} />
+                    </div>
+                </MathJax.Provider>
+                <MathJax.Provider>
+                    <div>
+                        <MathJax.Node formula={"Costo Total De Almacenamiento = h*\\frac{y}{2}"} />
+                    </div>
+                </MathJax.Provider>
+                <MathJax.Provider>
+                    <div>
+                        <MathJax.Node formula={"Costo Total Por Unidad De Tiempo = \\frac{K}{\\frac{y}{D}}+h*\\frac{y}{2}"} />
+                    </div>
+                </MathJax.Provider>
+                <MathJax.Provider>
+                    <div>
+                        <MathJax.Node formula={"y* = \\sqrt{\\frac{2*K*D}{h}}"} />
+                    </div>
+                </MathJax.Provider>    
                 </Card>
             </Row>
             <Row style={{marginBottom:10}}>
