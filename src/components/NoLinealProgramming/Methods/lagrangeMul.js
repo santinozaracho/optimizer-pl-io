@@ -22,7 +22,7 @@ var checkIfAllPositive = function(str)
 var checkIfAllNegative = function(str)
 {
     str=str.toString()
-    let plus = /\[[0-9]|\,[0-9]|^-[0-9]/;
+    let plus = /\[[0-9]|\,[0-9]/;
     let minus = /-/;
     if(minus.test(str) && !plus.test(str)){
         return true;
@@ -326,5 +326,5 @@ module.exports ={lagrangeMul};
 //console.log(lagrangeMul("-x1^2 -(x2 -1)^2",["2*x1+x2-1=0"],"min"));
 //console.log(lagrangeMul("x^2+y^2+z^2",["x^2+y+3*z-2=0","5*x+2*y+z-5=0"],"max"));
 
-lagrangeMul("x1^2+x2^2-2*x1-2*x2+4",["x1+x2-4=0"],"max");
+lagrangeMul("-x1^2 -(x2-1)^2",["2*x1+x2-1=0"],"max");
 
