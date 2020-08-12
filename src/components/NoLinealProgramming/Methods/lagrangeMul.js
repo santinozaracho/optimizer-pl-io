@@ -103,9 +103,12 @@ const lagrangeMul =async (f,g, objective) => {
             const variable = await fetch(url,{method:'GET'})
             .then(res => res.json())
             .then(json => {
+                console.log("json dado por la primera funcion de back")
+                console.log(json)
                 return callback(json.MESSAGE)
             });
-            
+            console.log("Dentro de traerValores, antes de retornar")
+            console.log(variable)
             return variable;
         }
     
@@ -302,7 +305,7 @@ const lagrangeMul =async (f,g, objective) => {
                     }
                     console.log("Despues de hacer la comprobacion")
                     console.log(resultadoADevolver)
-                    return resultadoADevolver;
+                    //return resultadoADevolver;
                 })
             }
             x0.forEach(async element =>{
@@ -312,7 +315,8 @@ const lagrangeMul =async (f,g, objective) => {
             return resultadoADevolver;    
         }
         var objetoADevolver = await traerValores(url,callbackFunction)
-        
+        console.log("lagrangeMul, antes de devolver el valor final")
+        console.log(objetoADevolver)
         return objetoADevolver;
     }
     catch(e){
@@ -327,4 +331,4 @@ module.exports ={lagrangeMul};
 //console.log(lagrangeMul("x^2+y^2+z^2",["x^2+y+3*z-2=0","5*x+2*y+z-5=0"],"max"));
 
 //lagrangeMul("-x1^2-x2^2-x3^2+4*x1+8*x2+16*x3^2",["x1+x2+x3-2=0","x1+2*x2=0"],"max");
-
+//x1^2+x2^2-2*x1-2*x2+4

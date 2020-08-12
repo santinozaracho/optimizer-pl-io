@@ -55,7 +55,9 @@ handleObjective = objective => {
     this.setState({model})
     
   }
-
+  wait = function(ms){
+    return new Promise((r, j)=>setTimeout(r, ms))
+  }
   resolverLagrange(){
     
     let {funcion, restricciones, obj } = this.state.model;
@@ -65,7 +67,11 @@ handleObjective = objective => {
         console.log("hola")
         console.log(solucion)
         this.setState({salida:solucion})
-        this.muestraResultado(solucion)
+        var prom= this.wait(2000)
+        prom.then(()=>{
+          this.muestraResultado(solucion)
+        })
+        //ohohohismagic
         
         
       })
@@ -83,12 +89,17 @@ handleObjective = objective => {
               
     
     console.log('puntos')
-    console.log(solucion.puntos);
     
+    //console.log(solucion.length)
+    console.log(typeof solucion)
+    console.log(solucion.puntos.length)
+
     let resolucion=(
       <div>
         
-        {this.state.salida.puntos.length}
+        {
+        this.state.salida.puntos.length
+        }
         {/*
           puntos.map((elem,indicePunto)=>
             <div>
