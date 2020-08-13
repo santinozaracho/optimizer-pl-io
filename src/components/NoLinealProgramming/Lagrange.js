@@ -71,7 +71,7 @@ handleObjective = objective => {
         prom.then(()=>{
           this.muestraResultado(solucion)
         })
-        //ohohohismagic
+        
         
         
       })
@@ -88,35 +88,27 @@ handleObjective = objective => {
   muestraResultado(solucion){
               
     
-    console.log('puntos')
-    
-    //console.log(solucion.length)
-    console.log(typeof solucion)
-    console.log(solucion.puntos.length)
-
+    let {puntos, tipo} = solucion
     let resolucion=(
       <div>
         
+        
         {
-        this.state.salida.puntos.length
-        }
-        {/*
-          puntos.map((elem,indicePunto)=>
+          puntos.map((elem,indicePunto)=>(
+           
             <div>
+             <b>Punto{indicePunto}: </b> 
              { 
               elem.map((punto,index)=>
-              elem
-              
+               `${punto.toFixed(4)}; `
               
               )
-            
-            
-             }
-
+             } 
+            <b>Tipo:</b> {tipo[indicePunto]==="nae"?"No es un extremo":tipo[indicePunto]}
           </div>
-          
+          )
         )
-      */}
+      }
           
          
        
