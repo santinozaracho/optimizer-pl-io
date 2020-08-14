@@ -364,6 +364,13 @@ class CantidadEconomicaPedido extends React.Component{
                             <Col>
                                 <Card body>
                                     <Graph y={cantidadEconomica} t={longitudCiclo} puntoDeReorden={puntoDeReorden} yProm={Number(cantidadEconomica)/2} title={'Grafico CEP'}/>
+                                    <div className='text-center content-align-center'>   
+                                        <div className='text-center content-align-center' style={{display:'flex', alignItems:'center', textAlign:'center'}}>
+                                            <hr style={{borderTop: '2px dashed green', width:'50px', marginRight:10}}/><td>y* promedio</td>
+                                            
+                                            
+                                        </div>
+                                    </div>
                                 </Card>
                             </Col>
                         </Row>  

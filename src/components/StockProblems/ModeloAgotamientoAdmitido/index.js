@@ -102,26 +102,6 @@ class ModeloAgotamientoAdmitido extends React.Component{
       return((LeadTime*demanda)+StockDeProteccion)//sp
     }
 
-    /* //FUNCIONES QUE NO ESTAMOS OCUPANDO
-    calcularCostoTotalEsperadoConQ(){
-        let {costoDeAdquisicion,demanda,CostoDeUnaOrden,CostoUnitarioDeAlmacenamiento,StockDeProteccion,T} = this.state;
-        let q = this.calcularTamañoDelLote();
-        return((costoDeAdquisicion*demanda)+(q*CostoUnitarioDeAlmacenamiento*T)/2+CostoDeUnaOrden/(demanda/q)*StockDeProteccion*CostoUnitarioDeAlmacenamiento*T)//CTEo
-    }
-
-    calcularIntervaloDeUnCicloSinRaiz()
-    {
-        let {demanda, T} = this.state;
-        return ((this.calcularTamañoDelLote()*T)/(demanda)); //to
-    }
-
-    calcularTamañoDelLoteSinRaiz(){
-        let {demanda, T, } = this.state;
-        let to = this.calcularIntervaloDeUnCiclo()
-        return ((demanda*to)/T); //q
-    }
-    */
-
     mostrarResultados = () => {
         let {demanda, costoDeAdquisicion, CostoUnitarioDeAlmacenamiento, CostoDeUnaOrden,CostoDeEscasez} = this.state;
         let combinacion1 = [demanda,CostoDeUnaOrden,CostoUnitarioDeAlmacenamiento,costoDeAdquisicion,CostoDeEscasez] //Cargamos un arreglo
