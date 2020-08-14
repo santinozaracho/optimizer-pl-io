@@ -293,6 +293,11 @@ class ModeloWilson extends React.Component{
                         <Row>
                             <Card body>
                                 <Graph y={loteOptimo} t={tiempoEntrePedidos} yProm={Number(loteOptimo)/2} title={'Grafico Modelo Wilson'}/>
+                                <div className='text-center content-align-center'>   
+                                    <div className='text-center content-align-center' style={{display:'flex', alignItems:'center', textAlign:'center'}}>
+                                        <hr style={{borderTop: '2px dashed green', width:'50px', marginRight:10}}/><td>y* promedio</td>                                  
+                                    </div>
+                                </div>
                             </Card>
                         </Row>   
                     </Col>)}

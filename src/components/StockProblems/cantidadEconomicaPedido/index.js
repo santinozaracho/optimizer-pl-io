@@ -367,8 +367,7 @@ class CantidadEconomicaPedido extends React.Component{
                                     <div className='text-center content-align-center'>   
                                         <div className='text-center content-align-center' style={{display:'flex', alignItems:'center', textAlign:'center'}}>
                                             <hr style={{borderTop: '2px dashed green', width:'50px', marginRight:10}}/><td>y* promedio</td>
-                                            
-                                            
+                                            <hr style={{borderTop: '2px dashed blue', width:'50px', marginRight:10}}/><td>Punto de reorden</td>                                   
                                         </div>
                                     </div>
                                 </Card>
