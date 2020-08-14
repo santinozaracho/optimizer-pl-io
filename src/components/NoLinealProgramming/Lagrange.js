@@ -4,6 +4,7 @@ import { Alert, UncontrolledPopover, PopoverBody, PopoverHeader, Input,InputGrou
 import logo from "../../components/LinealProgramming/logo.svg";
 import Variables from '../LinealProgramming/Configuration/Variables/index'
 import ReactDOM from 'react-dom'
+import spinner from '../img/spinner.gif'
 const {lagrangeMul} = require('./Methods/lagrangeMul')
 
 //import lagrangeMul from './Methods/lagrangeMul'
@@ -64,8 +65,7 @@ handleObjective = objective => {
     try{
       lagrangeMul(funcion, restricciones,obj)
       .then((solucion) => {
-        console.log("hola")
-        console.log(solucion)
+        ReactDOM.render(<img src={spinner}></img>, document.getElementById("resolucion"))
         this.setState({salida:solucion})
         var prom= this.wait(2000)
         prom.then(()=>{
@@ -86,36 +86,38 @@ handleObjective = objective => {
 
 
   muestraResultado(solucion){
-              
-    
-    let {puntos, tipo} = solucion
-    let resolucion=(
-      <div>
-        
-        
-        {
-          puntos.map((elem,indicePunto)=>(
-           
-            <div>
-             <b>Punto{indicePunto}: </b> 
-             { 
-              elem.map((punto,index)=>
-               `${punto.toFixed(4)}; `
-              
-              )
-             } 
-            <b>Tipo:</b> {tipo[indicePunto]==="nae"?"No es un extremo":tipo[indicePunto]}
-          </div>
-          )
-        )
-      }
+    var resolucion;          
+    if (solucion === false){
+      resolucion = (<div>No existen extremos dentro de los Reales</div>)
+    }else{
+      let {puntos, tipo} = solucion
+      resolucion=(
+        <div>
           
-         
-       
-      
-      </div>
-    )
-    
+          
+          {
+            puntos.map((elem,indicePunto)=>(
+            
+              <div>
+              <b>Punto{indicePunto}: </b> 
+              { 
+                elem.map((punto,index)=>
+                `${punto.toFixed(4)}; `
+                
+                )
+              } 
+              <b>Tipo:</b> {tipo[indicePunto]==="nae"?"No es un extremo":tipo[indicePunto]}
+            </div>
+            )
+          )
+        }
+            
+          
+        
+        
+        </div>
+      )
+  }
     ReactDOM.render(resolucion, document.getElementById("resolucion"))
   
     }
