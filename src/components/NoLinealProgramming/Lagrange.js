@@ -67,7 +67,7 @@ handleObjective = objective => {
       .then((solucion) => {
         ReactDOM.render(<img src={spinner}></img>, document.getElementById("resolucion"))
         this.setState({salida:solucion})
-        var prom= this.wait(2000)
+        var prom= this.wait(3000)
         prom.then(()=>{
           this.muestraResultado(solucion)
         })
@@ -87,7 +87,7 @@ handleObjective = objective => {
 
   muestraResultado(solucion){
     var resolucion;          
-    if (solucion === false){
+    if (solucion === false || solucion === undefined){
       resolucion = (<div>No existen extremos dentro de los Reales</div>)
     }else{
       let {puntos, tipo} = solucion
