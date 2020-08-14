@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {Link} from 'react-router-dom';
-import { Button, Jumbotron, Container, Row, Col, Tooltip, tolltipOpen} from "reactstrap";
+import { Button, Jumbotron, Container, Row, Col, UncontrolledTooltip} from "reactstrap";
 import './index.css'
 
 import {BsFillInfoSquareFill} from "react-icons/bs"
@@ -21,18 +21,9 @@ const StockProblems = () => {
             </Row>
             <Row className="mt-3 mx-auto">
               <Col>
-                <Link to={"/StockProblems/CantidadEconomicaPedido"}>
-                    <Button size='lg' outline color="success">Cantidad Economica de Pedido - Taha</Button>
-                </Link>
-                <Link to={"/StockProblems/CantidadEconomicaPedido/info.js"} >
-                  <BsFillInfoSquareFill color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillInfoSquareFill>
-                </Link>
-              </Col>
-            </Row>
-            <Row className="mt-3 mx-auto">
-              <Col>
                  <Link to={"/StockProblems/ModeloWilson"} >
-                    <Button size='lg' outline color="success">Modelo Wilson - Sturla</Button>
+                    <UncontrolledTooltip target='button-wilson'>Demanda deterministica constante y reposicion instantanea</UncontrolledTooltip>
+                    <Button size='lg' outline color="success" id='button-wilson'>Modelo Wilson - Sturla</Button>
                 </Link>
                 <Link to={"/StockProblems/ModeloWilson/info.js"} >
                   <BsFillInfoSquareFill color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillInfoSquareFill>
@@ -41,8 +32,20 @@ const StockProblems = () => {
             </Row>
             <Row className="mt-3 mx-auto">
               <Col>
+                <Link to={"/StockProblems/CantidadEconomicaPedido"}>
+                  <UncontrolledTooltip target='button-cantidadEconomica'>Demanda deterministica constante y reposicion no instantanea</UncontrolledTooltip>
+                  <Button size='lg' outline color="success" id='button-cantidadEconomica'>Cantidad Economica de Pedido - Taha</Button>
+                </Link>
+                <Link to={"/StockProblems/CantidadEconomicaPedido/info.js"} >
+                  <BsFillInfoSquareFill color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillInfoSquareFill>
+                </Link>
+              </Col>
+            </Row>
+            <Row className="mt-3 mx-auto">
+              <Col>
                 <Link to={"/StockProblems/ModeloStockProteccion"} >
-                      <Button size='lg' outline color="success">Modelo con stock de proteccion</Button>
+                    <UncontrolledTooltip target='button-stockProteccion'>Demanda constante con inventario de contingencia</UncontrolledTooltip>
+                    <Button size='lg' outline color="success" id='button-stockProteccion'>Modelo con stock de proteccion</Button>
                 </Link>
                 <Link to={"/StockProblems/ModeloStockProteccion/info.js"} >
                   <BsFillInfoSquareFill color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillInfoSquareFill>
@@ -52,7 +55,8 @@ const StockProblems = () => {
             <Row className="mt-3 mx-auto">
               <Col>
                 <Link to={"/StockProblems/ModeloAgotamientoAdmitido"} >
-                    <Button size='lg' outline color="success">Modelo con Agotamiento</Button>
+                  {/*<UncontrolledTooltip target='button-agotamiento'>Demanda constante con inventario de contingencia</UncontrolledTooltip>*/}
+                  <Button size='lg' outline color="success" id='button-agotamiento'>Modelo con Agotamiento</Button>
                 </Link>
                 <Link to={"/StockProblems/ModeloAgotamientoAdmitido/info.js"} >
                   <BsFillInfoSquareFill color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillInfoSquareFill>
