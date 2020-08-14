@@ -1,5 +1,5 @@
 import React from 'react';
-import {XYPlot, XAxis, YAxis, HorizontalGridLines,LineSeries, VerticalGridLines, DiscreteColorLegend} from 'react-vis';
+import {XYPlot, XAxis, YAxis, HorizontalGridLines,LineSeries, VerticalGridLines} from 'react-vis';
 import { Container, Row, Col } from 'reactstrap';
 
 

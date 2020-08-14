@@ -1,9 +1,7 @@
 import React from "react";
-import { ButtonGroup, Button, Container, Row, Col, Card, CardBody, CardHeader, CardTitle, Jumbotron, Dropdown, DropdownItem, ButtonDropdown, DropdownMenu, DropdownToggle} from "reactstrap";
-import {InputGroupText,InputGroup, Input,InputGroupAddon,PopoverBody, CardText, UncontrolledPopover} from 'reactstrap';
+import {Button, Container, Row, Col, Card, CardText, CardTitle, Jumbotron} from "reactstrap";
 import {Link} from 'react-router-dom';
 import '../index.css'
-import { Variable } from "javascript-lp-solver/src/expressions";
 import MathJax from "react-mathjax"
 
 
