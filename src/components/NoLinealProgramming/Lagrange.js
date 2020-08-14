@@ -63,7 +63,13 @@ handleObjective = objective => {
     
     let {funcion, restricciones, obj } = this.state.model;
     try{
-      lagrangeMul(funcion, restricciones,obj)
+      var detectarVarIncorrectas= /[a-wy-z]/
+      if(detectarVarIncorrectas.test(restricciones) || detectarVarIncorrectas.test(funcion))
+      {
+        console.log("Reestricciones incorrectas")
+      }
+      else{
+        lagrangeMul(funcion, restricciones,obj)
       .then((solucion) => {
         ReactDOM.render(<img src={spinner}></img>, document.getElementById("resolucion"))
         this.setState({salida:solucion})
@@ -75,6 +81,8 @@ handleObjective = objective => {
         
         
       })
+      }
+      
       
       
     }
