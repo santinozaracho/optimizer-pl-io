@@ -73,12 +73,14 @@ const info = () => {
                 </MathJax.Provider>
                 <MathJax.Provider>
                     <div>
-                        <MathJax.Node formula={"Costo Total Esperado = \\frac{D}{q}*K + b*D + \\frac{1}{2}*q*T*c1 +sp*b +sp*T*c1"} />
+                        <MathJax.Node formula={"Costo Total Esperado =" } />
+                        <MathJax.Node formula={"\\frac{D}{q}*K + b*D + \\frac{1}{2}*q*T*c1 +sp*b +sp*T*c1"} />
                     </div>
                 </MathJax.Provider>    
                 <MathJax.Provider>
                     <div>
-                        <MathJax.Node formula={"Costo Total Esperado Optimo =  b*D + \\sqrt{2*T*D*K*c1} +sp*b +sp*T*c1 "} />
+                        <MathJax.Node formula={"Costo Total Esperado Optimo =" } />
+                        <MathJax.Node formula={"b*D + \\sqrt{2*T*D*K*c1} +sp*b +sp*T*c1 "} />
                     </div>
                 </MathJax.Provider>    
                 <MathJax.Provider>
