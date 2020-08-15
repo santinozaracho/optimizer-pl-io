@@ -26,6 +26,7 @@ class ModeloWilson extends React.Component{
             inputUpdated: false,
             incompleto: false,
             CTE: null,
+            CTEoptimo: null,
             
         }
     }
@@ -91,11 +92,18 @@ class ModeloWilson extends React.Component{
 
     //CALCULAR CTE 
     calcularCTE(){
+        let {costoDePreparacionTotal, costoDeProductoTotal, costoDeAlmacenamientoTotal} = this.state
+        let sum = (Number(costoDePreparacionTotal) + Number(costoDeProductoTotal) + Number(costoDeAlmacenamientoTotal))
+        this.setState({CTE: (Number(sum))})
+    }
+
+    //CALCULAR CTE OPTIMO
+    calcularCTEoptimo(){
         let {costoDeProducto, costoDeAlmacenamiento, demanda} = this.state
         let bD, raiz2TDKC1
         bD = (Number(costoDeProducto)*Number(demanda))
         raiz2TDKC1 = ( Math.sqrt(2*Number(demanda)*Number(costoDeProducto)*Number(costoDeAlmacenamiento)) )
-        this.setState({CTE: (bD + raiz2TDKC1)})
+        this.setState({CTEoptimo: (bD + raiz2TDKC1)})
     }
 
 
@@ -114,6 +122,7 @@ class ModeloWilson extends React.Component{
                 this.calcularCostoProductoTotal()
                 this.calcularCostoAlmacenamientoTotal()
                 this.calcularCTE()
+                this.calcularCTEoptimo()
             }, 1);
 
             this.setState({mostrarResultados: true})
@@ -128,7 +137,7 @@ class ModeloWilson extends React.Component{
     }
 
     render() { 
-        let {demanda, costoDePreparacion, costoDeAlmacenamiento,unidadesDemanda, loteOptimo, unidadesAlmacenamiento, incompleto} = this.state;
+        let {demanda, costoDePreparacion, costoDeAlmacenamiento,unidadesDemanda, loteOptimo, unidadesAlmacenamiento, incompleto, CTEoptimo} = this.state;
         let {costoDeProducto, costoDeProductoTotal, costoDePreparacionTotal, costoDeAlmacenamientoTotal, CTE, mostrarResultados, tiempoEntrePedidos} = this.state;
  
         
@@ -269,7 +278,7 @@ class ModeloWilson extends React.Component{
                                                 <td className="text-left"><b>$ {Number(costoDeProductoTotal).toFixed(2)}</b></td>
                                             </tr>
                                             <tr>
-                                                <td>CTA</td>
+                                                <td>CTAlm</td>
                                                 <td>Costo Total Almacenamiento</td>
                                                 <td className="text-left"><b>$ {Number(costoDeAlmacenamientoTotal).toFixed(2)}</b></td>
                                             </tr>
@@ -277,6 +286,11 @@ class ModeloWilson extends React.Component{
                                                 <td>CTE</td>
                                                 <td>Costo Total Esperado</td>
                                                 <td className="text-left"><b>$ {Number(CTE).toFixed(2)}</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td>CTEo</td>
+                                                <td>Costo Total Esperado Optimo</td>
+                                                <td className="text-left"><b>$ {Number(CTEoptimo).toFixed(2)}</b></td>
                                             </tr>
                                         </tbody>
                                     </Table>
