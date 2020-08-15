@@ -26,7 +26,8 @@ const StockProblems = () => {
                     <Button size='lg' outline color="success" id='button-wilson'>Modelo Wilson - Sturla</Button>
                 </Link>
                 <Link to={"/StockProblems/ModeloWilson/info.js"} >
-                  <BsFillInfoSquareFill color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillInfoSquareFill>
+                  <UncontrolledTooltip target='info-wilson'>Más Información</UncontrolledTooltip>
+                  <BsFillInfoSquareFill id="info-wilson" color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillInfoSquareFill>
                 </Link>
               </Col>
             </Row>
@@ -37,7 +38,8 @@ const StockProblems = () => {
                   <Button size='lg' outline color="success" id='button-cantidadEconomica'>Cantidad Economica de Pedido - Taha</Button>
                 </Link>
                 <Link to={"/StockProblems/CantidadEconomicaPedido/info.js"} >
-                  <BsFillInfoSquareFill color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillInfoSquareFill>
+                  <UncontrolledTooltip target='info-cantidadEconomica'>Más Información</UncontrolledTooltip>
+                  <BsFillInfoSquareFill id="info-cantidadEconomica" color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillInfoSquareFill>
                 </Link>
               </Col>
             </Row>
@@ -48,7 +50,8 @@ const StockProblems = () => {
                     <Button size='lg' outline color="success" id='button-stockProteccion'>Modelo con stock de proteccion</Button>
                 </Link>
                 <Link to={"/StockProblems/ModeloStockProteccion/info.js"} >
-                  <BsFillInfoSquareFill color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillInfoSquareFill>
+                  <UncontrolledTooltip target='info-stockProteccion'>Más Información</UncontrolledTooltip>
+                  <BsFillInfoSquareFill id="info-stockProteccion" color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillInfoSquareFill>
                 </Link>
               </Col>
             </Row>
@@ -59,7 +62,8 @@ const StockProblems = () => {
                   <Button size='lg' outline color="success" id='button-agotamiento'>Modelo con Agotamiento</Button>
                 </Link>
                 <Link to={"/StockProblems/ModeloAgotamientoAdmitido/info.js"} >
-                  <BsFillInfoSquareFill color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillInfoSquareFill>
+                  <UncontrolledTooltip target='info-agotamiento'>Más Información</UncontrolledTooltip>
+                  <BsFillInfoSquareFill id="info-agotamiento" color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillInfoSquareFill>
                 </Link>
               </Col>
             </Row>
@@ -69,7 +73,8 @@ const StockProblems = () => {
                     <Button size='lg' outline color="success">Modelo Triangular</Button>
                 </Link>
                 <Link to={"/StockProblems/ModeloTriangular/info.js"} >
-                  <BsFillInfoSquareFill color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillInfoSquareFill>
+                  <UncontrolledTooltip target='info-triangular'>Más Información</UncontrolledTooltip>
+                  <BsFillInfoSquareFill id="info-triangular" color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillInfoSquareFill>
                 </Link>
               </Col>
             </Row>
@@ -89,7 +94,8 @@ const StockProblems = () => {
                     <Button size='lg' outline color="success">Modelo simple sin Agotamiento [WIP]</Button>
                 </Link>
                 <Link to={"StockProblems/modeloSimpleSinAgotamiento/info.js"} >
-                    <BsFillInfoSquareFill color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillInfoSquareFill>
+                  <UncontrolledTooltip target='info-wip'>Más Información</UncontrolledTooltip>
+                  <BsFillInfoSquareFill id="info-wip" color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillInfoSquareFill>
                 </Link>
               </Col>
             </Row>
