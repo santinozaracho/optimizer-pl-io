@@ -64,7 +64,7 @@ const Inicio = () =>{
                     <Row>
                         <ButtonGroup className="mx-auto">
                             <UncontrolledTooltip target='btncf'>Cuzziol, Facundo</UncontrolledTooltip>
-                            <Button id='btncf' outline tag="a" href="https://github.com/FacuCuzzio">
+                            <Button id='btncf' outline tag="a" href="https://github.com/FacuCuzziol">
                                 CF
                             </Button>
                             <UncontrolledTooltip target='btndd'>Diez, Danilo</UncontrolledTooltip>
