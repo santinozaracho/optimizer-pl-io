@@ -3,7 +3,7 @@ import {  Button, Container, Row, Col, Card, CardBody, CardHeader, CardTitle, Ju
 import {UncontrolledPopover, PopoverBody, PopoverHeader, Input,InputGroupText,InputGroup,InputGroupAddon, } from "reactstrap";
 import ReactDOM from 'react-dom'
 import logo from "../../components/LinealProgramming/logo.svg";
-import {metodoDerivadas} from "../NoLinealProgramming/Methods/pruebaDerivadas/getDerivadas"
+const {metodoDerivadas} = require("../NoLinealProgramming/Methods/pruebaDerivadas/getDerivadas")
 class Derivadas extends React.Component{
     constructor(props){
         super(props)
