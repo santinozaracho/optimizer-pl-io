@@ -3,6 +3,7 @@ import {XYPlot, XAxis, YAxis, HorizontalGridLines,LineSeries, VerticalGridLines}
 import { Container, Row, Col } from 'reactstrap';
 
 
+
 const Graph = ({ y, yProm, t, title, sr, puntoDeReorden }) => {
   if (!sr){
     sr = 0
@@ -19,7 +20,6 @@ const Graph = ({ y, yProm, t, title, sr, puntoDeReorden }) => {
   let linePuntoDeReorden = [{x:0,y:puntoDeReorden},{x:(5*t),y:puntoDeReorden}]
   let lineStockReposicion = [{x:0,y:sr},{x:(5*t),y:sr}]
   let topLine = [{x:0,y},{x:(5*t),y}]
-  console.log(y)
   return (
   <Container>
     <Row className="justify-content-center" style={{margin:0}}>
