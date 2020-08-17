@@ -242,7 +242,7 @@ class ModeloAgotamientoAdmitido extends React.Component{
                             <Input
                             className="input-unidadesDemanda"
                             name={"unidadesDemanda"}
-                            placeholder="Ej: luces, pantallas, kg"
+                            placeholder="Ej: focos, pantallas"
                             aria-label="UnidadDemanda"
                             aria-describedby="unidadDemanda"
                             onChange={this.handleInputChange}
@@ -259,7 +259,7 @@ class ModeloAgotamientoAdmitido extends React.Component{
                             aria-describedby="cantidadDePeriodos"
                             type="number"
                             onChange={this.handleInputChange}
-                            style={{maxWidth:50}}
+                            style={{maxWidth:70}}
                             />      
                             <Input type="select" name="unidadTiempo" id="unidadTiempo" style={{maxWidth:110}} onChange={this.handleInputChange}>
                                 <option value={'Año'}>Año</option>
