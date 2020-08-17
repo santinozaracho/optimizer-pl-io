@@ -331,7 +331,7 @@ module.exports ={lagrangeMul};
 // URL Should be like --> https://nlsystemsolver.herokuapp.com/getmsg/?ecuaciones=1-2*x;z-2*y;2%2By-2*z&variables=x,y,z
 // 2*x**2-L1*3x  "2*x^2",["3*x=12"],"max"
 //console.log(lagrangeMul("-x1^2 -(x2 -1)^2",["2*x1+x2-1=0"],"min"));
-lagrangeMul("x1^2+x2^2+x3^2",["x1+x2+3*x3-2=0","5*x1+2*x2+-5=0"],"max");
+//lagrangeMul("x1^2+x2^2+x3^2",["x1+x2+3*x3-2=0","5*x1+2*x2+-5=0"],"max");
 
 //lagrangeMul("-x1^2 -(x2 -1)^2",["2*x1+x2-1=0"],"max");
 //x1^2+x2^2-2*x1-2*x2+4

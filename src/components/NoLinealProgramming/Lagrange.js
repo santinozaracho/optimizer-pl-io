@@ -2,7 +2,7 @@ import React from 'react';
 import { ButtonGroup, Button, Container, Row, Col, Card, CardBody, CardHeader, CardTitle, Jumbotron } from "reactstrap";
 import { Alert, UncontrolledPopover, PopoverBody, PopoverHeader, Input,InputGroupText,InputGroup,InputGroupAddon, } from "reactstrap";
 import logo from "../../components/LinealProgramming/logo.svg";
-import Variables from '../LinealProgramming/Configuration/Variables/index'
+
 import ReactDOM from 'react-dom'
 import spinner from '../img/spinner.gif'
 const {lagrangeMul} = require('./Methods/lagrangeMul')
@@ -59,19 +59,36 @@ handleObjective = objective => {
   wait = function(ms){
     return new Promise((r, j)=>setTimeout(r, ms))
   }
+
   resolverLagrange(){
     
     let {funcion, restricciones, obj } = this.state.model;
+    if(funcion==="" || restricciones[0]==="" || restricciones.length===0){
+      ReactDOM.render(<Alert color="danger">Por favor no llame a la funcion sin los datos requeridos</Alert>, document.getElementById("resolucion"))
+      setTimeout(()=>{
+
+        ReactDOM.render(<div></div>, document.getElementById("resolucion"))
+
+      },3000)
+      return;
+    }
+    
     try{
       var detectarVarIncorrectas= /[a-wy-z]/
       if(detectarVarIncorrectas.test(restricciones) || detectarVarIncorrectas.test(funcion))
       {
-        console.log("Reestricciones incorrectas")
+        ReactDOM.render(<Alert color="danger">Las variables utilizadas no son correctas</Alert>, document.getElementById("resolucion"))
+      setTimeout(()=>{
+
+        ReactDOM.render(<div></div>, document.getElementById("resolucion"))
+
+      },3000)
+      return;
       }
       else{
         lagrangeMul(funcion, restricciones,obj)
       .then((solucion) => {
-        ReactDOM.render(<img src={spinner}></img>, document.getElementById("resolucion"))
+        ReactDOM.render(<img src={spinner} alt="carga de la resolucion"></img>, document.getElementById("resolucion"))
         this.setState({salida:solucion})
         var prom= this.wait(3000)
         prom.then(()=>{
@@ -133,6 +150,8 @@ handleObjective = objective => {
 
 
   render(){
+    console.log("modelo")
+    console.log(this.state.model)
     console.log("salida")
     console.log(this.state.salida)
     let buttonsOptType = (
