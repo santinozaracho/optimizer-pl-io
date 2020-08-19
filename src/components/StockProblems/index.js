@@ -70,7 +70,8 @@ const StockProblems = () => {
             <Row className="mt-3 mx-auto">
               <Col>
                 <Link to={"/StockProblems/ModeloTriangular"} >
-                    <Button size='lg' outline color="success">Modelo Triangular</Button>
+                  <UncontrolledTooltip target='button-triangular'>Reaprovisionamiento no instantaneo</UncontrolledTooltip>
+                  <Button id="button-triangular" size='lg' outline color="success">Modelo Triangular</Button>
                 </Link>
                 <Link to={"/StockProblems/ModeloTriangular/info.js"} >
                   <UncontrolledTooltip target='info-triangular'>Más Información</UncontrolledTooltip>
@@ -78,16 +79,6 @@ const StockProblems = () => {
                 </Link>
               </Col>
             </Row>
-            {/*<Row className="mt-3 mx-auto">
-              <Col>
-                <Link to={"/StockProblems/ModelStockDiscontinuidadDePrecio"} >
-                    <Button size='lg' outline color="success">Modelo stock discontinuidad del precio</Button>
-                </Link>
-                <Link to={"/StockProblems/ModelStockDiscontinuidadDePrecio/info.js"}>
-                  <BsFillInfoSquareFill color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillInfoSquareFill>
-                </Link>
-              </Col>
-            </Row>*/}
             <Row className="mt-3 mx-auto">
               <Col>
                 <Link to={"StockProblems/modeloSimpleSinAgotamiento"} >

@@ -1,8 +1,29 @@
 import React from "react";
 import {Button, Container, Row, Col, Card, Jumbotron} from "reactstrap";
-import {InputGroupText,InputGroup, Input,InputGroupAddon, CardText} from 'reactstrap';
+import {InputGroupText,InputGroup, Input,InputGroupAddon, CardText, Table, Label} from 'reactstrap';
 import {Link} from 'react-router-dom';
 import '../index.css'
+
+import GraphTriangular from "../Graph/modeloTriangular";
+
+
+//CALCULAR Ti
+const calcularT = (cantidadDePeriodos, unidadTiempo) =>{//Necesitamos T en dias que vamos a calcular y n
+    let unidadTiempoEnDias;
+    if (unidadTiempo === "Año"){
+        unidadTiempoEnDias = 365
+    } else if (unidadTiempo === "Mes"){
+        unidadTiempoEnDias = 30
+    }else if (unidadTiempo === "Semana"){
+        unidadTiempoEnDias = 30
+    }else {
+        unidadTiempoEnDias = 1
+    }
+    return (Number(cantidadDePeriodos) * unidadTiempoEnDias ) //Retornamos T en dias
+}
+
+
+
 
 
 
@@ -11,19 +32,30 @@ class ModeloTriangular extends React.Component{
         super(props)
         this.state={
             demanda: null, //D
-            CostoDeUnaOrden: null, //K
+            costoDePreparacion: null, //K
+            costoDePreparacionTotal: null,
             costoDeAlmacenamiento: null,//c1
-            costoDeAdquisicion: null, //b
+            costoDeAlmacenamientoTotal: null,
+            costoDeProducto: null, //b
+            costoDeProductoTotal: null,
             unidadesAlmacenamiento: null,
-            unidadesDemanda:null,
             loteOptimo:null, //q
             tiempoEntrePedidos: null, //t0
             mostrarResultados: false,
             inputUpdated: false,
             incompleto: false,
-            CTE: null,
+            CTE: null, //CTE
+            CTEoptimo: null, //CTEo
+            costoDeEscasez:null, //c2
+            costoDeEscasezTotal:null, 
+            stockAlmacenado:null, //s
+            cantidadDePeriodos:1, //Cuantos unidadTiempo son?
+            unidadTiempo: "Año", //Ano, Mes, Semana, Dia
             T:1,
-            VelocidadDeProduccion:null,
+            pedidosNecesarios: null, //n
+            velocidadDeProduccion:null, //p
+            t1p: null,
+            
         }
     }
 
@@ -47,15 +79,15 @@ class ModeloTriangular extends React.Component{
         this.setState({mostrarResultados:false})
     }
     
-
-    //q0
+    //CALCULAR q
     calcularTamañoDelLote(){
-        let {demanda, CostoDeUnaOrden,T, CostoUnitarioDeAlmacenamiento, loteOptimo,VelocidadDeProduccion} = this.state;
-        let numerador, denominador, demandaUnitaria
-        demandaUnitaria= (Number(demanda)/Number(T))
-        numerador = ( 2*Number(CostoDeUnaOrden)*Number(demandaUnitaria)*Number(VelocidadDeProduccion) )
-        denominador = ( Number(CostoUnitarioDeAlmacenamiento)*(Number(VelocidadDeProduccion)-Number(demandaUnitaria)) )
-        loteOptimo = (Math.sqrt(numerador/denominador));
+        let {demanda, costoDePreparacion,costoDeAlmacenamiento, loteOptimo,velocidadDeProduccion} = this.state;
+        let numerador, denominador
+        numerador = ( 2*Number(costoDePreparacion)*Number(demanda)*Number(velocidadDeProduccion) )
+        denominador = ( Number(costoDeAlmacenamiento)*(Number(velocidadDeProduccion)-Number(demanda)) )
+        loteOptimo = (Math.sqrt(Number(numerador)/Number(denominador)));
+        console.log(numerador)
+        console.log(denominador)
         
         //NO SE SI VA ESTO 
         if (loteOptimo>demanda){ //Si el q0 calculado es mas grande que la demanda entonces como lote optimo va la demanda
@@ -65,34 +97,71 @@ class ModeloTriangular extends React.Component{
         }
     }
 
-    
+    //CALCULAR s
+    calcularStockAlmacenado(){
+        let {loteOptimo, velocidadDeProduccion, demanda} = this.state;
+        this.setState({ stockAlmacenado: ( Number(loteOptimo) * ( 1 - (Number(demanda)/Number(velocidadDeProduccion) ) ) ) })
+    }
+
+    //CALCULAR T1p
+    calculart1p(){
+        let {loteOptimo, velocidadDeProduccion} = this.state;
+        this.setState({ t1p:  (Number(loteOptimo)/Number(velocidadDeProduccion)) })
+    }
+
+
+    //CALCULAR COSTO DE PREPARACION TOTAL
+    calcularCostoPreparacionTotal(){
+        let {demanda, loteOptimo, costoDePreparacion} = this.state;
+        this.setState({costoDePreparacionTotal: ((Number(demanda)/Number(loteOptimo))*Number(costoDePreparacion)) })
+    }
+
+    //CALCULAR COSTO DEL PRODUCTO TOTAL
+    calcularCostoProductoTotal(){
+        let {costoDeProducto, demanda} = this.state;
+        this.setState({costoDeProductoTotal: (Number(costoDeProducto)*Number(demanda)) })
+    }
+
+    //CALCULAR COSTO TOTAL DE ALMACENAMIENTO
+    calcularCostoAlmacenamientoTotal(){
+        let {loteOptimo, costoDeAlmacenamiento, demanda, velocidadDeProduccion} = this.state;
+        this.setState({costoDeAlmacenamientoTotal: ( (1/2) * Number(costoDeAlmacenamiento) * (1 - (Number(demanda)/Number(velocidadDeProduccion))) ) })
+    }
 
     //CALCULAR CTE
-    calcularCostoTotalEsperado(){
-        let {costoDeAdquisicion,demanda,CostoDeUnaOrden,costoDeAlmacenamiento,T,VelocidadDeProduccion, loteOptimo} = this.state;
-        let bD, costoTotalDePreparacion, costoTotalDeAlmacenamiento, demandaUnitaria
-
-        
-        costoTotalDePreparacion = (Number(demanda)/(loteOptimo*Number(CostoDeUnaOrden)))
-        bD = (Number(costoDeAdquisicion)*Number(demanda))//Costo total del producto
-        demandaUnitaria = ( Number(demanda)/Number(T) )
-        costoTotalDeAlmacenamiento = ((loteOptimo*Number(T)*Number(costoDeAlmacenamiento)*(1-(demandaUnitaria/Number(VelocidadDeProduccion))))/2)
-        
-        this.setState({CTE: (costoTotalDePreparacion + bD + costoTotalDeAlmacenamiento) }) //CTEo
+    calcularCTE(){
+        let {costoDePreparacionTotal, costoDeProductoTotal, costoDeAlmacenamientoTotal} = this.state
+        let sum = (Number(costoDePreparacionTotal) + Number(costoDeProductoTotal) + Number(costoDeAlmacenamientoTotal))
+        this.setState({CTE: (Number(sum))}) //CTE 
     }
-    
-    
+
+    //CALCULAR CTE OPTIMO
+    calcularCTEoptimo(){
+        let {costoDeProducto,demanda,costoDePreparacion,costoDeAlmacenamiento,costoDeEscasez,T} = this.state;
+        let bD, raiz2TDKC1, raizc1c2
+        bD = (Number(costoDeProducto)*Number(demanda))
+        raiz2TDKC1 = (Math.sqrt(2*Number(costoDePreparacion)*Number(demanda)*Number(T)*Number(costoDeAlmacenamiento)))
+        raizc1c2 = ( Math.sqrt( (Number(costoDeEscasez))/(Number(costoDeAlmacenamiento)+(Number(costoDeEscasez))) ) )
+        this.setState({CTEoptimo: (bD + (raiz2TDKC1*raizc1c2)) }) //CTEo
+    }
+
 
     mostrarResultados = () => {
-        let {demanda, costoDeAdquisicion, CostoUnitarioDeAlmacenamiento, CostoDeUnaOrden,VelocidadDeProduccion} = this.state;
-        let combinacion1 = [demanda,CostoDeUnaOrden,CostoUnitarioDeAlmacenamiento,costoDeAdquisicion,VelocidadDeProduccion] //Cargamos un arreglo
+        let {demanda, costoDePreparacion, costoDeAlmacenamiento, costoDeProducto , velocidadDeProduccion} = this.state;
+        let combinacion1 = [demanda, costoDePreparacion, costoDeAlmacenamiento, costoDeProducto ,velocidadDeProduccion] //Cargamos un arreglo
         let control1 = combinacion1.every(caso => caso); //Si devuelve true es porque todos los elementos del arreglo estan cargados 
         
         if (control1){ //SI TODOS LOS CAMPOS ESTAN CARGADOS ENTONCES CALCULO TODO Y MUESTRO
-            this.calcularTamañoDelLote(); //Calculo q0
-            
-            setTimeout(() => { //Luego de calcular lo anterior, le doy un tiempo para que calcule el CTE
-                this.calcularCostoTotalEsperado();
+            this.calcularTamañoDelLote() //q
+        
+            setTimeout(() => {
+                this.calcularStockAlmacenado()
+                this.calculart1p()
+                this.calcularCostoPreparacionTotal()
+                this.calcularCostoProductoTotal()
+                this.calcularCostoAlmacenamientoTotal()
+                this.calcularCTE()
+                
             }, 1);
 
             this.setState({mostrarResultados: true})
@@ -101,14 +170,20 @@ class ModeloTriangular extends React.Component{
         }else{
             this.setState({incompleto:true}) //PONGO A INCOMPLETO EN TRUE Y MUESTRO LA ALERTA DE COMPLETAR CAMPOS
         }
-                      
+        
+        
+                 
     }
 
     render() { 
-        let {demanda,CTE,loteOptimo,tiempoEntrePedidos,CostoDeUnaOrden,costoDeAdquisicion, VelocidadDeProduccion} = this.state;
-        let {incompleto,mostrarResultados,CostoUnitarioDeAlmacenamiento,unidadesDemanda,unidadesAlmacenamiento} = this.state;
+        let {demanda, costoDePreparacion, costoDeAlmacenamiento,unidadesDemanda, loteOptimo, unidadesAlmacenamiento, incompleto, CTEoptimo} = this.state;
+        let {costoDeProducto, costoDeProductoTotal, costoDePreparacionTotal, costoDeAlmacenamientoTotal, CTE, mostrarResultados, tiempoEntrePedidos} = this.state;
+        let {stockAlmacenado, cantidadDePeriodos, unidadTiempo} = this.state;
+        let {velocidadDeProduccion, t1p} = this.state;
+
+
+        let tiempoTotalEnDias = calcularT(cantidadDePeriodos, unidadTiempo)
         
- 
         
         return (
             <Container fluid className="App"> 
@@ -120,7 +195,7 @@ class ModeloTriangular extends React.Component{
                     </Col>
                     
                     <Col> 
-                        <InputGroup className="mt-3">
+                        <InputGroup className="mt-3" id={"demanda"} key={"demanda"}>
                             <InputGroupAddon addonType="prepend">
                             <InputGroupText><b>{"D"}</b></InputGroupText>
                             </InputGroupAddon>
@@ -133,79 +208,105 @@ class ModeloTriangular extends React.Component{
                             aria-describedby="demanda"
                             onChange={this.handleInputChange}
                             />
-                            <InputGroupAddon className="input-unidades" addonType="prepend">
-                            <InputGroupText><b>{"Unidades"}</b></InputGroupText>
+                        </InputGroup>
+                    </Col>
+                    <Col>
+                        <InputGroup className="mt-3" id={""} key={""}>
+                            <InputGroupAddon className="" addonType="prepend">
+                                <InputGroupText><b>{"Unidades del Producto"}</b></InputGroupText>
                             </InputGroupAddon>
                             <Input
                             className="input-unidadesDemanda"
                             name={"unidadesDemanda"}
-                            placeholder="Ingresar las unidades de demanda"
+                            placeholder="Ej: focos, pantallas"
                             aria-label="UnidadDemanda"
                             aria-describedby="unidadDemanda"
                             onChange={this.handleInputChange}
                             />
-                        </InputGroup>
-                    </Col>
-                    <Col>
-                        <InputGroup className="mt-3">
-                            <InputGroupAddon addonType="prepend">
-                                <InputGroupText><b>{"K"}</b></InputGroupText>
-                            </InputGroupAddon>
-                            <InputGroupAddon addonType="prepend">
-                                <InputGroupText>{"$"}</InputGroupText>
+
+                            <InputGroupAddon className="" addonType="prepend">
+                                <InputGroupText><b>{"Unidades de Tiempo"}</b></InputGroupText>
                             </InputGroupAddon>
                             <Input
-                            name={"CostoDeUnaOrden"}
-                            value={CostoDeUnaOrden}
-                            placeholder="Ingresar el costo de preparacion/producción"
-                            aria-label="CostoDeUnaOrden"
-                            aria-describedby="CostoDeUnaOrden"
+                            className="input-unidadesDemanda"
+                            name={"cantidadDePeriodos"}
+                            placeholder="1"
+                            aria-label="cantidadDePeriodos"
+                            aria-describedby="cantidadDePeriodos"
+                            type="number"
+                            onChange={this.handleInputChange}
+                            style={{maxWidth:70}}
+                            />      
+                            <Input type="select" name="unidadTiempo" id="unidadTiempo" style={{maxWidth:110}} onChange={this.handleInputChange}>
+                                <option value={'Año'}>Año</option>
+                                <option value={'Mes'}>Mes</option>
+                                <option value={'Semana'}>Semana</option>
+                                <option value={'Dia'}>Día</option>
+                            </Input>
+                        </InputGroup>
+                    
+                    </Col>
+                    <Col>
+                        <InputGroup className="mt-3" id={"costoDePreparacion"} key={"costoDePreparacion"}>
+                            <InputGroupAddon addonType="prepend">
+                            <InputGroupText><b>{"K"}</b></InputGroupText>
+                            </InputGroupAddon>
+                            <InputGroupAddon addonType="prepend">
+                            <InputGroupText>{"$"}</InputGroupText>
+                            </InputGroupAddon>
+                            <Input
+                            name={"costoDePreparacion"}
+                            value={costoDePreparacion}
+                            placeholder="Ingresar el costo por pedido"
+                            aria-label="costoDePreparacion"
+                            aria-describedby="costoDePreparacion"
                             onChange={this.handleInputChange}
                             />
+                            
                         </InputGroup>
                     </Col>
                     <Col>
-                        <InputGroup className="mt-3">
+                        <InputGroup className="mt-3" id={"costoDeAlmacenamiento"} key={"costoDeAlmacenamiento"}>
                             <InputGroupAddon addonType="prepend">
                                 <InputGroupText><b>{"c1"}</b></InputGroupText>
                             </InputGroupAddon>
                             <InputGroupAddon addonType="prepend">
-                                <InputGroupText>{"$"}</InputGroupText>
+                                <InputGroupText >{"$"}</InputGroupText>
                             </InputGroupAddon>
                             <Input
-                            name={"CostoUnitarioDeAlmacenamiento"}
-                            value={CostoUnitarioDeAlmacenamiento}
+                            name={"costoDeAlmacenamiento"}
+                            value={costoDeAlmacenamiento}
                             placeholder="Ingresar el costo de almacenamiento"
-                            aria-label="CostoUnitarioDeAlmacenamiento"
-                            aria-describedby="CostoUnitarioDeAlmacenamiento"
+                            aria-label="costoDePreparacion"
+                            aria-describedby="costoDePreparacion"
                             onChange={this.handleInputChange}
-                            />
+                            />  
                             
                             <InputGroupAddon className="unidadesAlmacenamiento" addonType="prepend">
-                                <InputGroupText><b>{"Unidades"}</b></InputGroupText>
+                                <InputGroupText><b>{"Periodo"}</b></InputGroupText>
                             </InputGroupAddon>
                             <Input
                             className=""
                             name={"unidadesAlmacenamiento"}
-                            placeholder="Ingresar las unidades de tiempo"
+                            placeholder={cantidadDePeriodos + ' ' + unidadTiempo}
                             onChange={this.handleInputChange}
+                            disabled
                             />
+                        
                         </InputGroup>
                     </Col>
+                    
                     <Col>
                         <InputGroup className="mt-3">
                             <InputGroupAddon addonType="prepend">
-                                <InputGroupText><b>{"b"}</b></InputGroupText>
-                            </InputGroupAddon>
-                            <InputGroupAddon addonType="prepend">
-                                <InputGroupText>{"$"}</InputGroupText>
+                            <InputGroupText><b>{"b"}</b></InputGroupText>
                             </InputGroupAddon>
                             <Input
-                            name={"costoDeAdquisicion"}
-                            value={costoDeAdquisicion}
+                            name={"costoDeProducto"}
+                            value={costoDeProducto}
                             placeholder="Ingresar el costo del producto x unidad"
-                            aria-label="costoDeAdquisicion"
-                            aria-describedby="costoDeAdquisicion"
+                            aria-label="costoDeProducto"
+                            aria-describedby="costoDeProducto"
                             onChange={this.handleInputChange}
                             />                        
                         </InputGroup>
@@ -213,35 +314,85 @@ class ModeloTriangular extends React.Component{
                     <Col>
                         <InputGroup className="mt-3">
                             <InputGroupAddon addonType="prepend">
-                                <InputGroupText><b>{"P"}</b></InputGroupText>
+                            <InputGroupText><b>{"p"}</b></InputGroupText>
                             </InputGroupAddon>
                             <Input
-                            name={"VelocidadDeProduccion"}
-                            value={VelocidadDeProduccion}
-                            placeholder="Ingresar Velocidad De Produccion"
-                            aria-label="VelocidadDeProduccion"
-                            aria-describedby="VelocidadDeProduccion"
+                            name={"velocidadDeProduccion"}
+                            value={velocidadDeProduccion}
+                            placeholder="Ingresar el costo de escasez"
+                            aria-label="velocidadDeProduccion"
+                            aria-describedby="velocidadDeProduccion"
                             onChange={this.handleInputChange}
-                            />
+                            />                        
                         </InputGroup>
                     </Col>
                                         
                     {mostrarResultados && (    //Si mostrarResultados esta en true que quiere decir que apreto el boton y que todos los campos estan completos
                                                           
                     <Col>
-                        <Card body inverse style={{ backgroundColor: '#333', borderColor: '#333', marginTop:10}}>
-                            <CardText>
-                                <h6 style={{display:'inline'}}>El lote optimo es:</h6> <h5 style={{display:'inline'}}><b>{Number(loteOptimo).toFixed(2)} {unidadesDemanda}</b></h5><br></br>
-                                <h6 style={{display:'inline'}}>El costo total esperado es:</h6> <h5 style={{display:'inline'}}><b>${Number(CTE).toFixed(2)}</b></h5><br></br>
-                                {/*<Col>
-                                    <Card body inverse color="primary" style={{marginTop:10, padding: '5px 0 0 0'}}>
-                                        <CardText>
-                                        <h5>Pedir {Number(loteOptimo).toFixed(2)} {unidadesDemanda} cada {Number(tiempoEntrePedidos).toFixed(2)} {unidadesAlmacenamiento}</h5>
-                                        </CardText>
-                                    </Card>   
-                                </Col>*/}
-                            </CardText>
-                        </Card>   
+                        <Row>
+                            <Card body inverse style={{ backgroundColor: '#333', borderColor: '#333', margin:15}}>
+                                <CardText className="text-left">
+                                <Table dark className="text-center">
+                                        <thead>
+                                            <tr>
+                                                <th>Variable</th>
+                                                <th>Nombre Variable</th>
+                                                <th className="text-left"><b>Resultado</b></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>q</td>
+                                                <td>Lote optimo</td>
+                                                <td className="text-left"><b>{Number(loteOptimo).toFixed(2)} {unidadesDemanda}</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td>s</td>
+                                                <td>stock almacenado</td>
+                                                <td className="text-left"><b>{Number(stockAlmacenado).toFixed(2)} {unidadesDemanda}</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td>T</td>
+                                                <td>Tiempo total en dias</td>
+                                                <td className="text-left"><b>{Number(tiempoTotalEnDias) + " Dias" }</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td>CTPrep</td>
+                                                <td>Costo Total Preparacion</td>
+                                                <td className="text-left"><b>$ {Number(costoDePreparacionTotal).toFixed(4)}</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td>CTProp</td>
+                                                <td>Costo total Producto</td>
+                                                <td className="text-left"><b>$ {Number(costoDeProductoTotal).toFixed(4)}</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td>CTAlm</td>
+                                                <td>Costo Total Almacenamiento</td>
+                                                <td className="text-left"><b>$ {Number(costoDeAlmacenamientoTotal).toFixed(4)}</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td>CTE</td>
+                                                <td>Costo Total Esperado</td>
+                                                <td className="text-left"><b>$ {Number(CTE).toFixed(4)}</b></td>
+                                            </tr> 
+                                        </tbody>
+                                    </Table>
+                                </CardText>
+                            </Card>
+                        </Row>
+                        <Row>
+                            <Card body>
+                                <GraphTriangular title={'Grafico Modelo Triangular'} s={stockAlmacenado} t1p={t1p} t={tiempoTotalEnDias}/>
+                                <div className='text-center content-align-center'>   
+                                    <div className='text-center content-align-center' style={{display:'flex', alignItems:'center', textAlign:'center'}}>
+                                        <hr style={{borderTop: '2px dashed blue', width:'50px', marginRight:10}}/><td>s</td>
+                                        <hr style={{borderTop: '2px dashed green', width:'50px', marginRight:10}}/><td>t1p</td>                                    
+                                    </div>
+                                </div>
+                            </Card>
+                        </Row>   
                     </Col>)}
                            
                     {incompleto && (
