@@ -1,9 +1,11 @@
 import React from "react";
-import { ButtonGroup, Button, Container, Row, Col, Card, CardBody, CardHeader, CardTitle, Jumbotron, Dropdown, DropdownItem, ButtonDropdown, DropdownMenu, DropdownToggle} from "reactstrap";
-import {InputGroupText,InputGroup, Input,InputGroupAddon,PopoverBody, CardText} from 'reactstrap';
+import { Button, Container, Row, Col, Card,Jumbotron} from "reactstrap";
+import {InputGroupText,InputGroup, Input,InputGroupAddon,CardText,Table} from 'reactstrap';
 import {Link} from 'react-router-dom';
-import '../index.css'
-import { Variable } from "javascript-lp-solver/src/expressions";
+import '../index.css';
+import Graph from "../Graph";
+
+
 
 
 
@@ -25,7 +27,7 @@ class CantidadEconomicaPedido extends React.Component{
             inputUpdated: false,
             incompleto: false,
             puntoDeReorden: null,
-            TCU: null,
+            TCU: null,      
         }
     }
 
@@ -182,13 +184,6 @@ class CantidadEconomicaPedido extends React.Component{
         }else{
             this.setState({incompleto:true})
         } 
-
-
-        
-        
-        
-        
-        
                
     }
 
@@ -217,9 +212,7 @@ class CantidadEconomicaPedido extends React.Component{
             </Col>
         )
         
-         
-        
-              
+
         
         return (
             <Container fluid className="App"> 
@@ -229,17 +222,6 @@ class CantidadEconomicaPedido extends React.Component{
                     <Col>
                         <h2>Modelo clasico con cantidad economica de pedido</h2><br></br>                   
                     </Col>
-                    {/*<Col>
-                    <div>
-                        <div className="justify-content-center">
-                            <div className="info-descarga">
-                            <i class="fas fa-info-circle"></i>
-                            <a>Las números decimales ingresar con . (Ejemplo: 0.02)</a>
-                            </div>
-                        </div>
-                    </div>
-                    </Col>*/}
-                   
                     <Col> 
                         <InputGroup className="mt-3" id={"demanda"} key={"demanda"}>
                             <InputGroupAddon addonType="prepend">
@@ -334,45 +316,63 @@ class CantidadEconomicaPedido extends React.Component{
                             />                        
                         </InputGroup>
                     </Col>
-                    <Col>
-                        <InputGroup className="mt-3">
-                            <InputGroupAddon addonType="prepend">
-                            <InputGroupText><b>{"t0*"}</b></InputGroupText>
-                            </InputGroupAddon>
-                            <Input
-                            name={"longitudCiclo"}
-                            value={longitudCiclo}
-                            placeholder="Ingresar la longitud del ciclo"
-                            onChange={this.handleInputChange}
-                            />                        
-                        </InputGroup>
-                    </Col>
-
-                    <Col>
-                        <InputGroup className="mt-3">
-                            <InputGroupAddon addonType="prepend">
-                            <InputGroupText><b>{"y*"}</b></InputGroupText>
-                            </InputGroupAddon>
-                            <Input
-                            name={"cantidadEconomica"}
-                            value={cantidadEconomica}
-                            placeholder="Ingresar la cantidad economica"
-                            onChange={this.handleInputChange}
-                            />                        
-                        </InputGroup>
-                    </Col>
                     
                     
                     {mostrarResultados && (    //Si mostrarResultados esta en true que quiere decir que apreto el boton
                                                           
                     <Col>
-                        <Card body inverse style={{ backgroundColor: '#333', borderColor: '#333', marginTop:10}}>
-                            <CardText>
-                                <h6 style={{display:'inline'}}>El costo de inventario TCU(y) es:</h6> <h5 style={{display:'inline'}}><b>${Number(TCU).toFixed(2)}</b></h5><br></br>
-                                <h6 style={{display:'inline'}}>El punto de reorden es:</h6> <h5 style={{display:'inline'}}><b>{Number(puntoDeReorden).toFixed(2)}</b></h5>
-                                {controlarPolitica}
-                            </CardText>
-                        </Card>   
+                        <Row>
+                            <Card body inverse style={{ backgroundColor: '#333', borderColor: '#333', margin: 15}}>
+                                <CardText>
+                                <Table dark className="text-center">
+                                        <thead>
+                                            <tr>
+                                                <th>Variable</th>
+                                                <th>Nombre Variable</th>
+                                                <th className="text-left"><b>Resultado</b></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>t0*</td>
+                                                <td>Longitud del Ciclo</td>
+                                                <td className="text-left"><b>{Number(longitudCiclo).toFixed(2)} {unidadesAlmacenamiento}</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td>y*</td>
+                                                <td>Cantidad Economica</td>
+                                                <td className="text-left"><b>{Number(cantidadEconomica).toFixed(2)} {unidadesDemanda}</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>Punto de Reorden</td>
+                                                <td className="text-left"><b>{Number(puntoDeReorden).toFixed(2)} {unidadesDemanda}</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td>TCU(y)</td>
+                                                <td>Costo de Inventario</td>
+                                                <td className="text-left"><b>${Number(TCU).toFixed(2)}</b></td>
+                                            </tr>
+                                            
+                                        </tbody>
+                                    </Table>
+                                    {controlarPolitica}
+                                </CardText>
+                            </Card> 
+                        </Row>
+                        <Row className="justify-content-end" style={{justifyContent:"center"}}>
+                            <Col>
+                                <Card body>
+                                    <Graph y={cantidadEconomica} t={longitudCiclo} puntoDeReorden={puntoDeReorden} yProm={Number(cantidadEconomica)/2} title={'Grafico CEP'}/>
+                                    <div className='text-center content-align-center'>   
+                                        <div className='text-center content-align-center' style={{display:'flex', alignItems:'center', textAlign:'center'}}>
+                                            <hr style={{borderTop: '2px dashed green', width:'50px', marginRight:10}}/><td>y* promedio</td>
+                                            <hr style={{borderTop: '2px dashed blue', width:'50px', marginRight:10}}/><td>Punto de reorden</td>                                   
+                                        </div>
+                                    </div>
+                                </Card>
+                            </Col>
+                        </Row>  
                     </Col>)}
                            
                     {incompleto && (
@@ -385,9 +385,6 @@ class CantidadEconomicaPedido extends React.Component{
                         <Link to='./'><Button>Volver</Button></Link>
                         <Button className="btn-Calcular" color="success" onClick={this.mostrarResultados}>Calcular</Button>
                     </Row>
-                    <Row>
-                        
-                    </Row>
                 </Jumbotron>
               </Col>
             </Row>
@@ -398,5 +395,6 @@ class CantidadEconomicaPedido extends React.Component{
 
 
 }
+
 
 export default CantidadEconomicaPedido;

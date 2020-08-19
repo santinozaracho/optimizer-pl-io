@@ -1,9 +1,9 @@
 import React from "react";
-import { ButtonGroup, Button, Container, Row, Col, Card, CardBody, CardHeader, CardTitle, Jumbotron, Dropdown, DropdownItem, ButtonDropdown, DropdownMenu, DropdownToggle} from "reactstrap";
-import {InputGroupText,InputGroup, Input,InputGroupAddon,PopoverBody, CardText} from 'reactstrap';
+import {Button, Container, Row, Col, Card,Jumbotron, Table} from "reactstrap";
+import {InputGroupText,InputGroup, Input,InputGroupAddon, CardText} from 'reactstrap';
 import {Link} from 'react-router-dom';
 import '../index.css'
-import { Variable } from "javascript-lp-solver/src/expressions";
+import Graph from "../Graph";
 
 
 
@@ -12,10 +12,12 @@ class ModeloStockProteccion extends React.Component{
         super(props)
         this.state={
             demanda: null, //D
-            CostoDeUnaOrden: null, //K
+            costoDePreparacion: null, //K
+            costoDePreparacionTotal: null,
             costoDeAlmacenamiento: null,//c1
-            costoDeAdquisicion: null, //b
-            StockDeProteccion:null,// c2
+            costoDeAlmacenamientoTotal: null,
+            costoDeProducto: null, //b
+            costoDeProductoTotal: null,
             unidadesAlmacenamiento: null,
             unidadesDemanda:null,
             loteOptimo:null, //q
@@ -24,6 +26,7 @@ class ModeloStockProteccion extends React.Component{
             inputUpdated: false,
             incompleto: false,
             CTE: null,
+            CTEoptimo: null,
             T:1,
             
         }
@@ -52,8 +55,8 @@ class ModeloStockProteccion extends React.Component{
 
     //q0
     calcularTamañoDelLote(){
-        let {demanda, CostoDeUnaOrden,T, CostoUnitarioDeAlmacenamiento, loteOptimo} = this.state;
-        loteOptimo = (Math.sqrt((2*Number(CostoDeUnaOrden)*Number(demanda))/(Number(CostoUnitarioDeAlmacenamiento)*Number(T))));
+        let {demanda, costoDePreparacion,T, costoDeAlmacenamiento, loteOptimo} = this.state;
+        loteOptimo = (Math.sqrt((2*Number(costoDePreparacion)*Number(demanda))/(Number(costoDeAlmacenamiento)*Number(T))));
         
         if (loteOptimo>demanda){ //Si el q0 calculado es mas grande que la demanda entonces como lote optimo va la demanda
             this.setState({loteOptimo: demanda})
@@ -65,19 +68,45 @@ class ModeloStockProteccion extends React.Component{
     //CALCULAR t0
     calcularIntervaloDeUnCiclo()
     {
-        let {demanda, CostoDeUnaOrden, CostoUnitarioDeAlmacenamiento,T} = this.state;
-        this.setState({tiempoEntrePedidos: (Math.sqrt((2*Number(CostoDeUnaOrden)*Number(T))/(Number(demanda)*Number(CostoUnitarioDeAlmacenamiento)))) })
+        let {demanda, costoDePreparacion, costoDeAlmacenamiento,T} = this.state;
+        this.setState({tiempoEntrePedidos: (Math.sqrt((2*Number(costoDePreparacion)*Number(T))/(Number(demanda)*Number(costoDeAlmacenamiento)))) })
     }
 
-    //CALCULAR CTE
-    calcularCostoTotalEsperado(){
-        let {costoDeAdquisicion,demanda,CostoDeUnaOrden,CostoUnitarioDeAlmacenamiento,StockDeProteccion,T} = this.state;
+    //CALCULAR COSTO DE PREPARACION TOTAL
+    calcularCostoPreparacionTotal(){
+        let {demanda, loteOptimo, costoDePreparacion} = this.state;
+        this.setState({costoDePreparacionTotal: ((Number(demanda)/Number(loteOptimo))*Number(costoDePreparacion)) })
+    }
+
+    //CALCULAR COSTO DEL PRODUCTO TOTAL
+    calcularCostoProductoTotal(){
+        let {costoDeProducto, demanda} = this.state;
+        this.setState({costoDeProductoTotal: (Number(costoDeProducto)*Number(demanda)) })
+    }
+
+    //CALCULAR COSTO TOTAL DE ALMACENAMIENTO
+    calcularCostoAlmacenamientoTotal(){
+        let {loteOptimo, costoDeAlmacenamiento} = this.state;
+        this.setState({costoDeAlmacenamientoTotal: ((1/2)*Number(loteOptimo)*Number(costoDeAlmacenamiento)) })
+    }
+
+    //CALCULAR CTE 
+    calcularCTE(){
+        let {costoDePreparacionTotal, costoDeProductoTotal, costoDeAlmacenamientoTotal} = this.state
+        let sum = (Number(costoDePreparacionTotal) + Number(costoDeProductoTotal) + Number(costoDeAlmacenamientoTotal))
+        this.setState({CTE: (Number(sum))})
+        console.log(sum)
+    }
+
+    //CALCULAR CTE OPTIMO
+    calcularCTEoptimo(){
+        let {costoDeProducto,demanda,costoDePreparacion,costoDeAlmacenamiento,StockDeProteccion,T} = this.state;
         let bD, raiz2TDKC1, spTC1, spb
-        bD = (Number(costoDeAdquisicion)*Number(demanda))
-        raiz2TDKC1 = (Math.sqrt(2*Number(CostoDeUnaOrden)*Number(demanda)*Number(T)*Number(CostoUnitarioDeAlmacenamiento)))
-        spTC1 = (Number(StockDeProteccion)*Number(CostoUnitarioDeAlmacenamiento)*Number(T))
-        spb = (Number(StockDeProteccion) * Number(costoDeAdquisicion))
-        this.setState({CTE: (bD + raiz2TDKC1 + spTC1 + spb) }) //CTEo
+        bD = (Number(costoDeProducto)*Number(demanda))
+        raiz2TDKC1 = (Math.sqrt(2*Number(costoDePreparacion)*Number(demanda)*Number(T)*Number(costoDeAlmacenamiento)))
+        spTC1 = (Number(StockDeProteccion)*Number(costoDeAlmacenamiento)*Number(T))
+        spb = (Number(StockDeProteccion) * Number(costoDeProducto))
+        this.setState({CTEoptimo: (bD + raiz2TDKC1 + spTC1 + spb) }) //CTEo
     }
     
     calcularStockDeReorden(){
@@ -85,29 +114,9 @@ class ModeloStockProteccion extends React.Component{
       return((LeadTime*demanda)+StockDeProteccion)//sp
     }
 
-    /* //FUNCIONES QUE NO ESTAMOS OCUPANDO
-    calcularCostoTotalEsperadoConQ(){
-        let {costoDeAdquisicion,demanda,CostoDeUnaOrden,CostoUnitarioDeAlmacenamiento,StockDeProteccion,T} = this.state;
-        let q = this.calcularTamañoDelLote();
-        return((costoDeAdquisicion*demanda)+(q*CostoUnitarioDeAlmacenamiento*T)/2+CostoDeUnaOrden/(demanda/q)*StockDeProteccion*CostoUnitarioDeAlmacenamiento*T)//CTEo
-    }
-
-    calcularIntervaloDeUnCicloSinRaiz()
-    {
-        let {demanda, T} = this.state;
-        return ((this.calcularTamañoDelLote()*T)/(demanda)); //to
-    }
-
-    calcularTamañoDelLoteSinRaiz(){
-        let {demanda, T, } = this.state;
-        let to = this.calcularIntervaloDeUnCiclo()
-        return ((demanda*to)/T); //q
-    }
-    */
-
     mostrarResultados = () => {
-        let {demanda, costoDeAdquisicion, CostoUnitarioDeAlmacenamiento, CostoDeUnaOrden, T,LeadTime,StockDeProteccion} = this.state;
-        let combinacion1 = [demanda,CostoDeUnaOrden,CostoUnitarioDeAlmacenamiento,costoDeAdquisicion,StockDeProteccion] //Cargamos un arreglo
+        let {demanda, costoDeProducto, costoDeAlmacenamiento, costoDePreparacion, T,LeadTime,StockDeProteccion} = this.state;
+        let combinacion1 = [demanda,costoDePreparacion,costoDeAlmacenamiento,costoDeProducto,StockDeProteccion] //Cargamos un arreglo
         let control1 = combinacion1.every(caso => caso); //Si devuelve true es porque todos los elementos del arreglo estan cargados 
         
         if (control1){ //SI TODOS LOS CAMPOS ESTAN CARGADOS ENTONCES CALCULO TODO Y MUESTRO
@@ -116,7 +125,11 @@ class ModeloStockProteccion extends React.Component{
             this.calcularIntervaloDeUnCiclo(); //Calculo t0
             
             setTimeout(() => { //Luego de calcular lo anterior, le doy un tiempo para que calcule el CTE
-                this.calcularCostoTotalEsperado();
+                this.calcularCostoPreparacionTotal()
+                this.calcularCostoProductoTotal()
+                this.calcularCostoAlmacenamientoTotal()
+                this.calcularCTE()
+                this.calcularCTEoptimo()
             }, 1);
 
             this.setState({mostrarResultados: true})
@@ -129,9 +142,9 @@ class ModeloStockProteccion extends React.Component{
     }
 
     render() { 
-        let {demanda,CTE,loteOptimo,tiempoEntrePedidos,CostoDeUnaOrden,costoDeAdquisicion, StockDeProteccion} = this.state;
-        let {incompleto,mostrarResultados,CostoUnitarioDeAlmacenamiento,unidadesDemanda,unidadesAlmacenamiento} = this.state;
-        
+        let {demanda,CTE,loteOptimo,tiempoEntrePedidos,costoDePreparacion,costoDeProducto, StockDeProteccion} = this.state;
+        let {incompleto,mostrarResultados,costoDeAlmacenamiento,unidadesDemanda,unidadesAlmacenamiento} = this.state;
+        let {costoDeAlmacenamientoTotal, costoDeProductoTotal, costoDePreparacionTotal, CTEoptimo} = this.state;
  
         
         return (
@@ -179,11 +192,11 @@ class ModeloStockProteccion extends React.Component{
                                 <InputGroupText>{"$"}</InputGroupText>
                             </InputGroupAddon>
                             <Input
-                            name={"CostoDeUnaOrden"}
-                            value={CostoDeUnaOrden}
+                            name={"costoDePreparacion"}
+                            value={costoDePreparacion}
                             placeholder="Ingresar el costo de preparacion/producción"
-                            aria-label="CostoDeUnaOrden"
-                            aria-describedby="CostoDeUnaOrden"
+                            aria-label="costoDePreparacion"
+                            aria-describedby="costoDePreparacion"
                             onChange={this.handleInputChange}
                             />
                         </InputGroup>
@@ -197,11 +210,11 @@ class ModeloStockProteccion extends React.Component{
                                 <InputGroupText>{"$"}</InputGroupText>
                             </InputGroupAddon>
                             <Input
-                            name={"CostoUnitarioDeAlmacenamiento"}
-                            value={CostoUnitarioDeAlmacenamiento}
+                            name={"costoDeAlmacenamiento"}
+                            value={costoDeAlmacenamiento}
                             placeholder="Ingresar el costo de almacenamiento"
-                            aria-label="CostoUnitarioDeAlmacenamiento"
-                            aria-describedby="CostoUnitarioDeAlmacenamiento"
+                            aria-label="costoDeAlmacenamiento"
+                            aria-describedby="costoDeAlmacenamiento"
                             onChange={this.handleInputChange}
                             />
                             
@@ -225,11 +238,11 @@ class ModeloStockProteccion extends React.Component{
                                 <InputGroupText>{"$"}</InputGroupText>
                             </InputGroupAddon>
                             <Input
-                            name={"costoDeAdquisicion"}
-                            value={costoDeAdquisicion}
+                            name={"costoDeProducto"}
+                            value={costoDeProducto}
                             placeholder="Ingresar el costo del producto x unidad"
-                            aria-label="costoDeAdquisicion"
-                            aria-describedby="costoDeAdquisicion"
+                            aria-label="costoDeProducto"
+                            aria-describedby="costoDeProducto"
                             onChange={this.handleInputChange}
                             />                        
                         </InputGroup>
@@ -252,20 +265,76 @@ class ModeloStockProteccion extends React.Component{
                     {mostrarResultados && (    //Si mostrarResultados esta en true que quiere decir que apreto el boton y que todos los campos estan completos
                                                           
                     <Col>
-                        <Card body inverse style={{ backgroundColor: '#333', borderColor: '#333', marginTop:10}}>
-                            <CardText>
-                                <h6 style={{display:'inline'}}>El lote optimo es:</h6> <h5 style={{display:'inline'}}><b>{Number(loteOptimo).toFixed(2)}</b></h5><br></br>
-                                <h6 style={{display:'inline'}}>El tiempo entre pedidos es:</h6> <h5 style={{display:'inline'}}><b>{Number(tiempoEntrePedidos).toFixed(2)}</b></h5><br></br>
-                                <h6 style={{display:'inline'}}>El costo total esperado es:</h6> <h5 style={{display:'inline'}}><b>${Number(CTE).toFixed(2)}</b></h5><br></br>
-                                <Col>
-                                    <Card body inverse color="primary" style={{marginTop:10, padding: '5px 0 0 0'}}>
-                                        <CardText>
-                                        <h5>Pedir {Number(loteOptimo).toFixed(2)} {unidadesDemanda} cada {Number(tiempoEntrePedidos).toFixed(2)} {unidadesAlmacenamiento}</h5>
-                                        </CardText>
-                                    </Card>   
-                                </Col>
-                            </CardText>
-                        </Card>   
+                        <Row>
+                            <Card body inverse style={{ backgroundColor: '#333', borderColor: '#333', margin:15}}>
+                                <CardText className="text-left">
+                                    <Table dark className="text-center">
+                                            <thead>
+                                                <tr>
+                                                    <th>Variable</th>
+                                                    <th>Nombre Variable</th>
+                                                    <th className="text-left"><b>Resultado</b></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>q</td>
+                                                    <td>Lote optimo</td>
+                                                    <td className="text-left"><b>{Number(loteOptimo).toFixed(2)} {unidadesDemanda}</b></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>t0</td>
+                                                    <td>Tiempo entre Pedidos</td>
+                                                    <td className="text-left"><b>{Number(tiempoEntrePedidos).toFixed(2)} {unidadesAlmacenamiento}</b></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>CTPrep</td>
+                                                    <td>Costo Total Preparacion</td>
+                                                    <td className="text-left"><b>$ {Number(costoDePreparacionTotal).toFixed(2)}</b></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>CTProp</td>
+                                                    <td>Costo total Producto</td>
+                                                    <td className="text-left"><b>$ {Number(costoDeProductoTotal).toFixed(2)}</b></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>CTAlm</td>
+                                                    <td>Costo Total Almacenamiento</td>
+                                                    <td className="text-left"><b>$ {Number(costoDeAlmacenamientoTotal).toFixed(2)}</b></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>CTE</td>
+                                                    <td>Costo Total Esperado</td>
+                                                    <td className="text-left"><b>$ {Number(CTE).toFixed(2)}</b></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>CTEo</td>
+                                                    <td>Costo Total Esperado Optimo</td>
+                                                    <td className="text-left"><b>$ {Number(CTEoptimo).toFixed(2)}</b></td>
+                                                </tr>
+                                            </tbody>
+                                        </Table>
+                                    <Col>
+                                        <Card body inverse color="primary" style={{marginTop:10, padding: '5px 0 0 0'}}>
+                                            <CardText className="text-center">
+                                            <h5>Pedir {Number(loteOptimo).toFixed(2)} {unidadesDemanda} cada {Number(tiempoEntrePedidos).toFixed(2)} {unidadesAlmacenamiento}</h5>
+                                            </CardText>
+                                        </Card>   
+                                    </Col>
+                                </CardText>
+                            </Card> 
+                        </Row>
+                        <Row>
+                            <Card body>
+                                <Graph y={loteOptimo} t={tiempoEntrePedidos} sr={StockDeProteccion} yProm={Number(loteOptimo)/2} title={'Grafico Stock de Proteccion'}/>
+                                <div className='text-center content-align-center'>   
+                                    <div className='text-center content-align-center' style={{display:'flex', alignItems:'center', textAlign:'center'}}>
+                                        <hr style={{borderTop: '2px dashed green', width:'50px', marginRight:10}}/><td>y* optimo</td>
+                                        <hr style={{borderTop: '2px dashed red', width:'50px', marginRight:10}}/><td>Stock de Proteccion</td>                                  
+                                    </div>
+                                </div>
+                            </Card>
+                        </Row>  
                     </Col>)}
                            
                     {incompleto && (

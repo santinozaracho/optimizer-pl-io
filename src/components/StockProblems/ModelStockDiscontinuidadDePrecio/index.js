@@ -1,6 +1,6 @@
 import React from "react";
-import { ButtonGroup, Button, Container, Row, Col, Card, CardText, CardTitle, Jumbotron, Dropdown, DropdownItem, ButtonDropdown, DropdownMenu, DropdownToggle} from "reactstrap";
-import {InputGroupText,InputGroup, Input,InputGroupAddon,PopoverBody} from 'reactstrap';
+import {Button, Container, Row, Col, Card, CardText,Jumbotron} from "reactstrap";
+import {InputGroupText,InputGroup, Input,InputGroupAddon} from 'reactstrap';
 import {Link} from 'react-router-dom';
 import '../index.css'
 
