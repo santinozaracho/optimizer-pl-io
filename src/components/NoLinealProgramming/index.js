@@ -25,6 +25,7 @@ class NoLinealProgramming extends React.Component {
                 <h2><b>Programacion No lineal</b></h2>
                 <br/>
                 <h4>Seleccione un metodo de resolucion</h4>
+                <h5>Se recomienda no cargar problemas de Programación Lineal en esta sección</h5>
                 <Row className="mt-3 mx-auto">
                         <Col>
                             <Link to={"/NoLinealProgramming/Gradiente"}>
