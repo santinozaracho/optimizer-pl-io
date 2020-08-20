@@ -42,7 +42,7 @@ const fGradiente = (funcionObjetivo,puntoa,puntob,e,Objetivo) => {
      // Calculo las derivadas de la funcion en x y en y
      derivadaExpr = [ math.derivative(expr.toString(),'x') , math.derivative(expr.toString(),'y')];
 
-     while (((math.abs(valorR)) > epsilon) && (salida < 999)){
+     while (((math.abs(valorR)) >= epsilon) && (salida < 999)){
           epsilon=e;
           // La variable salida representa la condicion en la que el punto se encuentra en el infinito
           salida = salida + 1;
@@ -116,7 +116,12 @@ const fGradiente = (funcionObjetivo,puntoa,puntob,e,Objetivo) => {
                helper = ZconR.split("r").join("x");
                helper = math.simplify(helper);
                helper = (helper.toString()).split("+ -").join("-");
-               valorR = algebrite.nroots(helper.toString());
+               if (helper=="0"){
+                    valorR=0;
+               }else{
+                    valorR = algebrite.nroots(helper.toString());
+               }
+               
 
                valorR = valorR.toString()
                valorR = valorR[1]+valorR[2]+valorR[3]+valorR[4]+valorR[5]+valorR[6]+valorR[7]
@@ -139,7 +144,9 @@ const fGradiente = (funcionObjetivo,puntoa,puntob,e,Objetivo) => {
           x1 = [ -Infinity , Infinity ];
      } 
 
-     console.log((math.abs(Z0-Z1)),epsilon,valorR,salida);
+     /*if (math.abs(Z0-Z1) < epsilon){
+          salida=1999;
+     }*/
      return x1;
 
 
