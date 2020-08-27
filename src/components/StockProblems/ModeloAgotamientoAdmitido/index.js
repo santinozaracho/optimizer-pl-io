@@ -332,7 +332,7 @@ class ModeloAgotamientoAdmitido extends React.Component{
                             type="number" min="0"
                             name={"costoDeProducto"}
                             value={costoDeProducto}
-                            placeholder="Ingresar el costo del producto x unidad"
+                            placeholder="Ingresar el costo del producto por unidad"
                             aria-label="costoDeProducto"
                             aria-describedby="costoDeProducto"
                             onChange={this.handleInputChange}
