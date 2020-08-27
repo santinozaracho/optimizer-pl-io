@@ -58,7 +58,7 @@ const StockProblems = () => {
             <Row className="mt-3 mx-auto">
               <Col>
                 <Link to={"/StockProblems/ModeloAgotamientoAdmitido"} >
-                  {/*<UncontrolledTooltip target='button-agotamiento'>Demanda constante con inventario de contingencia</UncontrolledTooltip>*/}
+                  <UncontrolledTooltip target='button-agotamiento'>Demanda constante con agotamiento o simple con Escasez</UncontrolledTooltip>
                   <Button size='lg' outline color="success" id='button-agotamiento'>Modelo con Agotamiento</Button>
                 </Link>
                 <Link to={"/StockProblems/ModeloAgotamientoAdmitido/info.js"} >
@@ -82,7 +82,8 @@ const StockProblems = () => {
             <Row className="mt-3 mx-auto">
               <Col>
                 <Link to={"StockProblems/modeloSimpleSinAgotamiento"} >
-                    <Button size='lg' outline color="success">Modelo simple sin Agotamiento [WIP]</Button>
+                  <UncontrolledTooltip target='button-wip'>Stock sin agotamiento con costos de compra variables de acuerdo al tamaño del lote ordenado (Descuento por cantidad)</UncontrolledTooltip>
+                  <Button id="button-wip" size='lg' outline color="success">Modelo simple sin Agotamiento [WIP]</Button>
                 </Link>
                 <Link to={"StockProblems/modeloSimpleSinAgotamiento/info.js"} >
                   <UncontrolledTooltip target='info-wip'>Más Información</UncontrolledTooltip>
