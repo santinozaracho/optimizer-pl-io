@@ -27,6 +27,7 @@ class ModeloWilson extends React.Component{
             incompleto: false,
             CTE: null,
             CTEoptimo: null,
+            n: null,
             
         }
     }
@@ -90,6 +91,12 @@ class ModeloWilson extends React.Component{
         this.setState({costoDeAlmacenamientoTotal: ((1/2)*Number(loteOptimo)*Number(costoDeAlmacenamiento)) })
     }
 
+    //CALCULAR n
+    calcularn(){
+        let {demanda, loteOptimo} = this.state
+        this.setState({ n: ( Number(demanda)/Number(loteOptimo) ) })
+    }
+
     //CALCULAR CTE 
     calcularCTE(){
         let {costoDePreparacionTotal, costoDeProductoTotal, costoDeAlmacenamientoTotal} = this.state
@@ -99,11 +106,13 @@ class ModeloWilson extends React.Component{
 
     //CALCULAR CTE OPTIMO
     calcularCTEoptimo(){
-        let {costoDeProducto, costoDeAlmacenamiento, demanda} = this.state
+        let {costoDeProducto, costoDeAlmacenamiento, demanda, costoDePreparacion} = this.state
         let bD, raiz2TDKC1
         bD = (Number(costoDeProducto)*Number(demanda))
-        raiz2TDKC1 = ( Math.sqrt(2*Number(demanda)*Number(costoDeProducto)*Number(costoDeAlmacenamiento)) )
+        raiz2TDKC1 = ( Math.sqrt(2*Number(demanda)*Number(costoDePreparacion)*Number(costoDeAlmacenamiento)) )
+        console.log(bD,raiz2TDKC1)
         this.setState({CTEoptimo: (bD + raiz2TDKC1)})
+        console.log(bD + raiz2TDKC1)
     }
 
 
@@ -118,6 +127,7 @@ class ModeloWilson extends React.Component{
             this.calcularTiempoEntrePedidos()
         
             setTimeout(() => {
+                this.calcularn()
                 this.calcularCostoPreparacionTotal()
                 this.calcularCostoProductoTotal()
                 this.calcularCostoAlmacenamientoTotal()
@@ -138,7 +148,7 @@ class ModeloWilson extends React.Component{
 
     render() { 
         let {demanda, costoDePreparacion, costoDeAlmacenamiento,unidadesDemanda, loteOptimo, unidadesAlmacenamiento, incompleto, CTEoptimo} = this.state;
-        let {costoDeProducto, costoDeProductoTotal, costoDePreparacionTotal, costoDeAlmacenamientoTotal, CTE, mostrarResultados, tiempoEntrePedidos} = this.state;
+        let {costoDeProducto, costoDeProductoTotal, costoDePreparacionTotal, costoDeAlmacenamientoTotal, CTE, mostrarResultados, tiempoEntrePedidos, n} = this.state;
  
         
         return (
@@ -266,6 +276,11 @@ class ModeloWilson extends React.Component{
                                                 <td>t0</td>
                                                 <td>Tiempo entre Pedidos</td>
                                                 <td className="text-left"><b>{Number(tiempoEntrePedidos).toFixed(2)} {unidadesAlmacenamiento}</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td>n</td>
+                                                <td></td>
+                                                <td className="text-left"><b>{Number(n).toFixed(2)}</b></td>
                                             </tr>
                                             <tr>
                                                 <td>CTPrep</td>
