@@ -203,6 +203,7 @@ class ModeloTriangular extends React.Component{
                             <InputGroupText><b>{"D"}</b></InputGroupText>
                             </InputGroupAddon>
                             <Input
+                            type="number" min="0"
                             className="input-demanda"
                             name={"demanda"}
                             value={demanda}
@@ -258,6 +259,7 @@ class ModeloTriangular extends React.Component{
                             <InputGroupText>{"$"}</InputGroupText>
                             </InputGroupAddon>
                             <Input
+                            type="number" min="0"
                             name={"costoDePreparacion"}
                             value={costoDePreparacion}
                             placeholder="Ingresar el costo por pedido"
@@ -277,6 +279,7 @@ class ModeloTriangular extends React.Component{
                                 <InputGroupText >{"$"}</InputGroupText>
                             </InputGroupAddon>
                             <Input
+                            type="number" min="0"
                             name={"costoDeAlmacenamiento"}
                             value={costoDeAlmacenamiento}
                             placeholder="Ingresar el costo de almacenamiento"
@@ -305,6 +308,7 @@ class ModeloTriangular extends React.Component{
                             <InputGroupText><b>{"b"}</b></InputGroupText>
                             </InputGroupAddon>
                             <Input
+                            type="number" min="0"
                             name={"costoDeProducto"}
                             value={costoDeProducto}
                             placeholder="Ingresar el costo del producto x unidad"
@@ -320,6 +324,7 @@ class ModeloTriangular extends React.Component{
                             <InputGroupText><b>{"p"}</b></InputGroupText>
                             </InputGroupAddon>
                             <Input
+                            type="number" min="0"
                             name={"velocidadDeProduccion"}
                             value={velocidadDeProduccion}
                             placeholder="Ingresar el costo de escasez"
