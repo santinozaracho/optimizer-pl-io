@@ -327,7 +327,7 @@ class ModeloTriangular extends React.Component{
                             type="number" min="0"
                             name={"velocidadDeProduccion"}
                             value={velocidadDeProduccion}
-                            placeholder="Ingresar el costo de escasez"
+                            placeholder="Ingresar la velocidad de producción"
                             aria-label="velocidadDeProduccion"
                             aria-describedby="velocidadDeProduccion"
                             onChange={this.handleInputChange}
