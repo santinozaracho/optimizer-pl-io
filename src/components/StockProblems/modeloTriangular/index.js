@@ -146,15 +146,11 @@ class ModeloTriangular extends React.Component{
 
 
     mostrarResultados = () => {
-        let {demanda, costoDePreparacion, costoDeAlmacenamiento, costoDeProducto , velocidadDeProduccion, tiempoTotalEnDias} = this.state;
+        let {demanda, costoDePreparacion, costoDeAlmacenamiento, costoDeProducto , velocidadDeProduccion, tiempoTotalEnDias,cantidadDePeriodos,unidadTiempo} = this.state;
         let combinacion1 = [demanda, costoDePreparacion, costoDeAlmacenamiento, costoDeProducto ,velocidadDeProduccion] //Cargamos un arreglo
         let control1 = combinacion1.every(caso => caso); //Si devuelve true es porque todos los elementos del arreglo estan cargados 
-        
-        
-
-            
             if (control1){ //SI TODOS LOS CAMPOS ESTAN CARGADOS ENTONCES CALCULO TODO Y MUESTRO
-                tiempoTotalEnDias = calcularT()
+                tiempoTotalEnDias = calcularT(cantidadDePeriodos, unidadTiempo)
                 if(velocidadDeProduccion > ((Number(demanda)/Number(tiempoTotalEnDias))))
                 {
                     this.calcularTamañoDelLote() //q
@@ -169,8 +165,8 @@ class ModeloTriangular extends React.Component{
                     }, 1);
                     this.setState({mostrarResultados: true})
                     this.setState({incompleto: false})
-
                     this.setState({pnomayord:false})
+
                 }else{
                     this.setState({pnomayord:true})    
                     }
