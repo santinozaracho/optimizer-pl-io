@@ -55,7 +55,8 @@ class ModeloTriangular extends React.Component{
             pedidosNecesarios: null, //n
             velocidadDeProduccion:null, //p
             t1p: null,
-            tiempoTotalEnDias:365
+            tiempoTotalEnDias:365,
+            pnomayord:false
             
         }
     }
@@ -149,32 +150,40 @@ class ModeloTriangular extends React.Component{
         let combinacion1 = [demanda, costoDePreparacion, costoDeAlmacenamiento, costoDeProducto ,velocidadDeProduccion] //Cargamos un arreglo
         let control1 = combinacion1.every(caso => caso); //Si devuelve true es porque todos los elementos del arreglo estan cargados 
         
-        if (control1){ //SI TODOS LOS CAMPOS ESTAN CARGADOS ENTONCES CALCULO TODO Y MUESTRO
-            tiempoTotalEnDias = calcularT()
-            this.calcularTamañoDelLote() //q
-            setTimeout(() => {
-                this.calcularStockAlmacenado()
-                this.calculart1p()
-                this.calcularCostoPreparacionTotal()
-                this.calcularCostoProductoTotal()
-                this.calcularCostoAlmacenamientoTotal()
-                this.calcularCTE()
-                
-            }, 1);
+        
 
-            this.setState({mostrarResultados: true})
-            this.setState({incompleto: false})
+            
+            if (control1){ //SI TODOS LOS CAMPOS ESTAN CARGADOS ENTONCES CALCULO TODO Y MUESTRO
+                tiempoTotalEnDias = calcularT()
+                if(velocidadDeProduccion > ((Number(demanda)/Number(tiempoTotalEnDias))))
+                {
+                    this.calcularTamañoDelLote() //q
+                    setTimeout(() => {
+                        this.calcularStockAlmacenado()
+                        this.calculart1p()
+                        this.calcularCostoPreparacionTotal()
+                        this.calcularCostoProductoTotal()
+                        this.calcularCostoAlmacenamientoTotal()
+                        this.calcularCTE()
+                        
+                    }, 1);
+                    this.setState({mostrarResultados: true})
+                    this.setState({incompleto: false})
 
-        }else{
-            this.setState({incompleto:true}) //PONGO A INCOMPLETO EN TRUE Y MUESTRO LA ALERTA DE COMPLETAR CAMPOS
-        }
+                    this.setState({pnomayord:false})
+                }else{
+                    this.setState({pnomayord:true})    
+                    }
+            }else{
+                this.setState({incompleto:true}) //PONGO A INCOMPLETO EN TRUE Y MUESTRO LA ALERTA DE COMPLETAR CAMPOS
+            }
         
         
                  
     }
 
     render() { 
-        let {demanda, costoDePreparacion, costoDeAlmacenamiento,unidadesDemanda, loteOptimo, unidadesAlmacenamiento, incompleto, CTEoptimo} = this.state;
+        let {demanda, costoDePreparacion, costoDeAlmacenamiento,unidadesDemanda, loteOptimo, unidadesAlmacenamiento, incompleto,pnomayord, CTEoptimo} = this.state;
         let {costoDeProducto, costoDeProductoTotal, costoDePreparacionTotal, costoDeAlmacenamientoTotal, CTE, mostrarResultados, tiempoEntrePedidos} = this.state;
         let {stockAlmacenado, cantidadDePeriodos, unidadTiempo} = this.state;
         let {velocidadDeProduccion, t1p} = this.state;
@@ -398,6 +407,10 @@ class ModeloTriangular extends React.Component{
                         <CardText>Complete más campos para poder continuar y luego presione calcular.</CardText>
                     </Card>)}
                     
+                    {pnomayord && (
+                    <Card className="card-incompleto" body inverse color="danger" style={{padding: '0 0 0 0', marginTop:10}}>
+                        <CardText>Con la demanda D ingresada la demanda unitaria calculada es mayor a p y esto no es posible en este modelo. Por favor vuelva a intentar.</CardText>
+                    </Card>)}
                     
                     <Row className="btn-volver justify-content-center">
                         <Link to='./'><Button>Volver</Button></Link>
