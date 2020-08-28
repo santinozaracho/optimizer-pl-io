@@ -2,6 +2,7 @@ import React from "react";
 import { Button, Container, Row, Col, Card, Jumbotron} from "reactstrap";
 import {InputGroupText,InputGroup, Input,InputGroupAddon, CardText} from 'reactstrap';
 import {Link} from 'react-router-dom';
+import Restricciones from './restriccion';
 import '../index.css'
 
 
@@ -13,7 +14,8 @@ class ModeloSimpleSinAgotamiento extends React.Component{
             demanda: 0, //D
             CostoDeUnaOrden: 0, //K
             costoDeAlmacenamiento: 0,//c1
-            costoDeAdquisicion: 0, //b en este caso son varios pero empezamos con 1 (por las restricciones)
+            costoDeAdquisicion: null, //b en este caso son varios pero empezamos con 1 (por las restricciones)
+            porcentajeAplicadoProducto: 0,
             StockDeProteccion:0,// c2
             unidadesAlmacenamiento: 0,
             unidadesDemanda:0,
@@ -25,7 +27,113 @@ class ModeloSimpleSinAgotamiento extends React.Component{
             inputUpdated: false,
             CTE: 0,
             stockAlmacenado:0,
-            porcentajeCapitalInmobilizado:0 //p
+            porcentajeCapitalInmobilizado:0, //p
+            listOfElements: [],
+            costosDeAdquisicion: null,
+            cantRestricciones: 0,
+            rest: [],
+            rangos: []
+        }
+    }
+
+    handleInputRestriccionesValueChange = (event) => {
+        var objectChildren = event.target;
+        var newListOfElements = this.state.listOfElements.slice();
+
+        if (newListOfElements.length < 1) {
+            var object = {
+                name: null, 
+                value: null
+            };
+            object.name = event.target.name;
+            object.value = event.target.value;
+            newListOfElements.push(object)
+            this.setState({listOfElements: newListOfElements});
+        } else {
+            var results = false;
+            var position;
+            for(var i = 0; i < newListOfElements.length; i++) {
+                if(newListOfElements[i].name == objectChildren.name) {
+                    results = true;
+                    position = i;
+                    break;
+                }
+            }
+
+            if (results) {
+                var object = newListOfElements[position];
+                object.value = objectChildren.value;
+                newListOfElements[position] = object;
+                this.setState({listOfElements: newListOfElements});
+            } else {
+                var object = {
+                    name: null, 
+                    value: null
+                };
+                object.name = objectChildren.name;
+                object.value = objectChildren.value;
+                newListOfElements.push(object)
+                this.setState({listOfElements: newListOfElements});
+            }
+        }
+    } 
+
+    handleInputRestriccionesChange = (event) =>{
+        let { rest } = this.state
+        if (event.target.value > 0){
+            for (let index = 0; index < event.target.value; index++) {
+                rest.push(<Restricciones index={index} inputValue={this.handleInputRestriccionesValueChange} />) 
+            }
+        }
+        this.setState({
+            [event.target.name]: event.target.value,
+            inputUpdated: true,
+        })
+    }
+
+    switchWithAtributo(atributo, value, object) {
+        switch (atributo) {
+            case "inicio":
+                object.inicio = value;
+                break;
+            case "fin":
+                object.fin = value;
+                break;
+            case "costoDeAdquisicion":
+                object.costoAdquisicion = value;
+                break;   
+            default:
+                break;
+        }
+        return object;
+    }
+
+    handleRangosAndCostosDeAdquisicion() {
+        let { listOfElements , rangos} = this.state;
+        var atributo, subArrays;
+        for (let index = 0; index < listOfElements.length; index++) {
+            var element = listOfElements[index];
+            var object = {
+                inicio: null,
+                fin: null,
+                costoAdquisicion: null
+            }
+            subArrays = element.name.split('-');
+            atributo = String(subArrays[0]);
+
+            object = this.switchWithAtributo(atributo, element.value, object);
+            index++;
+            element = listOfElements[index];
+            subArrays = element.name.split('-');
+            atributo = String(subArrays[0]);
+            object = this.switchWithAtributo(atributo, element.value, object);
+            index++;
+            element = listOfElements[index];
+            subArrays = element.name.split('-');
+            atributo = String(subArrays[0]);
+            object = this.switchWithAtributo(atributo, element.value, object);
+            rangos.push(object);
+            this.setState({rangos: rangos});
         }
     }
 
@@ -33,7 +141,6 @@ class ModeloSimpleSinAgotamiento extends React.Component{
         if(this.state.inputUpdated){
             this.setState({inputUpdated:false})
             this.controlarCambio();
-            
         } 
     }
 
@@ -49,58 +156,80 @@ class ModeloSimpleSinAgotamiento extends React.Component{
         this.setState({mostrarResultados:false})
     }
     
+    determinarLoteOptimo() {
+        let {rangos} = this.state;
+        for (var i = 0; i < rangos.length; i++) {
+            const costoAdquisicion = rangos[i].costoAdquisicion;
+            this.setState({costoDeAdquisicion: costoAdquisicion});
+            let loteOptimo = this.calcularTamañoDelLote(costoAdquisicion);
+            const rango = rangos[i];
+            console.log(rangos, "rangos")
+            if (loteOptimo > rango.inicio && loteOptimo < rango.fin) {
+                let result = {};
+                result.loteOptimo = loteOptimo;
+                let costoTotalEsperado = this.calcularCostoTotalEsperado(costoAdquisicion, loteOptimo);
+                result.cte = costoTotalEsperado;
+                return result;
+            } 
+        }
+    }
 
     //q0
-    calcularTamañoDelLote(){
-        let {demanda, CostoDeUnaOrden,T, CostoUnitarioDeAlmacenamiento, porcentajeCapitalInmobilizado, costoDeAdquisicion, costoDeAlmacenamiento} = this.state;
-        let loteOptimo
-        console.log(costoDeAlmacenamiento, "costo de almacenamiento")
-        CostoUnitarioDeAlmacenamiento = ((Number(porcentajeCapitalInmobilizado)*Number(costoDeAdquisicion))+Number(costoDeAlmacenamiento))*T
-        console.log(CostoUnitarioDeAlmacenamiento, "costo de almacenamiento unitario")
-        loteOptimo = (Math.sqrt((2*Number(CostoDeUnaOrden)*Number(demanda))/(Number(CostoUnitarioDeAlmacenamiento))));
+    calcularTamañoDelLote(costoAdquisicion){
+        let {demanda, CostoDeUnaOrden,T, CostoUnitarioDeAlmacenamiento, porcentajeCapitalInmobilizado, costoDeAlmacenamiento, porcentajeAplicadoProducto} = this.state;
+        let loteOptimo;
+        console.log(demanda, "demanda")
+        console.log(CostoDeUnaOrden, "costo de una orden")
+        console.log(T, "T")
         
-        // if (loteOptimo>demanda){ //Si el q0 calculado es mas grande que la demanda entonces como lote optimo va la demanda
-        //     this.setState({loteOptimo: demanda})
-        // }else{
-            this.setState({loteOptimo})
-        //}
+        console.log(porcentajeCapitalInmobilizado, "porcentaje capital inmobilizado")
+        console.log(costoAdquisicion, "costo de adquisicion")
+        
+        console.log(porcentajeAplicadoProducto, "porcentaje aplicado al producto")
+        if (Number(porcentajeAplicadoProducto) > 0) {
+            costoDeAlmacenamiento = Number(costoAdquisicion) * Number(porcentajeAplicadoProducto);
+        }
+        console.log(costoDeAlmacenamiento, "costo de almacenamiento")
+        CostoUnitarioDeAlmacenamiento = ((Number(porcentajeCapitalInmobilizado)*Number(costoAdquisicion))+Number(costoDeAlmacenamiento))*T
+        console.log(CostoUnitarioDeAlmacenamiento, "costo unitario de almacenamiento")
+        loteOptimo = (Math.sqrt((2*Number(CostoDeUnaOrden)*Number(demanda))/(Number(CostoUnitarioDeAlmacenamiento))));
+        console.log(loteOptimo, "Lote optimo")
+        
+        return loteOptimo;
     }
     
     //CALCULAR CTE
-    calcularCostoTotalEsperado(){
-        let {costoDeAdquisicion,demanda,CostoDeUnaOrden,costoDeAlmacenamiento,T, loteOptimo, porcentajeCapitalInmobilizado} = this.state;
+    calcularCostoTotalEsperado(costoDeAdquisicion, loteOptimo){
+        let {demanda,CostoDeUnaOrden,costoDeAlmacenamiento,T, porcentajeCapitalInmobilizado} = this.state;
         let pp, sp, tp
-        console.log(loteOptimo)
-        pp = ((Number(demanda)/Number(loteOptimo))*Number(CostoDeUnaOrden));
-        console.log(pp)
+        pp = ((Number(demanda)*Number(CostoDeUnaOrden))/Number(loteOptimo));
         sp = (Number(costoDeAdquisicion)*Number(demanda))
-        console.log(sp)
         tp = ( (1/2)*loteOptimo*T*(porcentajeCapitalInmobilizado*costoDeAdquisicion*costoDeAlmacenamiento))
-        console.log(tp)
-        this.setState({CTE: (pp + sp + tp) }) //CTEo
+        let CTEO = (pp + sp + tp);
+        return CTEO;
     }
     
     mostrarResultados = () => {
-        let {demanda, costoDeAdquisicion, costoDeAlmacenamiento, CostoDeUnaOrden} = this.state;
-        let combinacion1 = [demanda,CostoDeUnaOrden,costoDeAlmacenamiento,costoDeAdquisicion] //Cargamos un arreglo
+        let {demanda, rangos, costoDeAlmacenamiento, CostoDeUnaOrden} = this.state;
+        let combinacion1 = [demanda,CostoDeUnaOrden,costoDeAlmacenamiento] //Cargamos un arreglo
         let control1 = combinacion1.every(caso => caso); //Si devuelve true es porque todos los elementos del arreglo estan cargados 
-        
-        if (control1){ //SI TODOS LOS CAMPOS ESTAN CARGADOS ENTONCES CALCULO TODO Y MUESTRO
 
-            this.calcularTamañoDelLote(); //Calculo q0
-            setTimeout(() => {this.calcularCostoTotalEsperado()},1)
-            this.setState({mostrarResultados: true})
-            this.setState({incompleto: false})
+        this.handleRangosAndCostosDeAdquisicion();
+        if (control1 && rangos.length > 1){ //SI TODOS LOS CAMPOS ESTAN CARGADOS ENTONCES CALCULO TODO Y MUESTRO    
+            var result = this.determinarLoteOptimo();
+            this.setState({loteOptimo: result.loteOptimo});
+            this.setState({CTE: result.cte}); //CTEo
+            this.setState({mostrarResultados: true});
+            this.setState({incompleto: false});
 
         }else{
             this.setState({incompleto:true}) //PONGO A INCOMPLETO EN TRUE Y MUESTRO LA ALERTA DE COMPLETAR CAMPOS
-        }
-                      
+        }            
     }
 
     render() { 
-        let {CTE,loteOptimo,tiempoEntrePedidos, incompleto,mostrarResultados,unidadesDemanda,unidadesAlmacenamiento} = this.state;
-               
+        let {cantRestricciones, CTE,loteOptimo,tiempoEntrePedidos, incompleto,mostrarResultados,unidadesDemanda,unidadesAlmacenamiento} = this.state;
+        
         return (
             <Container fluid className="App"> 
             <Row>
@@ -113,12 +242,11 @@ class ModeloSimpleSinAgotamiento extends React.Component{
                     <Col> 
                         <InputGroup className="mt-3">
                             <InputGroupAddon addonType="prepend">
-                            <InputGroupText><b>{"D"}</b></InputGroupText>
+                            <InputGroupText><b>{"Demanda (D)"}</b></InputGroupText>
                             </InputGroupAddon>
                             <Input
                             className="input-demanda"
                             name={"demanda"}
-                            placeholder="Ingresar la demanda"
                             aria-label="Demanda"
                             aria-describedby="demanda"
                             onChange={this.handleInputChange}
@@ -128,14 +256,13 @@ class ModeloSimpleSinAgotamiento extends React.Component{
                     <Col>
                         <InputGroup className="mt-3">
                             <InputGroupAddon addonType="prepend">
-                                <InputGroupText><b>{"K"}</b></InputGroupText>
+                                <InputGroupText><b>{"Costo de preparacion (K)"}</b></InputGroupText>
                             </InputGroupAddon>
                             <InputGroupAddon addonType="prepend">
                                 <InputGroupText>{"$"}</InputGroupText>
                             </InputGroupAddon>
                             <Input
                             name={"CostoDeUnaOrden"}
-                            placeholder="Ingresar el costo de preparacion/producción"
                             aria-label="CostoDeUnaOrden"
                             aria-describedby="CostoDeUnaOrden"
                             onChange={this.handleInputChange}
@@ -145,14 +272,13 @@ class ModeloSimpleSinAgotamiento extends React.Component{
                     <Col>
                         <InputGroup className="mt-3">
                             <InputGroupAddon addonType="prepend">
-                                <InputGroupText><b>{"p"}</b></InputGroupText>
+                                <InputGroupText><b>{"Porcentaje de Capital Inmobilizado (p)"}</b></InputGroupText>
                             </InputGroupAddon>
                             <InputGroupAddon addonType="prepend">
                                 <InputGroupText>{"$"}</InputGroupText>
                             </InputGroupAddon>
                             <Input
                             name={"porcentajeCapitalInmobilizado"}
-                            placeholder="Ingresar el costo de preparacion/producción"
                             aria-label="porcentajeCapitalInmobilizado"
                             aria-describedby="porcentajeCapitalInmobilizado"
                             onChange={this.handleInputChange}
@@ -162,48 +288,57 @@ class ModeloSimpleSinAgotamiento extends React.Component{
                     <Col>
                         <InputGroup className="mt-3">
                             <InputGroupAddon className="unidadesAlmacenamiento" addonType="prepend">
-                                <InputGroupText><b>{"T"}</b></InputGroupText>
+                                <InputGroupText><b>{"Tiempo total (T)"}</b></InputGroupText>
                             </InputGroupAddon>
                             <Input
                             className=""
                             name={"T"}
-                            placeholder="Ingresar el tiempo total de simulacion"
                             onChange={this.handleInputChange}
                             />
 
                             <InputGroupAddon addonType="prepend">
-                                <InputGroupText><b>{"c1"}</b></InputGroupText>
+                                <InputGroupText><b>{"Costo de Almacenamiento (c1')"}</b></InputGroupText>
                             </InputGroupAddon>
                             <InputGroupAddon addonType="prepend">
                                 <InputGroupText>{"$"}</InputGroupText>
                             </InputGroupAddon>
                             <Input
                             name={"costoDeAlmacenamiento"}
-                            placeholder="Ingresar el costo de almacenamiento"
                             aria-label="costoDeAlmacenamiento"
                             aria-describedby="costoDeAlmacenamiento"
+                            onChange={this.handleInputChange}
+                            />
+
+                            <InputGroupAddon addonType="prepend">
+                                <InputGroupText><b>{"Porcentaje aplicado al posto del producto"}</b></InputGroupText>
+                            </InputGroupAddon>
+                            <InputGroupAddon addonType="prepend">
+                                <InputGroupText>{"$"}</InputGroupText>
+                            </InputGroupAddon>
+                            <Input
+                            name={"porcentajeAplicadoProducto"}
+                            aria-label="porcentajeAplicadoProducto"
+                            aria-describedby="porcentajeAplicadoProducto"
                             onChange={this.handleInputChange}
                             />
                         </InputGroup>
                     </Col>
                     <Col>
                         <InputGroup className="mt-3">
-                            <InputGroupAddon addonType="prepend">
-                                <InputGroupText><b>{"b"}</b></InputGroupText>
-                            </InputGroupAddon>
-                            <InputGroupAddon addonType="prepend">
-                                <InputGroupText>{"$"}</InputGroupText>
+                            <InputGroupAddon className="unidadesAlmacenamiento" addonType="prepend">
+                                <InputGroupText><b>{"Cantidad de restricciones"}</b></InputGroupText>
                             </InputGroupAddon>
                             <Input
-                            name={"costoDeAdquisicion"}
-                            placeholder="Ingresar el costo del producto x unidad."
-                            aria-label="costoDeAdquisicion"
-                            aria-describedby="costoDeAdquisicion"
-                            onChange={this.handleInputChange}
-                            />                        
+                            className=""
+                            name={"cantRestricciones"}
+                            onChange={this.handleInputRestriccionesChange}
+                            />
                         </InputGroup>
                     </Col>
-                                        
+                    {cantRestricciones > 0 && (
+                        this.state.rest)
+                    }
+                                       
                     {mostrarResultados && (    //Si mostrarResultados esta en true que quiere decir que apreto el boton y que todos los campos estan completos
                                                           
                     <Col>
