@@ -178,6 +178,8 @@ class ModeloSimpleSinAgotamiento extends React.Component{
     calcularTamañoDelLote(costoAdquisicion){
         let {demanda, CostoDeUnaOrden,T, CostoUnitarioDeAlmacenamiento, porcentajeCapitalInmobilizado, costoDeAlmacenamiento, porcentajeAplicadoProducto} = this.state;
         let loteOptimo;
+        porcentajeCapitalInmobilizado = Number(porcentajeCapitalInmobilizado)/100;
+        porcentajeAplicadoProducto = Number(porcentajeAplicadoProducto)/100;
         console.log(demanda, "demanda")
         console.log(CostoDeUnaOrden, "costo de una orden")
         console.log(T, "T")
@@ -201,7 +203,8 @@ class ModeloSimpleSinAgotamiento extends React.Component{
     //CALCULAR CTE
     calcularCostoTotalEsperado(costoDeAdquisicion, loteOptimo){
         let {demanda,CostoDeUnaOrden,costoDeAlmacenamiento,T, porcentajeCapitalInmobilizado} = this.state;
-        let pp, sp, tp
+        let pp, sp, tp;
+        porcentajeCapitalInmobilizado = Number(porcentajeCapitalInmobilizado)/100;
         pp = ((Number(demanda)*Number(CostoDeUnaOrden))/Number(loteOptimo));
         sp = (Number(costoDeAdquisicion)*Number(demanda))
         tp = ( (1/2)*loteOptimo*T*(porcentajeCapitalInmobilizado*costoDeAdquisicion*costoDeAlmacenamiento))
@@ -274,15 +277,15 @@ class ModeloSimpleSinAgotamiento extends React.Component{
                             <InputGroupAddon addonType="prepend">
                                 <InputGroupText><b>{"Porcentaje de Capital Inmobilizado (p)"}</b></InputGroupText>
                             </InputGroupAddon>
-                            <InputGroupAddon addonType="prepend">
-                                <InputGroupText>{"$"}</InputGroupText>
-                            </InputGroupAddon>
                             <Input
                             name={"porcentajeCapitalInmobilizado"}
                             aria-label="porcentajeCapitalInmobilizado"
                             aria-describedby="porcentajeCapitalInmobilizado"
                             onChange={this.handleInputChange}
                             />
+                            <InputGroupAddon addonType="prepend">
+                                <InputGroupText>{"%"}</InputGroupText>
+                            </InputGroupAddon>
                         </InputGroup>
                     </Col>
                     <Col>
@@ -295,6 +298,9 @@ class ModeloSimpleSinAgotamiento extends React.Component{
                             name={"T"}
                             onChange={this.handleInputChange}
                             />
+                            <InputGroupAddon addonType="prepend">
+                                <InputGroupText>{"Años"}</InputGroupText>
+                            </InputGroupAddon>
 
                             <InputGroupAddon addonType="prepend">
                                 <InputGroupText><b>{"Costo de Almacenamiento (c1')"}</b></InputGroupText>
@@ -312,15 +318,15 @@ class ModeloSimpleSinAgotamiento extends React.Component{
                             <InputGroupAddon addonType="prepend">
                                 <InputGroupText><b>{"Porcentaje aplicado al posto del producto"}</b></InputGroupText>
                             </InputGroupAddon>
-                            <InputGroupAddon addonType="prepend">
-                                <InputGroupText>{"$"}</InputGroupText>
-                            </InputGroupAddon>
                             <Input
                             name={"porcentajeAplicadoProducto"}
                             aria-label="porcentajeAplicadoProducto"
                             aria-describedby="porcentajeAplicadoProducto"
                             onChange={this.handleInputChange}
                             />
+                            <InputGroupAddon addonType="prepend">
+                                <InputGroupText>{"%"}</InputGroupText>
+                            </InputGroupAddon>
                         </InputGroup>
                     </Col>
                     <Col>
