@@ -78,16 +78,17 @@ class ModeloSimpleSinAgotamiento extends React.Component{
         }
     } 
 
-    handleInputRestriccionesChange = (event) =>{
-        let { rest } = this.state
+    handleInputRestriccionesChange = (event) => {
+        let restricciones = [];
         if (event.target.value > 0){
             for (let index = 0; index < event.target.value; index++) {
-                rest.push(<Restricciones index={index} inputValue={this.handleInputRestriccionesValueChange} />) 
+                restricciones.push(<Restricciones index={index} inputValue={this.handleInputRestriccionesValueChange} />) 
             }
         }
         this.setState({
             [event.target.name]: event.target.value,
             inputUpdated: true,
+            rest: restricciones
         })
     }
 
