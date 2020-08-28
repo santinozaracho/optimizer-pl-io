@@ -81,11 +81,11 @@ const StockProblems = () => {
             </Row>
             <Row className="mt-3 mx-auto">
               <Col>
-                <Link to={"StockProblems/modeloSimpleSinAgotamiento"} >
+                <Link to={"/StockProblems/modeloSimpleSinAgotamiento"} >
                   <UncontrolledTooltip target='button-wip'>Stock sin agotamiento con costos de compra variables de acuerdo al tamaño del lote ordenado (Descuento por cantidad)</UncontrolledTooltip>
                   <Button id="button-wip" size='lg' outline color="success">Modelo simple sin Agotamiento [WIP]</Button>
                 </Link>
-                <Link to={"StockProblems/modeloSimpleSinAgotamiento/info.js"} >
+                <Link to={"/StockProblems/modeloSimpleSinAgotamiento/info.js"} >
                   <UncontrolledTooltip target='info-wip'>Más Información</UncontrolledTooltip>
                   <BsFillInfoSquareFill id="info-wip" color='info' style={{color:'#17A2B8', marginLeft:10, fontSize:30}}></BsFillInfoSquareFill>
                 </Link>

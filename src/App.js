@@ -28,7 +28,7 @@ import infoModeloTriangular from "./components/StockProblems/modeloTriangular/in
 import ModelStockDiscontinuidadDePrecio from "./components/StockProblems/ModelStockDiscontinuidadDePrecio";
 import infoModelStockDiscontinuidadDePrecio from "./components/StockProblems/ModelStockDiscontinuidadDePrecio/info.js";
 
-import ModeloSimpleSinAgotamiento from "./components/StockProblems/modeloSimpleSinAgotamiento/index.js";
+import ModeloSimpleSinAgotamiento from "./components/StockProblems/modeloSimpleSinAgotamiento";
 import infoModeloSimpleSinAgotamiento from "./components/StockProblems/modeloSimpleSinAgotamiento/info.js";
 
 
@@ -67,7 +67,7 @@ const App = () =>
       <Route exact path="/StockProblems/ModelStockDiscontinuidadDePrecio" component={ModelStockDiscontinuidadDePrecio} />
       <Route exact path="/StockProblems/ModelStockDiscontinuidadDePrecio/info.js" component={infoModelStockDiscontinuidadDePrecio} />
 
-      <Route exact path="/StockProblems/StockProblems/modeloSimpleSinAgotamiento/info.js" component={infoModeloSimpleSinAgotamiento} />
+      <Route exact path="/StockProblems/modeloSimpleSinAgotamiento/info.js" component={infoModeloSimpleSinAgotamiento} />
       <Route exact path="/StockProblems/modeloSimpleSinAgotamiento" component={ModeloSimpleSinAgotamiento} />
       
       
