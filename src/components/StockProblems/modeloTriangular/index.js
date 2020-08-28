@@ -40,6 +40,7 @@ class ModeloTriangular extends React.Component{
             costoDeProductoTotal: null,
             unidadesAlmacenamiento: null,
             loteOptimo:null, //q
+            loteOptimoPorDia:null, //q
             tiempoEntrePedidos: null, //t0
             mostrarResultados: false,
             inputUpdated: false,
@@ -83,10 +84,24 @@ class ModeloTriangular extends React.Component{
     
     //CALCULAR q
     calcularTamañoDelLote(){
-        let {demanda, costoDePreparacion,costoDeAlmacenamiento, loteOptimo,velocidadDeProduccion,tiempoTotalEnDias} = this.state;
+        let {demanda, costoDePreparacion,costoDeAlmacenamiento, loteOptimoPorDia,velocidadDeProduccion,tiempoTotalEnDias} = this.state;
         let numerador, denominador
         numerador = ( 2*Number(costoDePreparacion)*(Number(demanda)/Number(tiempoTotalEnDias))*Number(velocidadDeProduccion))
         denominador = ( Number(costoDeAlmacenamiento)*(Number(velocidadDeProduccion)-(Number(demanda)/Number(tiempoTotalEnDias))))
+        loteOptimoPorDia = (Math.sqrt(Number(numerador)/Number(denominador)));
+        //NO SE SI VA ESTO 
+        if (loteOptimoPorDia>demanda){ //Si el q0 calculado es mas grande que la demanda entonces como lote optimo va la demanda
+            this.setState({loteOptimoPorDia: demanda})
+        }else{
+            this.setState({loteOptimoPorDia})
+        }
+    }
+    //CALCULAR q
+    calcularTamañoDelLoteEnFuncionDemanda(){
+        let {demanda, costoDePreparacion,costoDeAlmacenamiento, loteOptimo,velocidadDeProduccion,tiempoTotalEnDias,T} = this.state;
+        let numerador, denominador
+        numerador = ( 2 * Number(costoDePreparacion)*Number(demanda))
+        denominador = ( Number(costoDeAlmacenamiento)*  (1-((Number(demanda)/Number(tiempoTotalEnDias))/Number(velocidadDeProduccion)))*T)
         loteOptimo = (Math.sqrt(Number(numerador)/Number(denominador)));
         //NO SE SI VA ESTO 
         if (loteOptimo>demanda){ //Si el q0 calculado es mas grande que la demanda entonces como lote optimo va la demanda
@@ -153,7 +168,8 @@ class ModeloTriangular extends React.Component{
                 tiempoTotalEnDias = calcularT(cantidadDePeriodos, unidadTiempo)
                 if(velocidadDeProduccion > ((Number(demanda)/Number(tiempoTotalEnDias))))
                 {
-                    this.calcularTamañoDelLote() //q
+                    this.calcularTamañoDelLote()//q por dia
+                    this.calcularTamañoDelLoteEnFuncionDemanda() //q
                     setTimeout(() => {
                         this.calcularStockAlmacenado()
                         this.calculart1p()
@@ -182,7 +198,7 @@ class ModeloTriangular extends React.Component{
         let {demanda, costoDePreparacion, costoDeAlmacenamiento,unidadesDemanda, loteOptimo, unidadesAlmacenamiento, incompleto,pnomayord, CTEoptimo} = this.state;
         let {costoDeProducto, costoDeProductoTotal, costoDePreparacionTotal, costoDeAlmacenamientoTotal, CTE, mostrarResultados, tiempoEntrePedidos} = this.state;
         let {stockAlmacenado, cantidadDePeriodos, unidadTiempo} = this.state;
-        let {velocidadDeProduccion, t1p} = this.state;
+        let {velocidadDeProduccion, t1p,loteOptimoPorDia} = this.state;
 
 
         let tiempoTotalEnDias = calcularT(cantidadDePeriodos, unidadTiempo)
@@ -327,7 +343,7 @@ class ModeloTriangular extends React.Component{
                             type="number" min="0"
                             name={"velocidadDeProduccion"}
                             value={velocidadDeProduccion}
-                            placeholder="Ingresar la velocidad de producción"
+                            placeholder="Ingresar la velocidad de producción en DIAS"
                             aria-label="velocidadDeProduccion"
                             aria-describedby="velocidadDeProduccion"
                             onChange={this.handleInputChange}
@@ -353,7 +369,7 @@ class ModeloTriangular extends React.Component{
                                             <tr>
                                                 <td>q</td>
                                                 <td>Lote optimo</td>
-                                                <td className="text-left"><b>{Number(loteOptimo).toFixed(2)} {unidadesDemanda}</b></td>
+                                                <td className="text-left"><b>{Number(loteOptimo).toFixed(2)} {unidadesDemanda} por año <br/> {Number(loteOptimoPorDia).toFixed(2)} {unidadesDemanda} por dia</b></td>
                                             </tr>
                                             <tr>
                                                 <td>s</td>
