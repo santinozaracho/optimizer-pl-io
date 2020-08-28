@@ -158,6 +158,7 @@ class ModeloSimpleSinAgotamiento extends React.Component{
     
     determinarLoteOptimo() {
         let {rangos} = this.state;
+        rangos = rangos.sort((a, b) => a.costoAdquisicion - b.costoAdquisicion);
         for (var i = 0; i < rangos.length; i++) {
             const costoAdquisicion = rangos[i].costoAdquisicion;
             this.setState({costoDeAdquisicion: costoAdquisicion});
@@ -216,8 +217,11 @@ class ModeloSimpleSinAgotamiento extends React.Component{
         let {demanda, rangos, costoDeAlmacenamiento, CostoDeUnaOrden} = this.state;
         let combinacion1 = [demanda,CostoDeUnaOrden,costoDeAlmacenamiento] //Cargamos un arreglo
         let control1 = combinacion1.every(caso => caso); //Si devuelve true es porque todos los elementos del arreglo estan cargados 
-
-        this.handleRangosAndCostosDeAdquisicion();
+        
+        if(this.state.rangos.length < 1){
+            this.handleRangosAndCostosDeAdquisicion();
+        }
+            
         if (control1 && rangos.length > 1){ //SI TODOS LOS CAMPOS ESTAN CARGADOS ENTONCES CALCULO TODO Y MUESTRO    
             var result = this.determinarLoteOptimo();
             this.setState({loteOptimo: result.loteOptimo});
