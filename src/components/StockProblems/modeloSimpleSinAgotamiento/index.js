@@ -204,12 +204,17 @@ class ModeloSimpleSinAgotamiento extends React.Component{
     
     //CALCULAR CTE
     calcularCostoTotalEsperado(costoDeAdquisicion, loteOptimo){
-        let {demanda,CostoDeUnaOrden,costoDeAlmacenamiento,T, porcentajeCapitalInmobilizado} = this.state;
+        let {demanda,CostoDeUnaOrden,costoDeAlmacenamiento,T, porcentajeCapitalInmobilizado, porcentajeAplicadoProducto} = this.state;
         let pp, sp, tp;
+    
+        porcentajeAplicadoProducto = Number(porcentajeAplicadoProducto)/100;
         porcentajeCapitalInmobilizado = Number(porcentajeCapitalInmobilizado)/100;
+        if (Number(porcentajeAplicadoProducto) > 0) {
+            costoDeAlmacenamiento = Number(costoDeAdquisicion) * Number(porcentajeAplicadoProducto);
+        }
         pp = ((Number(demanda)*Number(CostoDeUnaOrden))/Number(loteOptimo));
-        sp = (Number(costoDeAdquisicion)*Number(demanda))
-        tp = ( (1/2)*loteOptimo*T*(porcentajeCapitalInmobilizado*costoDeAdquisicion*costoDeAlmacenamiento))
+        sp = (Number(costoDeAdquisicion)*Number(demanda));
+        tp = ( (1/2)*Number(loteOptimo)*Number(T)*((Number(porcentajeCapitalInmobilizado)*Number(costoDeAdquisicion))+Number(costoDeAlmacenamiento)));
         let CTEO = (pp + sp + tp);
         return CTEO;
     }
