@@ -55,6 +55,8 @@ class ModeloTriangular extends React.Component{
             pedidosNecesarios: null, //n
             velocidadDeProduccion:null, //p
             t1p: null,
+            tiempoTotalEnDias:365,
+            pnomayord:false
             
         }
     }
@@ -81,14 +83,11 @@ class ModeloTriangular extends React.Component{
     
     //CALCULAR q
     calcularTamañoDelLote(){
-        let {demanda, costoDePreparacion,costoDeAlmacenamiento, loteOptimo,velocidadDeProduccion} = this.state;
+        let {demanda, costoDePreparacion,costoDeAlmacenamiento, loteOptimo,velocidadDeProduccion,tiempoTotalEnDias} = this.state;
         let numerador, denominador
-        numerador = ( 2*Number(costoDePreparacion)*Number(demanda)*Number(velocidadDeProduccion) )
-        denominador = ( Number(costoDeAlmacenamiento)*(Number(velocidadDeProduccion)-Number(demanda)) )
+        numerador = ( 2*Number(costoDePreparacion)*(Number(demanda)/Number(tiempoTotalEnDias))*Number(velocidadDeProduccion))
+        denominador = ( Number(costoDeAlmacenamiento)*(Number(velocidadDeProduccion)-(Number(demanda)/Number(tiempoTotalEnDias))))
         loteOptimo = (Math.sqrt(Number(numerador)/Number(denominador)));
-        console.log(numerador)
-        console.log(denominador)
-        
         //NO SE SI VA ESTO 
         if (loteOptimo>demanda){ //Si el q0 calculado es mas grande que la demanda entonces como lote optimo va la demanda
             this.setState({loteOptimo: demanda})
@@ -99,8 +98,8 @@ class ModeloTriangular extends React.Component{
 
     //CALCULAR s
     calcularStockAlmacenado(){
-        let {loteOptimo, velocidadDeProduccion, demanda} = this.state;
-        this.setState({ stockAlmacenado: ( Number(loteOptimo) * ( 1 - (Number(demanda)/Number(velocidadDeProduccion) ) ) ) })
+        let {loteOptimo, velocidadDeProduccion, demanda,tiempoTotalEnDias} = this.state;
+        this.setState({ stockAlmacenado: ( Number(loteOptimo) * ( 1 - ((Number(demanda)/Number(tiempoTotalEnDias))/Number(velocidadDeProduccion) ) ) ) })
     }
 
     //CALCULAR T1p
@@ -124,8 +123,8 @@ class ModeloTriangular extends React.Component{
 
     //CALCULAR COSTO TOTAL DE ALMACENAMIENTO
     calcularCostoAlmacenamientoTotal(){
-        let {loteOptimo, costoDeAlmacenamiento, demanda, velocidadDeProduccion} = this.state;
-        this.setState({costoDeAlmacenamientoTotal: ( (1/2) * Number(costoDeAlmacenamiento) * (1 - (Number(demanda)/Number(velocidadDeProduccion))) ) })
+        let {loteOptimo, costoDeAlmacenamiento, demanda, velocidadDeProduccion,tiempoTotalEnDias} = this.state;
+        this.setState({costoDeAlmacenamientoTotal: ( (1/2) * Number(costoDeAlmacenamiento) * (1 - ((Number(demanda)/Number(tiempoTotalEnDias))/Number(velocidadDeProduccion))) ) })
     }
 
     //CALCULAR CTE
@@ -147,36 +146,40 @@ class ModeloTriangular extends React.Component{
 
 
     mostrarResultados = () => {
-        let {demanda, costoDePreparacion, costoDeAlmacenamiento, costoDeProducto , velocidadDeProduccion} = this.state;
+        let {demanda, costoDePreparacion, costoDeAlmacenamiento, costoDeProducto , velocidadDeProduccion, tiempoTotalEnDias,cantidadDePeriodos,unidadTiempo} = this.state;
         let combinacion1 = [demanda, costoDePreparacion, costoDeAlmacenamiento, costoDeProducto ,velocidadDeProduccion] //Cargamos un arreglo
         let control1 = combinacion1.every(caso => caso); //Si devuelve true es porque todos los elementos del arreglo estan cargados 
-        
-        if (control1){ //SI TODOS LOS CAMPOS ESTAN CARGADOS ENTONCES CALCULO TODO Y MUESTRO
-            this.calcularTamañoDelLote() //q
-        
-            setTimeout(() => {
-                this.calcularStockAlmacenado()
-                this.calculart1p()
-                this.calcularCostoPreparacionTotal()
-                this.calcularCostoProductoTotal()
-                this.calcularCostoAlmacenamientoTotal()
-                this.calcularCTE()
-                
-            }, 1);
+            if (control1){ //SI TODOS LOS CAMPOS ESTAN CARGADOS ENTONCES CALCULO TODO Y MUESTRO
+                tiempoTotalEnDias = calcularT(cantidadDePeriodos, unidadTiempo)
+                if(velocidadDeProduccion > ((Number(demanda)/Number(tiempoTotalEnDias))))
+                {
+                    this.calcularTamañoDelLote() //q
+                    setTimeout(() => {
+                        this.calcularStockAlmacenado()
+                        this.calculart1p()
+                        this.calcularCostoPreparacionTotal()
+                        this.calcularCostoProductoTotal()
+                        this.calcularCostoAlmacenamientoTotal()
+                        this.calcularCTE()
+                        
+                    }, 1);
+                    this.setState({mostrarResultados: true})
+                    this.setState({incompleto: false})
+                    this.setState({pnomayord:false})
 
-            this.setState({mostrarResultados: true})
-            this.setState({incompleto: false})
-
-        }else{
-            this.setState({incompleto:true}) //PONGO A INCOMPLETO EN TRUE Y MUESTRO LA ALERTA DE COMPLETAR CAMPOS
-        }
+                }else{
+                    this.setState({pnomayord:true})    
+                    }
+            }else{
+                this.setState({incompleto:true}) //PONGO A INCOMPLETO EN TRUE Y MUESTRO LA ALERTA DE COMPLETAR CAMPOS
+            }
         
         
                  
     }
 
     render() { 
-        let {demanda, costoDePreparacion, costoDeAlmacenamiento,unidadesDemanda, loteOptimo, unidadesAlmacenamiento, incompleto, CTEoptimo} = this.state;
+        let {demanda, costoDePreparacion, costoDeAlmacenamiento,unidadesDemanda, loteOptimo, unidadesAlmacenamiento, incompleto,pnomayord, CTEoptimo} = this.state;
         let {costoDeProducto, costoDeProductoTotal, costoDePreparacionTotal, costoDeAlmacenamientoTotal, CTE, mostrarResultados, tiempoEntrePedidos} = this.state;
         let {stockAlmacenado, cantidadDePeriodos, unidadTiempo} = this.state;
         let {velocidadDeProduccion, t1p} = this.state;
@@ -200,6 +203,7 @@ class ModeloTriangular extends React.Component{
                             <InputGroupText><b>{"D"}</b></InputGroupText>
                             </InputGroupAddon>
                             <Input
+                            type="number" min="0"
                             className="input-demanda"
                             name={"demanda"}
                             value={demanda}
@@ -255,6 +259,7 @@ class ModeloTriangular extends React.Component{
                             <InputGroupText>{"$"}</InputGroupText>
                             </InputGroupAddon>
                             <Input
+                            type="number" min="0"
                             name={"costoDePreparacion"}
                             value={costoDePreparacion}
                             placeholder="Ingresar el costo por pedido"
@@ -274,6 +279,7 @@ class ModeloTriangular extends React.Component{
                                 <InputGroupText >{"$"}</InputGroupText>
                             </InputGroupAddon>
                             <Input
+                            type="number" min="0"
                             name={"costoDeAlmacenamiento"}
                             value={costoDeAlmacenamiento}
                             placeholder="Ingresar el costo de almacenamiento"
@@ -302,9 +308,10 @@ class ModeloTriangular extends React.Component{
                             <InputGroupText><b>{"b"}</b></InputGroupText>
                             </InputGroupAddon>
                             <Input
+                            type="number" min="0"
                             name={"costoDeProducto"}
                             value={costoDeProducto}
-                            placeholder="Ingresar el costo del producto x unidad"
+                            placeholder="Ingresar el costo del producto por unidad"
                             aria-label="costoDeProducto"
                             aria-describedby="costoDeProducto"
                             onChange={this.handleInputChange}
@@ -317,9 +324,10 @@ class ModeloTriangular extends React.Component{
                             <InputGroupText><b>{"p"}</b></InputGroupText>
                             </InputGroupAddon>
                             <Input
+                            type="number" min="0"
                             name={"velocidadDeProduccion"}
                             value={velocidadDeProduccion}
-                            placeholder="Ingresar el costo de escasez"
+                            placeholder="Ingresar la velocidad de producción"
                             aria-label="velocidadDeProduccion"
                             aria-describedby="velocidadDeProduccion"
                             onChange={this.handleInputChange}
@@ -400,6 +408,10 @@ class ModeloTriangular extends React.Component{
                         <CardText>Complete más campos para poder continuar y luego presione calcular.</CardText>
                     </Card>)}
                     
+                    {pnomayord && (
+                    <Card className="card-incompleto" body inverse color="danger" style={{padding: '0 0 0 0', marginTop:10}}>
+                        <CardText>Con la demanda D ingresada la demanda unitaria calculada es mayor a p y esto no es posible en este modelo. Por favor vuelva a intentar.</CardText>
+                    </Card>)}
                     
                     <Row className="btn-volver justify-content-center">
                         <Link to='./'><Button>Volver</Button></Link>

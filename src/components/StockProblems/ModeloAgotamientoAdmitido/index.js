@@ -224,6 +224,7 @@ class ModeloAgotamientoAdmitido extends React.Component{
                             <InputGroupText><b>{"D"}</b></InputGroupText>
                             </InputGroupAddon>
                             <Input
+                            type="number" min="0"
                             className="input-demanda"
                             name={"demanda"}
                             value={demanda}
@@ -257,7 +258,7 @@ class ModeloAgotamientoAdmitido extends React.Component{
                             placeholder="1"
                             aria-label="cantidadDePeriodos"
                             aria-describedby="cantidadDePeriodos"
-                            type="number"
+                            type="number" min="0"
                             onChange={this.handleInputChange}
                             style={{maxWidth:70}}
                             />      
@@ -279,6 +280,7 @@ class ModeloAgotamientoAdmitido extends React.Component{
                             <InputGroupText>{"$"}</InputGroupText>
                             </InputGroupAddon>
                             <Input
+                            type="number" min="0"
                             name={"costoDePreparacion"}
                             value={costoDePreparacion}
                             placeholder="Ingresar el costo por pedido"
@@ -298,6 +300,7 @@ class ModeloAgotamientoAdmitido extends React.Component{
                                 <InputGroupText >{"$"}</InputGroupText>
                             </InputGroupAddon>
                             <Input
+                            type="number" min="0"
                             name={"costoDeAlmacenamiento"}
                             value={costoDeAlmacenamiento}
                             placeholder="Ingresar el costo de almacenamiento"
@@ -326,9 +329,10 @@ class ModeloAgotamientoAdmitido extends React.Component{
                             <InputGroupText><b>{"b"}</b></InputGroupText>
                             </InputGroupAddon>
                             <Input
+                            type="number" min="0"
                             name={"costoDeProducto"}
                             value={costoDeProducto}
-                            placeholder="Ingresar el costo del producto x unidad"
+                            placeholder="Ingresar el costo del producto por unidad"
                             aria-label="costoDeProducto"
                             aria-describedby="costoDeProducto"
                             onChange={this.handleInputChange}
@@ -341,6 +345,7 @@ class ModeloAgotamientoAdmitido extends React.Component{
                             <InputGroupText><b>{"c2"}</b></InputGroupText>
                             </InputGroupAddon>
                             <Input
+                            type="number" min="0"
                             name={"costoDeEscasez"}
                             value={costoDeEscasez}
                             placeholder="Ingresar el costo de escasez"

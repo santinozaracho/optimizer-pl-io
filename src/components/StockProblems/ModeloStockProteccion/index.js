@@ -162,6 +162,7 @@ class ModeloStockProteccion extends React.Component{
                             <InputGroupText><b>{"D"}</b></InputGroupText>
                             </InputGroupAddon>
                             <Input
+                            type="number" min="0"
                             className="input-demanda"
                             name={"demanda"}
                             value={demanda}
@@ -192,6 +193,7 @@ class ModeloStockProteccion extends React.Component{
                                 <InputGroupText>{"$"}</InputGroupText>
                             </InputGroupAddon>
                             <Input
+                            type="number" min="0"
                             name={"costoDePreparacion"}
                             value={costoDePreparacion}
                             placeholder="Ingresar el costo de preparacion/producción"
@@ -210,6 +212,7 @@ class ModeloStockProteccion extends React.Component{
                                 <InputGroupText>{"$"}</InputGroupText>
                             </InputGroupAddon>
                             <Input
+                            type="number" min="0"
                             name={"costoDeAlmacenamiento"}
                             value={costoDeAlmacenamiento}
                             placeholder="Ingresar el costo de almacenamiento"
@@ -238,9 +241,10 @@ class ModeloStockProteccion extends React.Component{
                                 <InputGroupText>{"$"}</InputGroupText>
                             </InputGroupAddon>
                             <Input
+                            type="number" min="0"
                             name={"costoDeProducto"}
                             value={costoDeProducto}
-                            placeholder="Ingresar el costo del producto x unidad"
+                            placeholder="Ingresar el costo del producto por unidad"
                             aria-label="costoDeProducto"
                             aria-describedby="costoDeProducto"
                             onChange={this.handleInputChange}
@@ -253,6 +257,7 @@ class ModeloStockProteccion extends React.Component{
                                 <InputGroupText><b>{"sp"}</b></InputGroupText>
                             </InputGroupAddon>
                             <Input
+                            type="number" min="0"
                             name={"StockDeProteccion"}
                             placeholder="Ingresar stock de proteccion"
                             aria-label="StockDeProteccion"
