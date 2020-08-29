@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Container, Row, Col, Card, Jumbotron} from "reactstrap";
+import { Button, Container, Row, Col, Card, Jumbotron, Table} from "reactstrap";
 import {InputGroupText,InputGroup, Input,InputGroupAddon, CardText} from 'reactstrap';
 import {Link} from 'react-router-dom';
 import Restricciones from './restriccion';
@@ -358,18 +358,21 @@ class ModeloSimpleSinAgotamiento extends React.Component{
                             aria-describedby="costoDeAlmacenamiento"
                             onChange={this.handleInputChange}
                             />
-
+                        </InputGroup>
+                    </Col>
+                    <Col>
+                        <InputGroup className="porcentaje">
                             <InputGroupAddon addonType="prepend">
-                                <InputGroupText><b>{"Porcentaje aplicado al posto del producto"}</b></InputGroupText>
-                            </InputGroupAddon>
-                            <Input
-                            name={"porcentajeAplicadoProducto"}
-                            aria-label="porcentajeAplicadoProducto"
-                            aria-describedby="porcentajeAplicadoProducto"
-                            onChange={this.handleInputChange}
-                            />
-                            <InputGroupAddon addonType="prepend">
-                                <InputGroupText>{"%"}</InputGroupText>
+                                    <InputGroupText><b>{"Porcentaje aplicado al posto del producto"}</b></InputGroupText>
+                                </InputGroupAddon>
+                                <Input
+                                name={"porcentajeAplicadoProducto"}
+                                aria-label="porcentajeAplicadoProducto"
+                                aria-describedby="porcentajeAplicadoProducto"
+                                onChange={this.handleInputChange}
+                                />
+                                <InputGroupAddon addonType="prepend">
+                                    <InputGroupText>{"%"}</InputGroupText>
                             </InputGroupAddon>
                         </InputGroup>
                     </Col>
@@ -390,22 +393,30 @@ class ModeloSimpleSinAgotamiento extends React.Component{
                     }
                                        
                     {mostrarResultados && (    //Si mostrarResultados esta en true que quiere decir que apreto el boton y que todos los campos estan completos
-                                                          
-                    <Col>
-                        <Card body inverse style={{ backgroundColor: '#333', borderColor: '#333', marginTop:10}}>
-                            <CardText>
-                                <h6 style={{display:'inline'}}>El lote optimo es:</h6> <h5 style={{display:'inline'}}><b>{Number(loteOptimo).toFixed(2)}</b></h5><br></br>
-                                <h6 style={{display:'inline'}}>El costo total esperado es:</h6> <h5 style={{display:'inline'}}><b>${Number(CTE).toFixed(2)}</b></h5><br></br>
-                                <Col>
-                                    <Card body inverse color="primary" style={{marginTop:10, padding: '5px 0 0 0'}}>
-                                        <CardText>
-                                        <h5>Pedir {Number(loteOptimo).toFixed(2)} {unidadesDemanda} cada {Number(tiempoEntrePedidos).toFixed(2)} {unidadesAlmacenamiento}</h5>
-                                        </CardText>
-                                    </Card>   
-                                </Col>
-                            </CardText>
-                        </Card>   
-                    </Col>)}
+                    <Col className="resul">        
+                        <Table dark className="text-center">
+                            <thead>
+                                <tr>
+                                    <th>Variable</th>
+                                    <th>Nombre Variable</th>
+                                    <th className="text-left"><b>Resultado</b></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>q0</td>
+                                    <td>Lote optimo</td>
+                                    <td className="text-left"><b>{Math.round(Number(loteOptimo))}</b></td>
+                                </tr>
+                                <tr>
+                                    <td>CTE</td>
+                                    <td>Costo total Esperado</td>
+                                    <td className="text-left"><b>$ {Number(CTE).toFixed(2)}</b></td>
+                                </tr>
+                            </tbody>
+                        </Table>
+                    </Col>                                    
+                    )}
                            
                     {incompleto && (
                     <Card className="card-incompleto" body inverse color="danger" style={{padding: '0 0 0 0', marginTop:10}}>
