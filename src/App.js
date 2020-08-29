@@ -7,12 +7,12 @@ import LinealProgramming from './components/LinealProgramming'
 import Inicio from "./components/Inicio";
 import SinglePage from "./components/LinealProgramming/SinglePage";
 
-import CantidadEconomicaPedido from "./components/StockProblems/cantidadEconomicaPedido";
-import infoCantidadEconomicaPedido from "./components/StockProblems/cantidadEconomicaPedido/info.js";
+import CantidadEconomicaPedido from "./components/StockProblems/CantidadEconomicaPedido";
+import infoCantidadEconomicaPedido from "./components/StockProblems/CantidadEconomicaPedido/info.js";
 
 
-import ModeloWilson from "./components/StockProblems/modeloWilson";
-import infoModeloWilson from "./components/StockProblems/modeloWilson/info.js";
+import ModeloWilson from "./components/StockProblems/ModeloWilson";
+import infoModeloWilson from "./components/StockProblems/ModeloWilson/info.js";
 
 import ModeloStockProteccion from "./components/StockProblems/ModeloStockProteccion";
 import infoModeloStockProteccion from "./components/StockProblems/ModeloStockProteccion/info.js";
@@ -28,8 +28,8 @@ import infoModeloTriangular from "./components/StockProblems/modeloTriangular/in
 import ModelStockDiscontinuidadDePrecio from "./components/StockProblems/ModelStockDiscontinuidadDePrecio";
 import infoModelStockDiscontinuidadDePrecio from "./components/StockProblems/ModelStockDiscontinuidadDePrecio/info.js";
 
-import ModeloSimpleSinAgotamiento from "./components/StockProblems/modeloSimpleSinAgotamiento";
-import infoModeloSimpleSinAgotamiento from "./components/StockProblems/modeloSimpleSinAgotamiento/info.js";
+import ModeloSimpleSinAgotamiento from "./components/StockProblems/ModeloSimpleSinAgotamiento";
+import infoModeloSimpleSinAgotamiento from "./components/StockProblems/ModeloSimpleSinAgotamiento/info.js";
 
 
 
