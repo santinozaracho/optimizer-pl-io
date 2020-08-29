@@ -238,12 +238,12 @@ class CantidadEconomicaPedido extends React.Component{
                             onChange={this.handleInputChange}
                             />
                             <InputGroupAddon className="input-unidades" addonType="prepend">
-                            <InputGroupText><b>{"Unidades"}</b></InputGroupText>
+                            <InputGroupText><b>{"Unidades de D"}</b></InputGroupText>
                             </InputGroupAddon>
                             <Input
                             className="input-unidadesDemanda"
                             name={"unidadesDemanda"}
-                            placeholder="Ingresar las unidades de demanda"
+                            placeholder="Ej: kg, pantallas, etc"
                             aria-label="UnidadDemanda"
                             aria-describedby="unidadDemanda"
                             onChange={this.handleInputChange}
@@ -290,12 +290,12 @@ class CantidadEconomicaPedido extends React.Component{
                             
                             
                             <InputGroupAddon className="unidadesAlmacenamiento" addonType="prepend">
-                                <InputGroupText><b>{"Unidades"}</b></InputGroupText>
+                                <InputGroupText><b>{"Unidades de T"}</b></InputGroupText>
                             </InputGroupAddon>
                             <Input
                             className=""
                             name={"unidadesAlmacenamiento"}
-                            placeholder="Ingresar las unidades de tiempo"
+                            placeholder="Ej: dia, semana, año, etc"
                             onChange={this.handleInputChange}
                             />
                         
