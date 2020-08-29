@@ -234,6 +234,7 @@ class ModeloSimpleSinAgotamiento extends React.Component{
             this.setState({CTE: result.cte}); //CTEo
             this.setState({mostrarResultados: true});
             this.setState({incompleto: false});
+            this.setState({rangos: []});
 
         }else{
             this.setState({incompleto:true}) //PONGO A INCOMPLETO EN TRUE Y MUESTRO LA ALERTA DE COMPLETAR CAMPOS
