@@ -1,12 +1,33 @@
-import React from "react";
-import {Button, Container, Row, Col, Card, CardText, Jumbotron, CardTitle} from "reactstrap";
+import React, {useState} from "react";
+import {Button, Container, Row, Col, Card, CardText, Jumbotron, CardTitle, Collapse} from "reactstrap";
 import {Link} from 'react-router-dom';
 import '../index.css'
 import MathJax from "react-mathjax"
 
 
 
-const infoModeloSimpleSinAgotamiento = () => {
+const InfoModeloSimpleSinAgotamiento = () => {
+    //DEFINIMOS ESTOS ESTADOS PARA MANEJAR LOS COLLAPSE
+    //Para controlar el collapse de Hipotesis
+    const [collapseHipotesis, setCollapseHipotesis] = useState(false);
+    const [statusHipotesis, setStatusHipotesis] = useState('+');
+    const onEnteredHipotesis = () => setStatusHipotesis('-');
+    const onExitedHipotesis = () => setStatusHipotesis('+');
+    const toggleHipotesis = () => setCollapseHipotesis(!collapseHipotesis);
+
+    //Para controlar el collapse de Formulas
+    const [collapseFormulas, setCollapseFormulas] = useState(false);
+    const [statusFormulas, setStatusFormulas] = useState('+');
+    const onEnteredFormulas = () => setStatusFormulas('-');
+    const onExitedFormulas = () => setStatusFormulas('+');
+    const toggleFormulas = () => setCollapseFormulas(!collapseFormulas);
+
+    //Para controlar el collapse de Variables
+    const [collapseVariables, setCollapseVariables] = useState(false);
+    const [statusVariables, setStatusVariables] = useState('+');
+    const onEnteredVariables = () => setStatusVariables('-');
+    const onExitedVariables = () => setStatusVariables('+');
+    const toggleVariables = () => setCollapseVariables(!collapseVariables);
     return(
     <Container fluid className="App">
       <Row>
@@ -20,8 +41,8 @@ const infoModeloSimpleSinAgotamiento = () => {
             
             <Row style={{marginBottom:10}}>
                 <Card body outline color="secondary" >
-                    <Row className="justify-content-center">
-                        <h5><b>Hipotesis</b></h5>
+                    <Row className="justify-content-center" onClick={toggleHipotesis} style={{cursor:"pointer"}}>
+                        <h5><b>Hipotesis {statusHipotesis}</b></h5>
                     </Row>
                     <ul className='lista'>
                         <li>Tasa constante de demanda con el surtido instantáneo del pedido y sin faltante</li>
@@ -31,8 +52,8 @@ const infoModeloSimpleSinAgotamiento = () => {
             </Row>
             <Row style={{marginBottom:10}}>
                 <Card body outline color="secondary">
-                <Row className="justify-content-center">
-                        <h5><b>Formulas</b></h5>
+                <Row className="justify-content-center" onClick={toggleFormulas} style={{cursor:"pointer"}}>
+                    <h5><b>Formulas {statusFormulas}</b></h5>
                 </Row>
                         
                 <MathJax.Provider>
@@ -49,8 +70,8 @@ const infoModeloSimpleSinAgotamiento = () => {
             </Row>
             <Row style={{marginBottom:10}}>
                 <Card body outline color="secondary">
-                    <Row className="justify-content-center">
-                        <h5><b>Variables</b></h5>
+                <Row className="justify-content-center" onClick={toggleVariables} style={{cursor:"pointer"}}>
+                        <h5><b>Variables {statusVariables}</b></h5>
                     </Row>
                     <ul className='lista'>
                         <li><b>D: </b>Demanda</li>
@@ -80,4 +101,4 @@ const infoModeloSimpleSinAgotamiento = () => {
     </Container>
     )
     };
-export default infoModeloSimpleSinAgotamiento;
+export default InfoModeloSimpleSinAgotamiento;
