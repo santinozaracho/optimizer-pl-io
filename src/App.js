@@ -28,8 +28,8 @@ import infoModeloTriangular from "./components/StockProblems/ModeloTriangular/in
 import ModelStockDiscontinuidadDePrecio from "./components/StockProblems/ModelStockDiscontinuidadDePrecio";
 import infoModelStockDiscontinuidadDePrecio from "./components/StockProblems/ModelStockDiscontinuidadDePrecio/info.js";
 
-import ModeloSimpleSinAgotamiento from "./components/StockProblems/modeloSimpleSinAgotamiento";
-import infoModeloSimpleSinAgotamiento from "./components/StockProblems/modeloSimpleSinAgotamiento/info.js";
+import ModeloSimpleSinAgotamiento from "./components/StockProblems/ModeloSimpleSinAgotamiento";
+import infoModeloSimpleSinAgotamiento from "./components/StockProblems/ModeloSimpleSinAgotamiento/info.js";
 
 
 
