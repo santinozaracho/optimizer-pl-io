@@ -20,8 +20,8 @@ import infoModeloStockProteccion from "./components/StockProblems/ModeloStockPro
 import ModeloAgotamientoAdmitido from "./components/StockProblems/ModeloAgotamientoAdmitido";
 import infoModeloAgotamientoAdmitido from "./components/StockProblems/ModeloAgotamientoAdmitido/info.js";
 
-import ModeloTriangular from "./components/StockProblems/modeloTriangular";
-import infoModeloTriangular from "./components/StockProblems/modeloTriangular/info.js";
+import ModeloTriangular from "./components/StockProblems/ModeloTriangular";
+import infoModeloTriangular from "./components/StockProblems/ModeloTriangular/info.js";
 
 
 
@@ -67,8 +67,8 @@ const App = () =>
       <Route exact path="/StockProblems/ModelStockDiscontinuidadDePrecio" component={ModelStockDiscontinuidadDePrecio} />
       <Route exact path="/StockProblems/ModelStockDiscontinuidadDePrecio/info.js" component={infoModelStockDiscontinuidadDePrecio} />
 
-      <Route exact path="/StockProblems/modeloSimpleSinAgotamiento/info.js" component={infoModeloSimpleSinAgotamiento} />
-      <Route exact path="/StockProblems/modeloSimpleSinAgotamiento" component={ModeloSimpleSinAgotamiento} />
+      <Route exact path="/StockProblems/ModeloSimpleSinAgotamiento/info.js" component={infoModeloSimpleSinAgotamiento} />
+      <Route exact path="/StockProblems/ModeloSimpleSinAgotamiento" component={ModeloSimpleSinAgotamiento} />
       
       
       <Redirect to="/home" />
