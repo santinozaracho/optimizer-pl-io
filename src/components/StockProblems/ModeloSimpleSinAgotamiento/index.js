@@ -81,8 +81,16 @@ class ModeloSimpleSinAgotamiento extends React.Component{
     handleInputRestriccionesChange = (event) => {
         let restricciones = [];
         if (event.target.value > 0){
+            let cant = event.target.value;
             for (let index = 0; index < event.target.value; index++) {
-                restricciones.push(<Restricciones index={index} inputValue={this.handleInputRestriccionesValueChange} />) 
+                let clase = "";
+                let value = undefined;
+                if (index == (cant-1)) { 
+                    console.log("holaaaa", cant--)
+                    clase="last";
+                    value= 10000000000;
+                }
+                restricciones.push(<Restricciones index={index} inputValue={this.handleInputRestriccionesValueChange} clase={clase} valueRes={value} />) 
             }
         }
         this.setState({
@@ -125,16 +133,23 @@ class ModeloSimpleSinAgotamiento extends React.Component{
             object = this.switchWithAtributo(atributo, element.value, object);
             index++;
             element = listOfElements[index];
-            subArrays = element.name.split('-');
-            atributo = String(subArrays[0]);
-            object = this.switchWithAtributo(atributo, element.value, object);
-            index++;
-            element = listOfElements[index];
-            subArrays = element.name.split('-');
-            atributo = String(subArrays[0]);
-            object = this.switchWithAtributo(atributo, element.value, object);
-            rangos.push(object);
-            this.setState({rangos: rangos});
+            if (index == (listOfElements.length - 1)) {
+                atributo = "fin";
+                object = this.switchWithAtributo(atributo, 10000000000, object);
+            } else {
+                subArrays = element.name.split('-');
+                atributo = String(subArrays[0]);
+                object = this.switchWithAtributo(atributo, element.value, object);
+                index++;
+                element = listOfElements[index];
+            }
+            if (element) {
+                subArrays = element.name.split('-');
+                atributo = String(subArrays[0]);
+                object = this.switchWithAtributo(atributo, element.value, object);
+                rangos.push(object);
+                this.setState({rangos: rangos});
+            }
         }
     }
 
@@ -164,13 +179,30 @@ class ModeloSimpleSinAgotamiento extends React.Component{
             const costoAdquisicion = rangos[i].costoAdquisicion;
             this.setState({costoDeAdquisicion: costoAdquisicion});
             let loteOptimo = this.calcularTamañoDelLote(costoAdquisicion);
-            const rango = rangos[i];
+            let rango = rangos[i];
             console.log(rangos, "rangos")
             if (loteOptimo > rango.inicio && loteOptimo < rango.fin) {
                 let result = {};
                 result.loteOptimo = loteOptimo;
                 let costoTotalEsperado = this.calcularCostoTotalEsperado(costoAdquisicion, loteOptimo);
                 result.cte = costoTotalEsperado;
+                let rangosSobrantes = [];
+                for(var j = i ; j > -1; j--) {
+                    let elementoSobrante = {};
+                    if (j == i) {
+                        elementoSobrante.loteOptimo = loteOptimo;
+                        elementoSobrante.costoTotalEsperado = costoTotalEsperado;
+                        rangosSobrantes.push(elementoSobrante);
+                    } else {
+                        let rangoSobrante = rangos[j];
+                        let costoAdquisicionSobrante = rangos[j].costoAdquisicion;
+                        let costoTotalEsperadoSobrante = this.calcularCostoTotalEsperado(costoAdquisicionSobrante, rangoSobrante.inicio);
+                        elementoSobrante.loteOptimo = Number(rangoSobrante.inicio);
+                        elementoSobrante.costoTotalEsperado = Number(costoTotalEsperadoSobrante);
+                        rangosSobrantes.push(elementoSobrante);
+                    }
+                }
+                result.rangosSobrantes = rangosSobrantes;
                 return result;
             } 
         }
@@ -230,8 +262,9 @@ class ModeloSimpleSinAgotamiento extends React.Component{
             
         if (control1 && rangos.length > 1){ //SI TODOS LOS CAMPOS ESTAN CARGADOS ENTONCES CALCULO TODO Y MUESTRO    
             var result = this.determinarLoteOptimo();
-            this.setState({loteOptimo: result.loteOptimo});
-            this.setState({CTE: result.cte}); //CTEo
+            let object = result.rangosSobrantes.sort((a, b) => a.costoTotalEsperado - b.costoTotalEsperado)[0];
+            this.setState({loteOptimo: object.loteOptimo});
+            this.setState({CTE: object.costoTotalEsperado}); //CTEo
             this.setState({mostrarResultados: true});
             this.setState({incompleto: false});
             this.setState({rangos: []});

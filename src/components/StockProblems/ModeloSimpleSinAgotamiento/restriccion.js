@@ -37,7 +37,7 @@ class restricciones extends React.Component{
                     />
 
                     <InputGroupAddon addonType="prepend">
-                        <InputGroupText><b>{" < q <"}</b></InputGroupText>
+                        <InputGroupText><b>{ this.props.clase && " <= q" + this.props.index || " <= q" + this.props.index + " <"}</b></InputGroupText>
                     </InputGroupAddon>
                     
                     <Input
@@ -46,10 +46,12 @@ class restricciones extends React.Component{
                     aria-label="costoDeAdquisicion"
                     aria-describedby="costoDeAdquisicion"
                     onChange={this.props.inputValue}
+                    className={"restriccion " + this.props.clase}
+                    value={this.props.valueRes}
                     />
 
                     <InputGroupAddon addonType="prepend">
-                        <InputGroupText><b>{"b"}</b></InputGroupText>
+                        <InputGroupText><b>{"b" + this.props.index}</b></InputGroupText>
                     </InputGroupAddon>
 
                     <Input
