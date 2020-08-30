@@ -35,7 +35,7 @@ const StockProblems = () => {
               <Col>
                 <Link to={"/StockProblems/CantidadEconomicaPedido"}>
                   <UncontrolledTooltip target='button-cantidadEconomica'>Demanda deterministica constante y reposicion no instantanea</UncontrolledTooltip>
-                  <Button size='lg' outline color="success" id='button-cantidadEconomica'>Cantidad Economica de Pedido - Taha</Button>
+                  <Button size='lg' outline color="success" id='button-cantidadEconomica'>Cantidad Económica de Pedido - Taha</Button>
                 </Link>
                 <Link to={"/StockProblems/CantidadEconomicaPedido/info.js"} >
                   <UncontrolledTooltip target='info-cantidadEconomica'>Más Información</UncontrolledTooltip>
@@ -47,7 +47,7 @@ const StockProblems = () => {
               <Col>
                 <Link to={"/StockProblems/ModeloStockProteccion"} >
                     <UncontrolledTooltip target='button-stockProteccion'>Demanda constante con inventario de contingencia</UncontrolledTooltip>
-                    <Button size='lg' outline color="success" id='button-stockProteccion'>Modelo con stock de proteccion</Button>
+                    <Button size='lg' outline color="success" id='button-stockProteccion'>Modelo con Stock de Protección</Button>
                 </Link>
                 <Link to={"/StockProblems/ModeloStockProteccion/info.js"} >
                   <UncontrolledTooltip target='info-stockProteccion'>Más Información</UncontrolledTooltip>
@@ -83,7 +83,7 @@ const StockProblems = () => {
               <Col>
                 <Link to={"/StockProblems/ModeloSimpleSinAgotamiento"} >
                   <UncontrolledTooltip target='button-wip'>Stock sin agotamiento con costos de compra variables de acuerdo al tamaño del lote ordenado (Descuento por cantidad)</UncontrolledTooltip>
-                  <Button id="button-wip" size='lg' outline color="success">Modelo simple sin Agotamiento [WIP]</Button>
+                  <Button id="button-wip" size='lg' outline color="success">Modelo Simple sin Agotamiento</Button>
                 </Link>
                 <Link to={"/StockProblems/ModeloSimpleSinAgotamiento/info.js"} >
                   <UncontrolledTooltip target='info-wip'>Más Información</UncontrolledTooltip>
