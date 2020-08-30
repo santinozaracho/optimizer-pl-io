@@ -363,7 +363,7 @@ class ModeloSimpleSinAgotamiento extends React.Component{
                     <Col>
                         <InputGroup className="porcentaje">
                             <InputGroupAddon addonType="prepend">
-                                    <InputGroupText><b>{"Porcentaje aplicado al posto del producto"}</b></InputGroupText>
+                                    <InputGroupText><b>{"Porcentaje aplicado al costo del producto"}</b></InputGroupText>
                                 </InputGroupAddon>
                                 <Input
                                 name={"porcentajeAplicadoProducto"}
