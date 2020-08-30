@@ -161,7 +161,7 @@ class ModeloStockProteccion extends React.Component{
               <Col xs={12} md={8} className="my-4 mx-auto">
                 <Jumbotron>
                     <Col>
-                        <h2>Modelo con stock de proteccion</h2><br></br>                   
+                        <h2>Modelo con Stock de Protección</h2><br></br>                   
                     </Col>
                     
                     <Col> 
@@ -185,7 +185,7 @@ class ModeloStockProteccion extends React.Component{
                             <Input
                             className="input-unidadesDemanda"
                             name={"unidadesDemanda"}
-                            placeholder="Ej: kg, pantallas, etc"
+                            placeholder="Ej: kg, pantallas, etc."
                             aria-label="UnidadDemanda"
                             aria-describedby="unidadDemanda"
                             onChange={this.handleInputChange}
@@ -235,7 +235,7 @@ class ModeloStockProteccion extends React.Component{
                             <Input
                             className=""
                             name={"unidadesAlmacenamiento"}
-                            placeholder="Ej: dia, semana, año, etc"
+                            placeholder="Ej: día, semana, año, etc."
                             onChange={this.handleInputChange}
                             />
                         </InputGroup>
@@ -267,7 +267,7 @@ class ModeloStockProteccion extends React.Component{
                             <Input
                             type="number" min="0"
                             name={"StockDeProteccion"}
-                            placeholder="Ingresar stock de proteccion"
+                            placeholder="Ingresar stock de protección"
                             aria-label="StockDeProteccion"
                             aria-describedby="StockDeProteccion"
                             onChange={this.handleInputChange}

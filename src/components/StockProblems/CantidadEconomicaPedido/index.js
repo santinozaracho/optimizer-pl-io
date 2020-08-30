@@ -243,7 +243,7 @@ class CantidadEconomicaPedido extends React.Component{
                             <Input
                             className="input-unidadesDemanda"
                             name={"unidadesDemanda"}
-                            placeholder="Ej: kg, pantallas, etc"
+                            placeholder="Ej: kg, pantallas, etc."
                             aria-label="UnidadDemanda"
                             aria-describedby="unidadDemanda"
                             onChange={this.handleInputChange}
@@ -295,7 +295,7 @@ class CantidadEconomicaPedido extends React.Component{
                             <Input
                             className=""
                             name={"unidadesAlmacenamiento"}
-                            placeholder="Ej: dia, semana, año, etc"
+                            placeholder="Ej: día, semana, año, etc."
                             onChange={this.handleInputChange}
                             />
                         

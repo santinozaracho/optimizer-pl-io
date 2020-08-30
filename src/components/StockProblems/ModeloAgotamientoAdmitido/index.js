@@ -243,7 +243,7 @@ class ModeloAgotamientoAdmitido extends React.Component{
                             <Input
                             className="input-unidadesDemanda"
                             name={"unidadesDemanda"}
-                            placeholder="Ej: focos, pantallas"
+                            placeholder="Ej: focos, pantallas, etc."
                             aria-label="UnidadDemanda"
                             aria-describedby="unidadDemanda"
                             onChange={this.handleInputChange}

@@ -49,9 +49,8 @@ const Info = () => {
                     </Row>
                     <Collapse isOpen={collapseHipotesis} onEntered={onEnteredHipotesis} onExited={onExitedHipotesis}>
                         <ul className='lista'>
-                            <li>No tenemos en cuenta si contamos o no con los recursos financieros</li>
-                            <li>No hay inflasión</li>
-                            <li>No se permiten faltantes</li>
+                            <li>No tenemos en cuenta si contamos o no con los recursos financieros.</li>
+                            <li>No se permiten faltantes.</li>
                             <li>Demanda constante y conocida.</li>
                             <li>Resposición instantánea.</li>
                             <li>Costo unitario de almacenamiento por unidad de tiempo 𝑐1, constante.</li>

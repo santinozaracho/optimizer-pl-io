@@ -303,7 +303,7 @@ class ModeloSimpleSinAgotamiento extends React.Component{
                     <Col>
                         <InputGroup className="mt-3">
                             <InputGroupAddon addonType="prepend">
-                                <InputGroupText><b>{"Costo de preparacion (K)"}</b></InputGroupText>
+                                <InputGroupText><b>{"Costo de Preparación (K)"}</b></InputGroupText>
                             </InputGroupAddon>
                             <InputGroupAddon addonType="prepend">
                                 <InputGroupText>{"$"}</InputGroupText>

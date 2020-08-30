@@ -238,7 +238,7 @@ class ModeloTriangular extends React.Component{
                             <Input
                             className="input-unidadesDemanda"
                             name={"unidadesDemanda"}
-                            placeholder="Ej: focos, pantallas"
+                            placeholder="Ej: focos, pantallas, etc."
                             aria-label="UnidadDemanda"
                             aria-describedby="unidadDemanda"
                             onChange={this.handleInputChange}
@@ -343,7 +343,7 @@ class ModeloTriangular extends React.Component{
                             type="number" min="0"
                             name={"velocidadDeProduccion"}
                             value={velocidadDeProduccion}
-                            placeholder="Ingresar la velocidad de producción en DIAS"
+                            placeholder="Ingresar la velocidad de producción en días"
                             aria-label="velocidadDeProduccion"
                             aria-describedby="velocidadDeProduccion"
                             onChange={this.handleInputChange}
