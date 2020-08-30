@@ -292,7 +292,7 @@ class ModeloWilson extends React.Component{
                                                 <td className="text-left"><b>$ {Number(costoDePreparacionTotal).toFixed(2)}</b></td>
                                             </tr>
                                             <tr>
-                                                <td>CTProp</td>
+                                                <td>CTProd</td>
                                                 <td>Costo total Producto</td>
                                                 <td className="text-left"><b>$ {Number(costoDeProductoTotal).toFixed(2)}</b></td>
                                             </tr>
