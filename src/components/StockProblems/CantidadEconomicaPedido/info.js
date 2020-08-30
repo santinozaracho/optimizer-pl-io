@@ -48,7 +48,7 @@ const Info = () => {
                     <Collapse isOpen={collapseHipotesis} onEntered={onEnteredHipotesis} onExited={onExitedHipotesis}>
                         <ul className='lista'>
                             <li>No tenemos en cuenta si contamos o no con los recursos financieros</li>
-                            <li>No hay inflasión</li>
+                            <li>No hay inflación</li>
                             <li>No se permiten faltantes</li>
                             <li>Demanda constante y conocida.</li>
                             <li>Resposición instantánea.</li>
