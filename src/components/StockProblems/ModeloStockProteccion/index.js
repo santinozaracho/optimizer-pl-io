@@ -28,6 +28,7 @@ class ModeloStockProteccion extends React.Component{
             CTE: null,
             CTEoptimo: null,
             T:1,
+            n:null
             
         }
     }
@@ -63,6 +64,12 @@ class ModeloStockProteccion extends React.Component{
         }else{
             this.setState({loteOptimo})
         }
+    }
+
+    //CALCULAR n
+    calcularn(){
+        let {demanda, loteOptimo} = this.state
+        this.setState({ n: ( Number(demanda)/Number(loteOptimo) ) })
     }
 
     //CALCULAR t0
@@ -125,6 +132,7 @@ class ModeloStockProteccion extends React.Component{
             this.calcularIntervaloDeUnCiclo(); //Calculo t0
             
             setTimeout(() => { //Luego de calcular lo anterior, le doy un tiempo para que calcule el CTE
+                this.calcularn()
                 this.calcularCostoPreparacionTotal()
                 this.calcularCostoProductoTotal()
                 this.calcularCostoAlmacenamientoTotal()
@@ -144,7 +152,7 @@ class ModeloStockProteccion extends React.Component{
     render() { 
         let {demanda,CTE,loteOptimo,tiempoEntrePedidos,costoDePreparacion,costoDeProducto, StockDeProteccion} = this.state;
         let {incompleto,mostrarResultados,costoDeAlmacenamiento,unidadesDemanda,unidadesAlmacenamiento} = this.state;
-        let {costoDeAlmacenamientoTotal, costoDeProductoTotal, costoDePreparacionTotal, CTEoptimo} = this.state;
+        let {costoDeAlmacenamientoTotal, costoDeProductoTotal, costoDePreparacionTotal, CTEoptimo, n} = this.state;
  
         
         return (
@@ -293,12 +301,17 @@ class ModeloStockProteccion extends React.Component{
                                                     <td className="text-left"><b>{Number(tiempoEntrePedidos).toFixed(2)} {unidadesAlmacenamiento}</b></td>
                                                 </tr>
                                                 <tr>
+                                                    <td>n</td>
+                                                    <td></td>
+                                                    <td className="text-left"><b>{Number(n).toFixed(2)}</b></td>
+                                                </tr>
+                                                <tr>
                                                     <td>CTPrep</td>
                                                     <td>Costo Total Preparacion</td>
                                                     <td className="text-left"><b>$ {Number(costoDePreparacionTotal).toFixed(2)}</b></td>
                                                 </tr>
                                                 <tr>
-                                                    <td>CTProp</td>
+                                                    <td>CTProd</td>
                                                     <td>Costo total Producto</td>
                                                     <td className="text-left"><b>$ {Number(costoDeProductoTotal).toFixed(2)}</b></td>
                                                 </tr>
