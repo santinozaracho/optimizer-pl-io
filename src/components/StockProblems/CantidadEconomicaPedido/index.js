@@ -220,7 +220,7 @@ class CantidadEconomicaPedido extends React.Component{
               <Col xs={12} md={8} className="my-4 mx-auto">
                 <Jumbotron>
                     <Col>
-                        <h2>Modelo clasico con cantidad economica de pedido</h2><br></br>                   
+                        <h2>Modelo Clásico con Cantidad Económica de Pedido</h2><br></br>                   
                     </Col>
                     <Col> 
                         <InputGroup className="mt-3" id={"demanda"} key={"demanda"}>
