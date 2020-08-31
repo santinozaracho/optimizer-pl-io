@@ -273,7 +273,7 @@ class ModeloWilson extends React.Component{
                                         <tbody>
                                             <tr>
                                                 <td>q</td>
-                                                <td>Lote optimo</td>
+                                                <td>Lote Óptimo</td>
                                                 <td className="text-left"><b>{Number(loteOptimo).toFixed(2)} {unidadesDemanda}</b></td>
                                             </tr>
                                             <tr>
@@ -288,12 +288,12 @@ class ModeloWilson extends React.Component{
                                             </tr>
                                             <tr>
                                                 <td>CTPrep</td>
-                                                <td>Costo Total Preparacion</td>
+                                                <td>Costo Total Preparación</td>
                                                 <td className="text-left"><b>$ {Number(costoDePreparacionTotal).toFixed(2)}</b></td>
                                             </tr>
                                             <tr>
                                                 <td>CTProd</td>
-                                                <td>Costo total Producto</td>
+                                                <td>Costo Total Producto</td>
                                                 <td className="text-left"><b>$ {Number(costoDeProductoTotal).toFixed(2)}</b></td>
                                             </tr>
                                             <tr>
@@ -308,7 +308,7 @@ class ModeloWilson extends React.Component{
                                             </tr>
                                             <tr>
                                                 <td>CTEo</td>
-                                                <td>Costo Total Esperado Optimo</td>
+                                                <td>Costo Total Esperado Óptimo</td>
                                                 <td className="text-left"><b>$ {Number(CTEoptimo).toFixed(2)}</b></td>
                                             </tr>
                                         </tbody>

@@ -368,27 +368,27 @@ class ModeloTriangular extends React.Component{
                                         <tbody>
                                             <tr>
                                                 <td>q</td>
-                                                <td>Lote optimo</td>
+                                                <td>Lote Óptimo</td>
                                                 <td className="text-left"><b>{Number(loteOptimo).toFixed(2)} {unidadesDemanda} por año <br/> {Number(loteOptimoPorDia).toFixed(2)} {unidadesDemanda} por dia</b></td>
                                             </tr>
                                             <tr>
                                                 <td>s</td>
-                                                <td>stock almacenado</td>
+                                                <td>Stock Almacenado</td>
                                                 <td className="text-left"><b>{Number(stockAlmacenado).toFixed(2)} {unidadesDemanda}</b></td>
                                             </tr>
                                             <tr>
                                                 <td>T</td>
-                                                <td>Tiempo total en dias</td>
+                                                <td>Tiempo Total en dias</td>
                                                 <td className="text-left"><b>{Number(tiempoTotalEnDias) + " Dias" }</b></td>
                                             </tr>
                                             <tr>
                                                 <td>CTPrep</td>
-                                                <td>Costo Total Preparacion</td>
+                                                <td>Costo Total Preparación</td>
                                                 <td className="text-left"><b>$ {Number(costoDePreparacionTotal).toFixed(4)}</b></td>
                                             </tr>
                                             <tr>
                                                 <td>CTProd</td>
-                                                <td>Costo total Producto</td>
+                                                <td>Costo Total Producto</td>
                                                 <td className="text-left"><b>$ {Number(costoDeProductoTotal).toFixed(4)}</b></td>
                                             </tr>
                                             <tr>

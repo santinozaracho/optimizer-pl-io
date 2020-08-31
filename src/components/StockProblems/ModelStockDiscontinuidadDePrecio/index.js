@@ -306,8 +306,8 @@ class modelStockSimple extends React.Component{
                     <Col>
                         <Card body inverse style={{ backgroundColor: '#333', borderColor: '#333', marginTop:10}}>
                             <CardText>
-                                <h6 style={{display:'inline'}}>El lote optimo es:</h6> <h5 style={{display:'inline'}}><b>{Number(loteOptimo).toFixed(2)}</b></h5><br></br>
-                                <h6 style={{display:'inline'}}>El costo total esperado es:</h6> <h5 style={{display:'inline'}}><b>${Number(TCL).toFixed(2)}</b></h5><br></br>
+                                <h6 style={{display:'inline'}}>El lote optimo (q0) es:</h6> <h5 style={{display:'inline'}}><b>{Number(loteOptimo).toFixed(2)}</b></h5><br></br>
+                                <h6 style={{display:'inline'}}>El costo total esperado (CTE) es:</h6> <h5 style={{display:'inline'}}><b>${Number(TCL).toFixed(2)}</b></h5><br></br>
                                 <Col>
                                     <Card body inverse color="primary" style={{marginTop:10, padding: '5px 0 0 0'}}>
                                         <CardText>

@@ -405,12 +405,12 @@ class ModeloSimpleSinAgotamiento extends React.Component{
                             <tbody>
                                 <tr>
                                     <td>q0</td>
-                                    <td>Lote optimo</td>
+                                    <td>Lote Óptimo</td>
                                     <td className="text-left"><b>{Math.round(Number(loteOptimo))}</b></td>
                                 </tr>
                                 <tr>
                                     <td>CTE</td>
-                                    <td>Costo total Esperado</td>
+                                    <td>Costo Total Esperado</td>
                                     <td className="text-left"><b>$ {Number(CTE).toFixed(2)}</b></td>
                                 </tr>
                             </tbody>
