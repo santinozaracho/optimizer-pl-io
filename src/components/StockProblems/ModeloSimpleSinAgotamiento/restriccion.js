@@ -31,7 +31,7 @@ class restricciones extends React.Component{
                 <InputGroup className="mt-3">
                     <Input
                     name={"inicio-"+this.props.index}
-                    placeholder="Ingresar la cantidad minima del rango"
+                    placeholder="Ingresar la cantidad mínima del rango"
                     aria-describedby="costoDeAdquisicion"
                     onChange={this.props.inputValue}
                     />
@@ -42,7 +42,7 @@ class restricciones extends React.Component{
                     
                     <Input
                     name={"fin-"+this.props.index}
-                    placeholder="Ingresar la cantidad maxima del rango"
+                    placeholder="Ingresar la cantidad máxima del rango"
                     aria-label="costoDeAdquisicion"
                     aria-describedby="costoDeAdquisicion"
                     onChange={this.props.inputValue}
@@ -56,7 +56,7 @@ class restricciones extends React.Component{
 
                     <Input
                     name={"costoDeAdquisicion-"+this.props.index}
-                    placeholder="Ingresar el costo del producto x unidad."
+                    placeholder="Ingresar el costo del producto por unidad."
                     aria-label="costoDeAdquisicion"
                     aria-describedby="costoDeAdquisicion"
                     onChange={this.props.inputValue}
