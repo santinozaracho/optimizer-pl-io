@@ -42,12 +42,12 @@ const Info = () => {
             <Row style={{marginBottom:10}}>
                 <Card body outline color="secondary" >
                     <Row className="justify-content-center" onClick={toggleHipotesis} style={{cursor:"pointer"}}>
-                        <h5><b>Hipotesis {statusHipotesis}</b></h5>
+                        <h5><b>Hipótesis {statusHipotesis}</b></h5>
                     </Row>
                     <Collapse isOpen={collapseHipotesis} onEntered={onEnteredHipotesis} onExited={onExitedHipotesis}>
                         <ul className='lista'>
-                            <li>No tenemos en cuenta si contamos o no con los recursos financieros</li>
-                            <li>No hay inflasión</li>
+                            <li>No tenemos en cuenta si contamos o no con los recursos financieros.</li>
+                            <li>No hay inflación.</li>
                             <li>Demanda constante y conocida.</li>
                             <li>Resposición instantánea.</li>
                             <li>Costo unitario de almacenamiento por unidad de tiempo 𝑐1, constante.</li>
@@ -64,7 +64,7 @@ const Info = () => {
             <Row style={{marginBottom:10}}>
                 <Card body outline color="secondary">
                 <Row className="justify-content-center" onClick={toggleFormulas} style={{cursor:"pointer"}}>
-                    <h5><b>Formulas {statusFormulas}</b></h5>
+                    <h5><b>Fórmulas {statusFormulas}</b></h5>
                 </Row>
 
                 <Collapse isOpen={collapseFormulas} onEntered={onEnteredFormulas} onExited={onExitedFormulas}>   
@@ -132,10 +132,10 @@ const Info = () => {
                     <Collapse isOpen={collapseVariables} onEntered={onEnteredVariables} onExited={onExitedVariables}>
                         <ul className='lista'>
                             <li><b>D: </b>Demanda</li>
-                            <li><b>K: </b>Costo de preparacion</li>
-                            <li><b>c1: </b>Costo de almacenamiento</li>
-                            <li><b>c2: </b>Costo de agotamiento</li>
-                            <li><b>b: </b>Costo unitario de producto</li>
+                            <li><b>K: </b>Costo de Preparación</li>
+                            <li><b>c1: </b>Costo de Almacenamiento</li>
+                            <li><b>c2: </b>Costo de Agotamiento</li>
+                            <li><b>b: </b>Costo Unitario del Producto</li>
                             <li><b>s: </b>Stock Real Almacenado</li>
                         </ul>
                     </Collapse>
@@ -143,7 +143,7 @@ const Info = () => {
             </Row>
             <Row className="justify-content-left">
                 <Card body outline color="secondary">
-                    <CardTitle><b>Bibliografia</b></CardTitle>
+                    <CardTitle><b>Bibliografía</b></CardTitle>
                     <CardText>Claudio L. R. Sturla</CardText>
                 </Card>
             </Row>

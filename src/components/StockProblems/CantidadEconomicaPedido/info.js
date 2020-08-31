@@ -43,13 +43,13 @@ const Info = () => {
             <Row style={{marginBottom:10}}>
                 <Card body outline color="secondary" >
                     <Row className="justify-content-center" onClick={toggleHipotesis} style={{cursor:"pointer"}}>
-                        <h5><b>Hipotesis {statusHipotesis}</b></h5>
+                        <h5><b>Hipótesis {statusHipotesis}</b></h5>
                     </Row>
                     <Collapse isOpen={collapseHipotesis} onEntered={onEnteredHipotesis} onExited={onExitedHipotesis}>
                         <ul className='lista'>
-                            <li>No tenemos en cuenta si contamos o no con los recursos financieros</li>
-                            <li>No hay inflación</li>
-                            <li>No se permiten faltantes</li>
+                            <li>No tenemos en cuenta si contamos o no con los recursos financieros.</li>
+                            <li>No hay inflación.</li>
+                            <li>No se permiten faltantes.</li>
                             <li>Demanda constante y conocida.</li>
                             <li>Resposición instantánea.</li>
                             <li>Costo unitario de almacenamiento por unidad de tiempo h, constante.</li>
@@ -63,7 +63,7 @@ const Info = () => {
             <Row style={{marginBottom:10}}>
                 <Card body outline color="secondary">
                 <Row className="justify-content-center" onClick={toggleFormulas} style={{cursor:"pointer"}}>
-                    <h5><b>Formulas {statusFormulas}</b></h5>
+                    <h5><b>Fórmulas {statusFormulas}</b></h5>
                 </Row>
 
                 <Collapse isOpen={collapseFormulas} onEntered={onEnteredFormulas} onExited={onExitedFormulas}>   
@@ -104,18 +104,18 @@ const Info = () => {
                     <Collapse isOpen={collapseVariables} onEntered={onEnteredVariables} onExited={onExitedVariables}>
                         <ul className='lista'>
                             <li><b>D: </b>Demanda</li>
-                            <li><b>K: </b>Costo de preparacion</li>
-                            <li><b>h: </b>Costo de almacenamiento</li>
-                            <li><b>L: </b>Tiempo de entrega</li>
-                            <li><b>t0*: </b>Longitud de ciclo</li>
-                            <li><b>y*: </b>Cantidad economica</li>  
+                            <li><b>K: </b>Costo de Preparación</li>
+                            <li><b>h: </b>Costo de Almacenamiento</li>
+                            <li><b>L: </b>Tiempo de Entrega</li>
+                            <li><b>t0*: </b>Longitud de Ciclo</li>
+                            <li><b>y*: </b>Cantidad Económica</li>  
                         </ul>
                     </Collapse>
                 </Card>
             </Row>
             <Row className="justify-content-left">
                 <Card body outline color="secondary">
-                    <CardTitle><b>Bibliografia</b></CardTitle>
+                    <CardTitle><b>Bibliografía</b></CardTitle>
                     <CardText>TAHA HAMDY A., “Investigación de Operaciones”, EDITORIAL Pearson Prentice Hall, 2004 </CardText>
                 </Card>
             </Row>

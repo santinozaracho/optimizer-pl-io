@@ -42,18 +42,18 @@ const InfoModeloSimpleSinAgotamiento = () => {
             <Row style={{marginBottom:10}}>
                 <Card body outline color="secondary" >
                     <Row className="justify-content-center" onClick={toggleHipotesis} style={{cursor:"pointer"}}>
-                        <h5><b>Hipotesis {statusHipotesis}</b></h5>
+                        <h5><b>Hipótesis {statusHipotesis}</b></h5>
                     </Row>
                     <ul className='lista'>
-                        <li>Tasa constante de demanda con el surtido instantáneo del pedido y sin faltante</li>
-                        <li>Una vez pedido el stock se actualiza automaticamente.</li>
+                        <li>Tasa constante de demanda con el surtido instantáneo del pedido y sin faltantes.</li>
+                        <li>Una vez pedido el stock, se actualiza automáticamente.</li>
                     </ul>
                 </Card>
             </Row>
             <Row style={{marginBottom:10}}>
                 <Card body outline color="secondary">
                 <Row className="justify-content-center" onClick={toggleFormulas} style={{cursor:"pointer"}}>
-                    <h5><b>Formulas {statusFormulas}</b></h5>
+                    <h5><b>Fórmulas {statusFormulas}</b></h5>
                 </Row>
                         
                 <MathJax.Provider>
@@ -75,18 +75,18 @@ const InfoModeloSimpleSinAgotamiento = () => {
                     </Row>
                     <ul className='lista'>
                         <li><b>D: </b>Demanda</li>
-                        <li><b>K: </b>Costo de preparacion</li>
+                        <li><b>K: </b>Costo de Preparación</li>
                         <li><b>p: </b>Porcentaje de Capital Inmobilizado</li>
-                        <li><b>T: </b>Tiempo total</li>
-                        <li><b>C’i: </b>Costo efectivo de almacenamient</li>
-                        <li><b>bi: </b>Costo  del i-esimoproducto</li>
-                        <li><b>q: </b>Lote optimo</li>
+                        <li><b>T: </b>Tiempo Total</li>
+                        <li><b>C’i: </b>Costo Efectivo de Almacenamiento</li>
+                        <li><b>bi: </b>Costo  del i-ésimo Producto</li>
+                        <li><b>q: </b>Lote Óptimo</li>
                     </ul>
                 </Card>
             </Row>
             <Row className="justify-content-left">
                 <Card body outline color="secondary">
-                    <CardTitle><b>Bibliografia</b></CardTitle>
+                    <CardTitle><b>Bibliografía</b></CardTitle>
                     <CardText>Claudio L. R. Sturla</CardText>
                 </Card>
             </Row>
