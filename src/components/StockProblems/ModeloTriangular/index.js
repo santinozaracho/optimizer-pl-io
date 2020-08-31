@@ -408,7 +408,7 @@ class ModeloTriangular extends React.Component{
                         </Row>
                         <Row>
                             <Card body>
-                                <GraphTriangular title={'Grafico Modelo Triangular'} s={stockAlmacenado} t1p={t1p} t={tiempoTotalEnDias}/>
+                                <GraphTriangular title={'Gráfico Modelo Triangular'} s={stockAlmacenado} t1p={t1p} t={tiempoTotalEnDias}/>
                                 <div className='text-center content-align-center'>   
                                     <div className='text-center content-align-center' style={{display:'flex', alignItems:'center', textAlign:'center'}}>
                                         <hr style={{borderTop: '2px dashed blue', width:'50px', marginRight:10}}/><td>s</td>

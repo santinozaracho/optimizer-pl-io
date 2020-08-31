@@ -344,7 +344,7 @@ class ModeloStockProteccion extends React.Component{
                         </Row>
                         <Row>
                             <Card body>
-                                <Graph y={loteOptimo} t={tiempoEntrePedidos} sr={StockDeProteccion} yProm={Number(loteOptimo)/2} title={'Grafico Stock de Proteccion'}/>
+                                <Graph y={loteOptimo} t={tiempoEntrePedidos} sr={StockDeProteccion} yProm={Number(loteOptimo)/2} title={'Gráfico Stock de Protección'}/>
                                 <div className='text-center content-align-center'>   
                                     <div className='text-center content-align-center' style={{display:'flex', alignItems:'center', textAlign:'center'}}>
                                         <hr style={{borderTop: '2px dashed green', width:'50px', marginRight:10}}/><td>y* optimo</td>

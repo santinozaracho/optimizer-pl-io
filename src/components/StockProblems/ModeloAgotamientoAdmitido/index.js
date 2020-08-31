@@ -440,7 +440,7 @@ class ModeloAgotamientoAdmitido extends React.Component{
                         </Row>
                         <Row>
                             <Card body>
-                                <GraphAgotamiento title={'Grafico Modelo con Agotamiento'} y={loteOptimo} s={stockAlmacenado} Ti={tiempoTotal} Ti1={tiempoHastaAgotamiento}/>
+                                <GraphAgotamiento title={'Gráfico Modelo con Agotamiento'} y={loteOptimo} s={stockAlmacenado} Ti={tiempoTotal} Ti1={tiempoHastaAgotamiento}/>
                                 <div className='text-center content-align-center'>   
                                     <div className='text-center content-align-center' style={{display:'flex', alignItems:'center', textAlign:'center'}}>
                                         <hr style={{borderTop: '2px dashed blue', width:'50px', marginRight:10}}/><td>Eje X</td>                                  
