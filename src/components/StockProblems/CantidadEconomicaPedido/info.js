@@ -45,13 +45,14 @@ const Info = () => {
                     <Row className="justify-content-center" onClick={toggleHipotesis} style={{cursor:"pointer"}}>
                         <h5><b>Hipótesis {statusHipotesis}</b></h5>
                     </Row>
+                    
                     <Collapse isOpen={collapseHipotesis} onEntered={onEnteredHipotesis} onExited={onExitedHipotesis}>
                         <ul className='lista'>
                             <li>No tenemos en cuenta si contamos o no con los recursos financieros.</li>
-                            <li>No hay inflación.</li>
                             <li>No se permiten faltantes.</li>
                             <li>Demanda constante y conocida.</li>
-                            <li>Resposición instantánea.</li>
+                            <li>No considera un stock de reposición instantáneo: puede transcurrir un tiempo de entrega positivo L, 
+                                entre que se realiza un pedido y se recibe el mismo.</li>
                             <li>Costo unitario de almacenamiento por unidad de tiempo h, constante.</li>
                             <li>Costo de preparacion 𝑘, constante.</li>
                             <li>No existen otros costos.</li>
@@ -69,29 +70,30 @@ const Info = () => {
                 <Collapse isOpen={collapseFormulas} onEntered={onEnteredFormulas} onExited={onExitedFormulas}>   
                     <MathJax.Provider>
                         <div>
-                            <MathJax.Node formula={"Tiempo De Ciclo = \\frac{y}{D}"} />
+                            <MathJax.Node formula={"Cantidad Economica = y* = \\sqrt{\\frac{2*K*D}{h}}"} />
                         </div>
                     </MathJax.Provider>
                     <MathJax.Provider>
                         <div>
-                            <MathJax.Node formula={"Costo De Preparacion = \\frac{K}{\\frac{y}{D}}"} />
+                            <MathJax.Node formula={"Tiempo De Ciclo = t0 = \\frac{y}{D}"} />
                         </div>
                     </MathJax.Provider>
                     <MathJax.Provider>
                         <div>
-                            <MathJax.Node formula={"Costo Total De Almacenamiento = h*\\frac{y}{2}"} />
+                            <MathJax.Node formula={"n = EnteroMayor<=\\frac{L}{t0}"} />
                         </div>
                     </MathJax.Provider>
                     <MathJax.Provider>
                         <div>
-                            <MathJax.Node formula={"Costo Total Por Unidad De Tiempo = \\frac{K}{\\frac{y}{D}}+h*\\frac{y}{2}"} />
+                            <MathJax.Node formula={"Le = L- n t0"} />
                         </div>
                     </MathJax.Provider>
                     <MathJax.Provider>
                         <div>
-                            <MathJax.Node formula={"y* = \\sqrt{\\frac{2*K*D}{h}}"} />
+                            <MathJax.Node formula={"Costo Total Por Unidad De Tiempo = TCU = \\frac{K}{\\frac{y}{D}}+h*\\frac{y}{2}"} />
                         </div>
-                    </MathJax.Provider> 
+                    </MathJax.Provider>
+                     
                 </Collapse>   
                 </Card>
             </Row>
@@ -102,14 +104,33 @@ const Info = () => {
                     </Row>
 
                     <Collapse isOpen={collapseVariables} onEntered={onEnteredVariables} onExited={onExitedVariables}>
-                        <ul className='lista'>
-                            <li><b>D: </b>Demanda</li>
-                            <li><b>K: </b>Costo de Preparación</li>
-                            <li><b>h: </b>Costo de Almacenamiento</li>
+                        <ul className='text-left'>
+                            <li><b>D: </b>Tasa de demanda (unidades por unidad de tiempo)</li>
+                            <li><b>K: </b>Costo de preparación correspondiente a la colocación de un pedido ($/pedido)</li>
+                            <li><b>h: </b>Costo de almacenamiento ($ por unidad en inventario por unidad de tiempo)</li>
                             <li><b>L: </b>Tiempo de Entrega</li>
-                            <li><b>t0*: </b>Longitud de Ciclo</li>
-                            <li><b>y*: </b>Cantidad Económica</li>  
+                            <li><b>Le: </b>Tiempo efectivo de entrega</li>
+                            <li><b>t0*: </b>Duración del ciclo de pedido (unidades de tiempo)</li>
+                            <li><b>y*: </b>Cantidad económica de pedido (cantidad de unidades)</li>
+                            <li><b>TCU: </b>Costo total por unidad de tiempo</li>  
                         </ul>
+                        <Row className="text-left" style={{marginLeft:5}}>
+                            <p>Para calcular de manera óptima el punto de reorden este modelo plantea utilizar <b>2 políticas:</b></p>
+                            <ul>    
+                                <li>
+                                    <b>Politica 1:</b> Si el tiempo de entrega L es menor que la longitud del ciclo t*0, entonces:
+                                    <i> “Pedir y* unidades cada t*0 unidades de tiempo.”</i>
+                                </li> <br/>
+                                <li>
+                                    <b>Politica 2:</b> Si el tiempo de entrega L es mayor que la longitud del ciclo t*0, entonces:
+                                    <ul>
+                                        <li>Calcular Le.</li>
+                                        <li>El punto de reorden será: Le.D (unidades)</li>
+                                        <li><i>“Pedir la cantidad y* siempre que la cantidad de inventario baja a LeD unidades.”</i></li>
+                                    </ul>    
+                                </li>
+                            </ul>
+                        </Row>
                     </Collapse>
                 </Card>
             </Row>
