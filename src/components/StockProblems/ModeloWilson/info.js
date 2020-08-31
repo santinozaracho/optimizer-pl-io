@@ -123,6 +123,7 @@ const Info = () => {
                             <li><b>t0: </b>Tiempo que dura el lote optimo antes de agotarse</li>
                             <li><b>CTPrep: </b>Costo Total de Preparación</li>
                             <li><b>CTProd: </b>Costo Total propio del producto</li>
+                            <li><b>CTA: </b>Costo Total de Almacenamiento</li>
                             <li><b>CTE: </b>Costo Total Esperado</li>
                         </ul>
                     </Collapse>

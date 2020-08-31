@@ -130,13 +130,18 @@ const Info = () => {
                     </Row>
 
                     <Collapse isOpen={collapseVariables} onEntered={onEnteredVariables} onExited={onExitedVariables}>
-                        <ul className='lista'>
+                        <ul className='text-left'>
                             <li><b>D: </b>Demanda</li>
                             <li><b>K: </b>Costo de Preparación</li>
                             <li><b>c1: </b>Costo de Almacenamiento</li>
-                            <li><b>c2: </b>Costo de Agotamiento</li>
+                            <li><b>c2: </b>Costo de Escasez/Faltante</li>
                             <li><b>b: </b>Costo Unitario del Producto</li>
-                            <li><b>s: </b>Stock Real Almacenado</li>
+                            <li><b>q: </b>Lote Optimo</li>
+                            <li><b>t0: </b>Tiempo que dura el lote optimo antes de agotarse</li>
+                            <li><b>CTPrep: </b>Costo Total de Preparación</li>
+                            <li><b>CTProd: </b>Costo Total propio del producto</li>
+                            <li><b>CTA: </b>Costo Total de Almacenamiento</li>
+                            <li><b>CTE: </b>Costo Total Esperado</li>
                         </ul>
                     </Collapse>
                 </Card>
