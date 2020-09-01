@@ -28,6 +28,7 @@ class SimplexPresentation extends React.Component{
         let tableResult=[];
         //Obtenemos el Set de Resultados con Formato [key,value]
         let resultSetArray =  Object.entries(result.solutionSet);
+        console.log("Imprimimos el resultsSetArray:" + resultSetArray);
         //Obtenemos la matriz del simplex reducida
         let matrix = result._tableau.matrix;
         //Obtenemos los indices de cada columna
@@ -44,7 +45,6 @@ class SimplexPresentation extends React.Component{
         let slacksEnCero = itemsinCero - varsEnCero.length;
 
         //Procesamos INFO
-
         //Primer elemento de la Tabla, el Optimo.
         tableResult.push({name:'Optimo',item:'',value:result.evaluation});
         //Procesamos todos los elementos a producir (result Set)
@@ -105,41 +105,45 @@ class SimplexPresentation extends React.Component{
         //Obtenemos las Variables desde las props
         let {variables, restricciones,result} = this.props;
         
+        
     
         //Obtenemos  la informacion para la tabla de Analisis
-        let itemsTabAnalisis = this.mapperAnalisisTable(result);     
+        let itemsTabAnalisis = this.mapperAnalisisTable(result); 
         //Renderizamos el Tablero de analisis
         let elementosTabAnalisis = itemsTabAnalisis.map( (item, index) => <tr key={'T-A-'+index}><td>{item.name}</td><td>{item.item}</td><td>{item.value}</td></tr>);
-        // 
+        
+        
+            
         let resultAnalisisCard = 
-                        <Card outline color='secondary' className="w-100 mt-3 mx-auto">
-                            <CardHeader><CardTitle><h4>Tablero de Analisis</h4></CardTitle></CardHeader>
-                            <CardBody>
-                                <Table>
-                                    <thead><tr><th></th><th>Elemento</th><th>Valor</th></tr></thead>
-                                    <tbody>
-                                        {elementosTabAnalisis}
-                                    </tbody>
-                                </Table>
-                            </CardBody>
-                        </Card>
+            <Card outline color='secondary' className="w-100 mt-3 mx-auto">
+                <CardHeader><CardTitle><h4>Tablero de Analisis</h4></CardTitle></CardHeader>
+                <CardBody>
+                    <Table>
+                        <thead><tr><th></th><th>Elemento</th><th>Valor</th></tr></thead>
+                        <tbody>
+                            {elementosTabAnalisis}
+                        </tbody>
+                    </Table>
+                </CardBody>
+                
+            </Card>
 
         let resultDetalleCard = <Card outline color='secondary' className="w-100 mt-3 mx-auto">
-                                <CardHeader>
-                                    <Row>
-                                        <Col className="text-left"><CardTitle><h5>Detalle de Variables Y Recursos:</h5></CardTitle></Col>
-                                        <Col><Button outline size='sm'
-                                            onClick={() => this.setState({details:!this.state.details})} 
-                                            color={!this.state.details ? 'success':'danger'}>{!this.state.details ? 'Ver Detalles':'Ocultar Detalles'}</Button>
-                                        </Col>
-                                    </Row>
-                                </CardHeader>
-                                <Collapse isOpen={this.state.details}>
-                                    <CardBody>
-                                        {this.cardsVariablesRender(variables,result)}
-                                    </CardBody>
-                                </Collapse>
-                            </Card>
+                                    <CardHeader>
+                                        <Row>
+                                            <Col className="text-left"><CardTitle><h5>Detalle de Variables Y Recursos:</h5></CardTitle></Col>
+                                            <Col><Button outline size='sm'
+                                                onClick={() => this.setState({details:!this.state.details})} 
+                                                color={!this.state.details ? 'success':'danger'}>{!this.state.details ? 'Ver Detalles':'Ocultar Detalles'}</Button>
+                                            </Col>
+                                        </Row>
+                                    </CardHeader>
+                                    <Collapse isOpen={this.state.details}>
+                                        <CardBody>
+                                            {this.cardsVariablesRender(variables,result)}
+                                        </CardBody>
+                                    </Collapse>
+                                </Card>
         return(
                 <CardBody>
                     <Row>{resultAnalisisCard}</Row>
