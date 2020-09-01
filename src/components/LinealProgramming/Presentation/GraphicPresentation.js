@@ -291,9 +291,7 @@ class GraphicPresentation extends React.Component{
     }
 
     getPoints = (restricciones,expresiones,solSet,xMax,yMax) => {
-        console.log('Getting Points');
-        //Definimos las Funciones necesarias para el buen funcionamiento de esta Funcion.
-
+        //Definimos las Funciones necesarias para el buen funcionamiento de esta Funcion
         const getAreaPointsForConvex = points => {
             //Funcion que calcula el Angulo entre dos puntos.
             const calcAng = (point,p) => Math.atan2(point.y - p.y, point.x - p.x) * 180 / Math.PI + 180;
@@ -542,12 +540,12 @@ class GraphicPresentation extends React.Component{
     }
 
     //Funcion que se encarga de devolverme la tabla.
-    getTableResult = (points,coeficientes,restricciones) =>{
-        console.log('Drawing Table Results');    
+    getTableResult = (points,coeficientes,restricciones) =>{ 
         const calcSlacksValue = point => {
             return restricciones.map( restri => <td key={'S-C-'+point.P+'-'+restri.ri}>{(Math.abs(restri.coeficientes[0]*point.x+restri.coeficientes[1]*point.y - restri.derecha)).toFixed(2)}</td>)
         }
         const calcResult = point =>{return (Math.abs(coeficientes.x*point.x + coeficientes.y*point.y)).toFixed(2)}
+        console.log("IMPRIMIENDO RESULT:" + calcResult);
         let slacksTitles = restricciones.map(restri => <th key={'S-T-'+restri.ri}>{'S'+restri.ri}</th>)
         return( <Table>
                     <thead><tr><th>Punto</th><th>Resultado</th><th>X0</th><th>X1</th>{slacksTitles}</tr></thead>
@@ -586,7 +584,7 @@ class GraphicPresentation extends React.Component{
                     </Row>
                 </CardHeader>
                 <CardBody>
-                    <Row className='mx-auto'>
+                    <Row className='mx-auto GraphClass'>
                         <XYPlot onMouseLeave={() => this.setState({pointer: null})} width={500} height={500}>
                             <HorizontalGridLines/>
                             <VerticalGridLines/>

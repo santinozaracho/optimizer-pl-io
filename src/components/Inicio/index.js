@@ -26,9 +26,17 @@ const Inicio = () =>{
                             </Link>     
                         </Col>
                     </Row>
-                    
+
+                    <Row className="mt-3 mx-auto">
+                        <Col>
+                            <Link to={"/StockProblems"}>
+                                <Button size='lg' outline color="success">Problemas de Inventario</Button>
+                            </Link>     
+                        </Col>
+                    </Row>
+
                     <Row className="mt-5">
-                        <h5>Colaboradores:</h5>
+                        <h5>Colaboradores P. Lineal y No Lineal:</h5>
                     </Row>
                     <Row>
                         <ButtonGroup className="mx-auto">
@@ -56,6 +64,39 @@ const Inicio = () =>{
                             <Button id='btnzs' outline tag="a" href="https://github.com/santinozaracho">
                                 ZS
                             </Button>
+                        </ButtonGroup>
+                    </Row>
+                    
+                    <Row className="mt-5">
+                        <h5>Colaboradores P. Inventario:</h5>
+                    </Row>
+                    <Row>
+                        <ButtonGroup className="mx-auto">
+                            <UncontrolledTooltip target='btnNicolas'>Alegre, Nicolas</UncontrolledTooltip>
+                            <Button id='btnNicolas' outline tag="a" href="https://github.com/nicmalegre">
+                                AN
+                            </Button>
+                            <UncontrolledTooltip target='btnCarlos'>Lopez, Soto Carlos</UncontrolledTooltip>
+                            <Button id='btnCarlos' outline tag="a" href="https://github.com/Carloslopezsoto">
+                                CLS
+                            </Button>
+                            <UncontrolledTooltip target='btnJoaquin'>Albarenga, Joaquin</UncontrolledTooltip>
+                            <Button id='btnJoaquin' outline tag="a" href="https://github.com/Joalbarenga">
+                                AJ
+                            </Button>
+                            <UncontrolledTooltip target='btnRodrigo'>Cuevas, Rodrigo</UncontrolledTooltip>
+                            <Button id='btnRodrigo' outline tag="a" href="">
+                                CR
+                            </Button>
+                            <UncontrolledTooltip target='btnMatias'>Saravia, Matias</UncontrolledTooltip>
+                            <Button id='btnMatias' outline tag="a" href="https://github.com/matiasaravia52">
+                                SM
+                            </Button>
+                            <UncontrolledTooltip target='btnMajo'>Lind, Maria Jose</UncontrolledTooltip>
+                            <Button id='btnMajo' outline tag="a" href="https://github.com/MariaJoseLind">
+                                LMJ
+                            </Button>
+                            
                         </ButtonGroup>
                     </Row>
                     <Row className="mt-3">
