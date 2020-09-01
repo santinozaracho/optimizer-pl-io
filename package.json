@@ -2,7 +2,6 @@
   "name": "optimizer-pl-io",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://nicmalegre.github.io/optimizer-pl-io",
   "dependencies": {
     "@react-pdf/renderer": "^2.0.0-beta.6",
     "algebra.js": "^0.2.6",
