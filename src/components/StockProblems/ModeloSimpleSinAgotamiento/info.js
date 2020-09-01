@@ -44,10 +44,12 @@ const InfoModeloSimpleSinAgotamiento = () => {
                     <Row className="justify-content-center" onClick={toggleHipotesis} style={{cursor:"pointer"}}>
                         <h5><b>Hipótesis {statusHipotesis}</b></h5>
                     </Row>
-                    <ul className='lista'>
-                        <li>Tasa constante de demanda con el surtido instantáneo del pedido y sin faltantes.</li>
-                        <li>Una vez pedido el stock, se actualiza automáticamente.</li>
-                    </ul>
+                    <Collapse isOpen={collapseHipotesis} onEntered={onEnteredHipotesis} onExited={onExitedHipotesis}>
+                        <ul className='lista'>
+                            <li>Tasa constante de demanda con el surtido instantáneo del pedido y sin faltantes.</li>
+                            <li>Una vez pedido el stock, se actualiza automáticamente.</li>
+                        </ul>
+                    </Collapse>
                 </Card>
             </Row>
             <Row style={{marginBottom:10}}>
@@ -55,33 +57,38 @@ const InfoModeloSimpleSinAgotamiento = () => {
                 <Row className="justify-content-center" onClick={toggleFormulas} style={{cursor:"pointer"}}>
                     <h5><b>Fórmulas {statusFormulas}</b></h5>
                 </Row>
-                        
-                <MathJax.Provider>
-                    <div>
-                        <MathJax.Node formula={"q_{0i} = \\sqrt{\\frac{2KD}{T(pb_{i}+C_{I}')}}   "} />
-                    </div>
-                </MathJax.Provider>
-                <MathJax.Provider>
-                    <div>
-                        <MathJax.Node formula={"CTE_{0}(q_{oi} , b_{i}) = \\frac{D}{q}K+b_{i}D+\\frac{1}{2}qT(pb_{i}C_{i}')"} />
-                    </div>
-                </MathJax.Provider>    
+
+                <Collapse isOpen={collapseFormulas} onEntered={onEnteredFormulas} onExited={onExitedFormulas}>     
+                    <MathJax.Provider>
+                        <div>
+                            <MathJax.Node formula={"q_{0i} = \\sqrt{\\frac{2KD}{T(pb_{i}+C_{I}')}}   "} />
+                        </div>
+                    </MathJax.Provider>
+                    <MathJax.Provider>
+                        <div>
+                            <MathJax.Node formula={"CTE_{0}(q_{oi} , b_{i}) = \\frac{D}{q}K+b_{i}D+\\frac{1}{2}qT(pb_{i}C_{i}')"} />
+                        </div>
+                    </MathJax.Provider>
+                </Collapse>
                 </Card>
             </Row>
             <Row style={{marginBottom:10}}>
                 <Card body outline color="secondary">
-                <Row className="justify-content-center" onClick={toggleVariables} style={{cursor:"pointer"}}>
+                    <Row className="justify-content-center" onClick={toggleVariables} style={{cursor:"pointer"}}>
                         <h5><b>Variables {statusVariables}</b></h5>
                     </Row>
-                    <ul className='lista'>
-                        <li><b>D: </b>Demanda</li>
-                        <li><b>K: </b>Costo de Preparación</li>
-                        <li><b>p: </b>Porcentaje de Capital Inmobilizado</li>
-                        <li><b>T: </b>Tiempo Total</li>
-                        <li><b>C’i: </b>Costo Efectivo de Almacenamiento</li>
-                        <li><b>bi: </b>Costo  del i-ésimo Producto</li>
-                        <li><b>q: </b>Lote Óptimo</li>
-                    </ul>
+
+                    <Collapse isOpen={collapseVariables} onEntered={onEnteredVariables} onExited={onExitedVariables}>
+                        <ul className='text-left'>
+                            <li><b>D: </b>Demanda</li>
+                            <li><b>K: </b>Costo de Preparación</li>
+                            <li><b>p: </b>Porcentaje de Capital Inmobilizado</li>
+                            <li><b>T: </b>Tiempo Total</li>
+                            <li><b>C’i: </b>Costo Efectivo de Almacenamiento</li>
+                            <li><b>bi: </b>Costo  del i-ésimo Producto</li>
+                            <li><b>q: </b>Lote Óptimo</li>
+                        </ul>
+                    </Collapse>
                 </Card>
             </Row>
             <Row className="justify-content-left">
