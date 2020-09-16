@@ -21,9 +21,10 @@ Colaboradores para el Desarrollo de Programacion Lineal:
 -Zaracho Simonetto, Carlos Santino.
 
 Colaboradores para el Desarrollo de Problemas de Stock:
--Cardozo, Edgar.
--Garcia, Emmanuel
--Solis, Santiago.
--Vaernet, Ian.
--Vazquez Diaz, Julian
--Zaracho Simonetto, Carlos Santino.
+-Albarenga, Joaquin.
+-Alegre, Nicolas.
+-Cuevas, Rodrigo.
+-Lind, Maria Jose.
+-Lopez Soto, Carlos.
+-Saravia, Matias.
+
